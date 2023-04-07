@@ -1,9 +1,9 @@
 import { AnimatedSprite } from "./animatedSprite.js";
 import { Velocity } from "./components.js";
-import { Sprite } from "./sprite.js";
-import { rectanglesOverlap } from "./utils.js";
 
 export class Player {
+	static PLATFORM_SPACING = 100;
+
 	constructor(
 		canvasWidth,
 		canvasHeight,
@@ -12,6 +12,7 @@ export class Player {
 		runningSpeed,
 		userControls
 	) {
+		this.debug = document.getElementById("debug");
 		this.animatingLevelComplete = false;
 		this.doneAnimatingLevelComplete = null;
 		this.width = 64;
@@ -39,7 +40,7 @@ export class Player {
 			[0, 0, 0, 0, 0, 0],
 			this.width,
 			this.height,
-			12
+			14
 		);
 
 		this.standingRightSprite = new AnimatedSprite(
@@ -64,7 +65,7 @@ export class Player {
 			[0, 0, 0, 0, 0, 0],
 			this.width,
 			this.height,
-			12
+			14
 		);
 
 		// this.sprite = this.standingSprite;
@@ -88,9 +89,9 @@ export class Player {
 	}
 
 	update() {
-		if (this.animatingLevelComplete) {
+		if (this.animatingLevelComplete) { // Free fall after beating a level
 			this.jumping = false;
-			this.velocity.y = 10;
+			this.velocity.y = 8;
 			this.y += this.velocity.y;
 			if (this.y + this.height >= this.canvasHeight) {
 				this.y = this.canvasHeight - this.height;
@@ -99,7 +100,8 @@ export class Player {
 				this.animatingLevelComplete = false;
 				this.doneAnimatingLevelComplete();
 			}
-		} else {
+		} else { // The player is controlled by the user
+
 			if (this.userControls.left) {
 				this.facingRight = false;
 			} else if (this.userControls.right) {
@@ -125,10 +127,14 @@ export class Player {
 				this.jumping = true;
 			}
 
-			// Stop jumping, cling to wall slightly after reaching apex
-			if (this.jumping && this.velocity.y > 1.0) {
-				this.velocity.y = 0;
-				this.jumping = false;
+			// Platform detection
+			if (this.jumping && this.velocity.y > 0.1) { // Just started falling after a jump apex
+				let roundedBottomY = Math.ceil(this.y + this.height);
+				if (roundedBottomY % 100 == 0) { // At a "platform"
+					this.velocity.y = 0;
+					this.y = roundedBottomY - this.height;
+					this.jumping = false;
+				}
 			}
 
 			// Apply gravity and jump velocity
@@ -139,7 +145,7 @@ export class Player {
 			this.x += this.velocity.x;
 		}
 
-		// Collision detect main canvas
+		// Always apply collision detection main canvas
 		if (this.y + this.height > this.canvasHeight) {
 			this.y = this.canvasHeight - this.height;
 			this.velocity.y = 0;
@@ -156,6 +162,7 @@ export class Player {
 	}
 
 	render(renderContext) {
+		// this.debug.innerText = `${(this.y + this.height).toFixed(2)} ${this.velocity.y.toFixed(2)}`;
 		if (this.jumping) {
             if (this.facingRight) {
 			    this.jumpingRightSprite.render(renderContext, this.x, this.y);

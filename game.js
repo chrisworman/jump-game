@@ -71,7 +71,7 @@ class Game {
         this.collectables.forEach((x) => x.update(this.player));
 
 		// Check level end condition
-		if (this.player.y <= 0) { // Player made it to the top!!
+		if (this.player.y + this.player.height <= 0) { // Player made it to the top!!
             this.collectables = [];
             this.player.handelLevelComplete(() => {
                 this.resetCollectablesAndObstacles();
