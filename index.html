@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <script
+        src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+        crossorigin="anonymous"
+    ></script>
+
     <title>Mountain Leap</title>
     <style>
         html, body {
@@ -8,15 +18,40 @@
             margin: 0;
             background-color: black;
         }
-        .game-canvas {
-            display: block;
+
+        .game-play-panel {
+            position: relative;
             width: 533px;
             height: 800px;
+            overflow: hidden;
             margin: 0 auto;
         }
+
+        .game-canvas {
+            width: 533px;
+            height: 800px;
+        }
+
+        .overlay {
+            position : absolute;
+            top : 0;
+            left : 0;
+            width: 533px;
+            height: 800px;
+            background-repeat: no-repeat;
+            background-position: center center;
+            font-size: 55px;
+            color: white;
+            text-shadow: 5px 5px black;
+            text-align: center;
+            font-family: 'VT323', monospace;
+            line-height: 800px;
+
+        }
+
         .text-panel {
             font-size: 11px;
-            font-family: monospace;
+            font-family: 'VT323', monospace;
             width: 533px;
             margin: 0 auto;
             color : white;
@@ -28,8 +63,11 @@
         <div class="text-panel">
             <span id="score">0</span> <span id="high-score">0</span> Debug: <span id="debug"></span>
         </div>
-        <canvas id="canvas" class="game-canvas" width="533" height="800"></canvas>
-        
+        <div class ="game-play-panel">
+            <canvas id="canvas" class="game-canvas" width="533" height="800"></canvas>
+            <!-- <div id="animationOverlay" class="overlay" style="background-image: url('starburst-animation.gif');"></div> -->
+            <div id="textOverlay" class="overlay"></div>
+        </div>
     </div>
     
     <script src="game.js" type="module"></script>

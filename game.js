@@ -14,14 +14,18 @@ export class Game {
     static LEVEL_SCROLL_SPEED = 8;
 
 	constructor() {
+        // DOM
 		this.debug = document.getElementById("debug");
+        this.textOverlay = document.getElementById("textOverlay");
+        this.scoreDisplay = document.getElementById("score");
+		this.highScoreDisplay = document.getElementById("high-score");
+		this.canvas = document.getElementById("canvas");
+
+        // State
 		this.state = GameState.PLAYING;
 		this.highScore = 0;
 		this.animatingLevelComplete = false;
 		this.score = 0;
-		this.scoreDisplay = document.getElementById("score");
-		this.highScoreDisplay = document.getElementById("high-score");
-		this.canvas = document.getElementById("canvas");
 		this.canvasContext = canvas.getContext("2d");
 		this.userControls = new UserControls();
 		this.player = new Player(
@@ -38,6 +42,8 @@ export class Game {
 
 	start() {
         this.level = this.levelManager.getNextLevel();
+        this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
+        setTimeout(() => { $(this.textOverlay).fadeOut('slow'); }, 2000);
         this.platforms = new Platforms(this.state, this.level.platformSprite);
 		this.collectables = this.level.spawnCollectables();
         this.enemies = this.level.spawnInitialEnemies();
@@ -62,6 +68,7 @@ export class Game {
 		// Level transition?
 		if (this.state === GameState.LEVEL_TRANSITION ) {
             if (this.player.y + this.player.height >= this.canvas.height) { // Done transitioning
+                $(this.textOverlay).fadeOut('slow');
                 this.platforms.currentSprite = this.level.platformSprite;
                 this.player.handleLevelTransitionDone();
                 this.collectables = this.level.spawnCollectables();
@@ -83,6 +90,8 @@ export class Game {
 		// Check level end condition
 		if (this.player.y + this.player.height <= 0) { // END OF LEVEL
             this.level = this.levelManager.getNextLevel();
+            this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
+            $(this.textOverlay).fadeIn('slow');
             this.platforms.nextSprite = this.level.platformSprite;
 			this.state = GameState.LEVEL_TRANSITION;
 			this.collectables = [];
