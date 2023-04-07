@@ -59,17 +59,16 @@ export class Game {
 		this.player.update(this.state);
         this.platforms.update(this.state);
 
-		// Check if we are done animating level transition
-		if (
-			this.state === GameState.LEVEL_TRANSITION && // We are transitioning, and ...
-			this.player.y + this.player.height >= this.canvas.height // The player has hit the bottom!
-		) {
-            this.platforms.currentSprite = this.level.platformSprite;
-			this.player.handleLevelTransitionDone();
-			this.collectables = this.level.spawnCollectables();
-            this.enemies = this.level.spawnInitialEnemies();
-			this.state = GameState.PLAYING;
-			return;
+		// Level transition?
+		if (this.state === GameState.LEVEL_TRANSITION ) {
+            if (this.player.y + this.player.height >= this.canvas.height) { // Done transitioning
+                this.platforms.currentSprite = this.level.platformSprite;
+                this.player.handleLevelTransitionDone();
+                this.collectables = this.level.spawnCollectables();
+                this.enemies = this.level.spawnInitialEnemies();
+                this.state = GameState.PLAYING;
+                return;
+            }
 		}
 
 		// Update other entities
@@ -82,8 +81,7 @@ export class Game {
 		);
 
 		// Check level end condition
-		if (this.player.y + this.player.height <= 0) {
-			// Player made it to the top!!
+		if (this.player.y + this.player.height <= 0) { // END OF LEVEL
             this.level = this.levelManager.getNextLevel();
             this.platforms.nextSprite = this.level.platformSprite;
 			this.state = GameState.LEVEL_TRANSITION;

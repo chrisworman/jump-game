@@ -2,6 +2,7 @@ import { AnimatedSprite } from "./animatedSprite.js";
 import { Velocity } from "./components.js";
 import { GameState } from "./gameState.js";
 import { Game } from "./game.js";
+import { Platforms } from "./platforms.js";
 
 export class Player {
 	static PLATFORM_SPACING = 100;
@@ -91,13 +92,11 @@ export class Player {
 		}
 
 		// Move player left or right
-		if (this.jumping) {
-			if (this.userControls.left) {
-				this.velocity.x = -this.runningSpeed;
-			} else if (this.userControls.right) {
-				this.velocity.x = this.runningSpeed;
-			}
-		} else {
+		if (this.userControls.left) {
+			this.velocity.x = -this.runningSpeed;
+		} else if (this.userControls.right) {
+			this.velocity.x = this.runningSpeed;
+		} else if (!this.jumping) { // Drift while jumping, but stop instantly on ground
 			this.velocity.x = 0;
 		}
 
@@ -113,9 +112,9 @@ export class Player {
 		if (this.jumping && this.velocity.y > 0.1) {
 			// Just started falling after a jump apex
 			let roundedBottomY = Math.ceil(this.y + this.height);
-			if (roundedBottomY % 100 == 0) {
-				// At a "platform" TODO: extract 100 to Game.PLATFORM_HEIGHT
+			if (roundedBottomY % Platforms.HEIGHT == 0) {
 				this.velocity.y = 0;
+				this.velocity.x = 0;
 				this.y = roundedBottomY - this.height;
 				this.jumping = false;
 			}

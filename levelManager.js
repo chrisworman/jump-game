@@ -5,6 +5,7 @@ export class LevelManager {
 	constructor(canvas, player) {
 		this.canvas = canvas;
 		this.player = player;
+		this.levelNumber = 0;
 		this.collectableCount = 0;
 	}
 
@@ -12,12 +13,15 @@ export class LevelManager {
 		if (this.collectableCount < 25) {
 			this.collectableCount += 5;
 		}
+		this.levelNumber++;
 		return new Level(
 			this.canvas,
 			this.player,
 			this.collectableCount,
 			"TODO: probabilities",
-			new Sprite('ground.png'),
+			this.levelNumber % 2 === 0
+				? new Sprite("ground.png")
+				: new Sprite("ground-2.png")
 		);
 	}
 
