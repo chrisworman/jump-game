@@ -1,6 +1,7 @@
 import { AnimatedSprite } from "./animatedSprite.js";
 import { Velocity } from "./components.js";
 import { GameState } from "./gameState.js";
+import { Game } from "./game.js";
 
 export class Player {
 	static PLATFORM_SPACING = 100;
@@ -17,58 +18,41 @@ export class Player {
 		this.doneAnimatingLevelComplete = null;
 		this.width = 64;
 		this.height = 48;
-		// this.sprite = new Sprite('yellow-climber.png');
 		this.standingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
-			[0, this.width],
-			[0, 0],
 			this.width,
 			this.height,
+			0,
+			2,
 			1
 		);
 
 		this.jumpingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
-			[
-				0,
-				this.width,
-				this.width * 2,
-				this.width * 3,
-				this.width * 4,
-				this.width * 5,
-			],
-			[0, 0, 0, 0, 0, 0],
 			this.width,
 			this.height,
+			0,
+			6,
 			14
 		);
 
 		this.standingRightSprite = new AnimatedSprite(
 			"blob-facing-right.png",
-			[0, this.width],
-			[0, 0],
 			this.width,
 			this.height,
+			0,
+			2,
 			1
 		);
 
 		this.jumpingRightSprite = new AnimatedSprite(
 			"blob-facing-right.png",
-			[
-				0,
-				this.width,
-				this.width * 2,
-				this.width * 3,
-				this.width * 4,
-				this.width * 5,
-			],
-			[0, 0, 0, 0, 0, 0],
 			this.width,
 			this.height,
+			0,
+			6,
 			14
 		);
-
-		// this.sprite = this.standingSprite;
 
 		this.canvasWidth = canvasWidth;
 		this.canvasHeight = canvasHeight;
@@ -84,7 +68,6 @@ export class Player {
 	}
 
 	resetPosition() {
-		// this.x = Math.floor((this.canvasWidth / 2.0) - (this.width / 2.0));
 		this.y = Math.floor(this.canvasHeight - this.height);
 	}
 
@@ -94,10 +77,7 @@ export class Player {
 				this.updatePlaying();
 				break;
 			case GameState.LEVEL_TRANSITION:
-				this.updateLevelComplete();
-				break;
-			case GameState.GAME_OVER:
-				this.jumping = false;
+				this.updateLevelTransition();
 				break;
 		}
 	}
@@ -130,9 +110,11 @@ export class Player {
 		}
 
 		// Platform detection
-		if (this.jumping && this.velocity.y > 0.1) { // Just started falling after a jump apex
+		if (this.jumping && this.velocity.y > 0.1) {
+			// Just started falling after a jump apex
 			let roundedBottomY = Math.ceil(this.y + this.height);
-			if (roundedBottomY % 100 == 0) { // At a "platform"
+			if (roundedBottomY % 100 == 0) {
+				// At a "platform" TODO: extract 100 to Game.PLATFORM_HEIGHT
 				this.velocity.y = 0;
 				this.y = roundedBottomY - this.height;
 				this.jumping = false;
@@ -162,29 +144,29 @@ export class Player {
 		}
 	}
 
-	updateLevelComplete() {
+	updateLevelTransition() {
 		this.y += this.velocity.y;
 	}
 
 	render(renderContext) {
 		if (this.jumping) {
-            if (this.facingRight) {
-			    this.jumpingRightSprite.render(renderContext, this.x, this.y);
-            } else {
-                this.jumpingLeftSprite.render(renderContext, this.x, this.y);
-            }
+			if (this.facingRight) {
+				this.jumpingRightSprite.render(renderContext, this.x, this.y);
+			} else {
+				this.jumpingLeftSprite.render(renderContext, this.x, this.y);
+			}
 		} else {
-            if (this.facingRight) {
-			    this.standingRightSprite.render(renderContext, this.x, this.y);
-            } else {
-                this.standingLeftSprite.render(renderContext, this.x, this.y);
-            }
+			if (this.facingRight) {
+				this.standingRightSprite.render(renderContext, this.x, this.y);
+			} else {
+				this.standingLeftSprite.render(renderContext, this.x, this.y);
+			}
 		}
 	}
 
-	handelLevelComplete(scrollSpeed) {
+	handelLevelComplete() {
 		this.jumping = false;
-		this.velocity.y = scrollSpeed;
+		this.velocity.y = Game.LEVEL_SCROLL_SPEED;
 		this.y = -this.height;
 	}
 
@@ -192,5 +174,9 @@ export class Player {
 		this.y = this.canvasHeight - this.height;
 		this.velocity.y = 0;
 		this.velocity.x = 0;
+	}
+
+	handleGameOver() {
+		this.jumping = false;
 	}
 }

@@ -1,11 +1,10 @@
-import { AnimatedSprite } from "./animatedSprite.js";
 import { randomIntBetween } from "./utils.js";
 import { Velocity } from "./components.js";
 import { Sprite } from "./sprite.js";
 
-export class Obstacle {
-	static OBSTACLE_WIDTH = 45;
-	static OBSTACLE_HEIGHT = 50;
+export class Enemy {
+	static WIDTH = 45;
+	static HEIGHT = 50;
 
 	constructor(x, y, width, height, gravity, sprite) {
 		this.x = x;
@@ -18,11 +17,11 @@ export class Obstacle {
 	}
 
 	static spawn(canvasWidth, gravity) {
-		return new Obstacle(
-			randomIntBetween(0, canvasWidth - Obstacle.OBSTACLE_WIDTH),
+		return new Enemy(
+			randomIntBetween(0, canvasWidth - Enemy.WIDTH),
 			0,
-			Obstacle.OBSTACLE_WIDTH,
-			Obstacle.OBSTACLE_HEIGHT,
+			Enemy.WIDTH,
+			Enemy.HEIGHT,
 			gravity,
 			new Sprite('rock.png'),
 		);

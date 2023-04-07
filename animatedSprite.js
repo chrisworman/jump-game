@@ -1,9 +1,12 @@
 export class AnimatedSprite {
-	constructor(imagePath, xs, ys, width, height, fps = 12) {
-        // By convention, sprite sheets are always 
-		this.xs = xs;
-		this.ys = ys;
-        this.frameCount = xs.length;
+	constructor(imagePath, width, height, yOffset, frameCount, fps = 12) {
+        // By convention, sprite sheets for animations are always left to right horizontal
+		this.xOffsets = Array(frameCount);
+		this.yOffset = yOffset;
+		for (let i=0; i<frameCount; i++) {
+			this.xOffsets[i] = i * width;
+		}
+        this.frameCount = frameCount;
 		this.width = width;
 		this.height = height;
         this.fps = fps;
@@ -31,12 +34,12 @@ export class AnimatedSprite {
             if (this.startTime === -1) {
                 this.startTime = now;
             }
-            var elapsedMs = now - this.startTime; // renderContext.getElapsedTime();
+            var elapsedMs = now - this.startTime;
             var frameIndex = Math.floor(elapsedMs * this.frameFactor % this.frameCount);
 			renderContext.getCanvasContext().drawImage(
 				this.image,
-				this.xs[frameIndex],
-				this.ys[frameIndex],
+				this.xOffsets[frameIndex],
+				this.yOffset,
 				this.width,
 				this.height,
 				x,

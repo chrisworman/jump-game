@@ -2,15 +2,34 @@
 <html>
 <head>
     <title>Mountain Leap</title>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            background-color: black;
+        }
+        .game-canvas {
+            display: block;
+            width: 533px;
+            height: 800px;
+            margin: 0 auto;
+        }
+        .text-panel {
+            font-size: 11px;
+            font-family: monospace;
+            width: 533px;
+            margin: 0 auto;
+            color : white;
+        }
+    </style>
 </head>
 <body>
-    <div style="display: flex;">
-        <canvas id="canvas" width="533" height="800"></canvas>
-        <div style="font-size: 30px; font-family: monospace;">
-            <div id="score">0</div>
-            <div id="high-score">0</div>
-            Debug: <div id="debug"></div>
+    <div>
+        <div class="text-panel">
+            <span id="score">0</span> <span id="high-score">0</span> Debug: <span id="debug"></span>
         </div>
+        <canvas id="canvas" class="game-canvas" width="533" height="800"></canvas>
+        
     </div>
     
     <script src="game.js" type="module"></script>
