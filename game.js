@@ -1,5 +1,6 @@
 import { Background } from "./background.js";
 import { Collectable } from "./collectable.js";
+import { GameState } from "./gameState.js";
 import { Obstacle } from "./obstacle.js";
 import { Player } from "./player.js";
 import { RenderContext } from "./renderContext.js";
@@ -14,8 +15,9 @@ class Game {
 	static COLLECTABLE_COUNT = 10;
 
 	constructor() {
+        this.debug = document.getElementById("debug");
+        this.state = GameState.PLAYING;
         this.highScore = 0;
-        this.gameOver = false;
         this.animatingLevelComplete = false;
 		this.score = 0;
 		this.scoreDisplay = document.getElementById("score");
@@ -48,22 +50,24 @@ class Game {
 		requestAnimationFrame(this.gameLoop.bind(this));
 	}
 
-    /*
-        TODO: game states:
-        - PLAYING,
-        - LEVEL_COMPLETE
-        - DEATH
-
-    */
-
 	update() {
-        if (this.player.animatingLevelComplete) {
-            this.player.update();
+
+        this.player.update(this.state);
+
+        if (this.state === GameState.GAME_OVER) {
             return;
         }
-        if (this.gameOver) {
+        
+        // Check if we are done animating level transition
+        if (
+            this.state === GameState.LEVEL_TRANSITION &&                // We are transitioning, and ...
+            this.player.y + this.player.height >= this.canvas.height    // The player has hit the bottom!
+        ) { 
+			this.player.handleLevelTransitionDone();
+            this.resetCollectablesAndObstacles();
+            this.state = GameState.PLAYING;
             return;
-        }
+		}
 
         // Update
 		this.obstacles.forEach((x) => x.update());
@@ -72,10 +76,9 @@ class Game {
 
 		// Check level end condition
 		if (this.player.y + this.player.height <= 0) { // Player made it to the top!!
+            this.state = GameState.LEVEL_TRANSITION;
             this.collectables = [];
-            this.player.handelLevelComplete(() => {
-                this.resetCollectablesAndObstacles();
-            });
+            this.player.handelLevelComplete(8); // TODO: static LEVEL_SCROLL_SPEED = 8;
             return;
 		}
 
@@ -84,7 +87,7 @@ class Game {
             if (rectanglesOverlap(this.player, obstacle)) {
                 this.player.jumping = false;
                 this.highScore = this.score > this.highScore ? this.score : this.highScore;
-                this.gameOver = true;
+                this.state = GameState.GAME_OVER;
                 return;
             }
         }
@@ -118,6 +121,7 @@ class Game {
     }
 
 	render() {
+        this.debug.innerText = this.state;
 		this.background.render(this.renderContext);
 		this.collectables.forEach((x) => x.render(this.renderContext));
 		this.obstacles.forEach((x) => x.render(this.renderContext));

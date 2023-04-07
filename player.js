@@ -1,5 +1,6 @@
 import { AnimatedSprite } from "./animatedSprite.js";
 import { Velocity } from "./components.js";
+import { GameState } from "./gameState.js";
 
 export class Player {
 	static PLATFORM_SPACING = 100;
@@ -12,7 +13,6 @@ export class Player {
 		runningSpeed,
 		userControls
 	) {
-		this.debug = document.getElementById("debug");
 		this.animatingLevelComplete = false;
 		this.doneAnimatingLevelComplete = null;
 		this.width = 64;
@@ -88,64 +88,65 @@ export class Player {
 		this.y = Math.floor(this.canvasHeight - this.height);
 	}
 
-	update() {
-		if (this.animatingLevelComplete) { // Free fall after beating a level
-			this.jumping = false;
-			this.velocity.y = 8;
-			this.y += this.velocity.y;
-			if (this.y + this.height >= this.canvasHeight) {
-				this.y = this.canvasHeight - this.height;
-				this.velocity.y = 0;
-				this.velocity.x = 0;
-				this.animatingLevelComplete = false;
-				this.doneAnimatingLevelComplete();
-			}
-		} else { // The player is controlled by the user
+	update(gameState) {
+		switch (gameState) {
+			case GameState.PLAYING:
+				this.updatePlaying();
+				break;
+			case GameState.LEVEL_TRANSITION:
+				this.updateLevelComplete();
+				break;
+			case GameState.GAME_OVER:
+				this.jumping = false;
+				break;
+		}
+	}
 
-			if (this.userControls.left) {
-				this.facingRight = false;
-			} else if (this.userControls.right) {
-				this.facingRight = true;
-			}
-
-			// Move player left or right
-			if (this.jumping) {
-				if (this.userControls.left) {
-					this.velocity.x = -this.runningSpeed;
-				} else if (this.userControls.right) {
-					this.velocity.x = this.runningSpeed;
-				}
-			} else {
-				this.velocity.x = 0;
-			}
-
-			// Make player jump when space is pressed
-			if (!this.jumping && this.userControls.jump) {
-				this.velocity.y = this.jumpSpeed;
-				this.jumpingRightSprite.reset();
-                this.jumpingLeftSprite.reset();
-				this.jumping = true;
-			}
-
-			// Platform detection
-			if (this.jumping && this.velocity.y > 0.1) { // Just started falling after a jump apex
-				let roundedBottomY = Math.ceil(this.y + this.height);
-				if (roundedBottomY % 100 == 0) { // At a "platform"
-					this.velocity.y = 0;
-					this.y = roundedBottomY - this.height;
-					this.jumping = false;
-				}
-			}
-
-			// Apply gravity and jump velocity
-			if (this.jumping) {
-				this.velocity.y += this.gravity;
-			}
-			this.y += this.velocity.y;
-			this.x += this.velocity.x;
+	updatePlaying() {
+		// Apply the direction of the player
+		if (this.userControls.left) {
+			this.facingRight = false;
+		} else if (this.userControls.right) {
+			this.facingRight = true;
 		}
 
-		// Always apply collision detection main canvas
+		// Move player left or right
+		if (this.jumping) {
+			if (this.userControls.left) {
+				this.velocity.x = -this.runningSpeed;
+			} else if (this.userControls.right) {
+				this.velocity.x = this.runningSpeed;
+			}
+		} else {
+			this.velocity.x = 0;
+		}
+
+		// Make player jump when space is pressed
+		if (!this.jumping && this.userControls.jump) {
+			this.velocity.y = this.jumpSpeed;
+			this.jumpingRightSprite.reset();
+			this.jumpingLeftSprite.reset();
+			this.jumping = true;
+		}
+
+		// Platform detection
+		if (this.jumping && this.velocity.y > 0.1) { // Just started falling after a jump apex
+			let roundedBottomY = Math.ceil(this.y + this.height);
+			if (roundedBottomY % 100 == 0) { // At a "platform"
+				this.velocity.y = 0;
+				this.y = roundedBottomY - this.height;
+				this.jumping = false;
+			}
+		}
+
+		// Apply gravity and jump velocity
+		if (this.jumping) {
+			this.velocity.y += this.gravity;
+		}
+		this.y += this.velocity.y;
+		this.x += this.velocity.x;
+
+		// Apply collision detection main canvas
 		if (this.y + this.height > this.canvasHeight) {
 			this.y = this.canvasHeight - this.height;
 			this.velocity.y = 0;
@@ -161,8 +162,11 @@ export class Player {
 		}
 	}
 
+	updateLevelComplete() {
+		this.y += this.velocity.y;
+	}
+
 	render(renderContext) {
-		// this.debug.innerText = `${(this.y + this.height).toFixed(2)} ${this.velocity.y.toFixed(2)}`;
 		if (this.jumping) {
             if (this.facingRight) {
 			    this.jumpingRightSprite.render(renderContext, this.x, this.y);
@@ -178,8 +182,15 @@ export class Player {
 		}
 	}
 
-	handelLevelComplete(doneAnimatingLevelComplete) {
-		this.animatingLevelComplete = true;
-		this.doneAnimatingLevelComplete = doneAnimatingLevelComplete;
+	handelLevelComplete(scrollSpeed) {
+		this.jumping = false;
+		this.velocity.y = scrollSpeed;
+		this.y = -this.height;
+	}
+
+	handleLevelTransitionDone() {
+		this.y = this.canvasHeight - this.height;
+		this.velocity.y = 0;
+		this.velocity.x = 0;
 	}
 }
