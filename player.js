@@ -5,14 +5,13 @@ import { Game } from "./game.js";
 import { Platforms } from "./platforms.js";
 
 export class Player {
-	static PLATFORM_SPACING = 100;
+	static VERTICAL_SPEED = -8;
+	static HORIZONTAL_SPEED = 5;
 
 	constructor(
 		canvasWidth,
 		canvasHeight,
 		gravity,
-		jumpSpeed,
-		runningSpeed,
 		userControls
 	) {
 		this.animatingLevelComplete = false;
@@ -62,14 +61,21 @@ export class Player {
 		this.resetPosition();
 		this.gravity = gravity;
 		this.velocity = new Velocity();
-		this.jumpSpeed = jumpSpeed;
-		this.runningSpeed = runningSpeed;
 		this.jumping = false;
 		this.facingRight = false;
 	}
 
 	resetPosition() {
 		this.y = Math.floor(this.canvasHeight - this.height);
+	}
+
+	getHitBox() {
+		return {
+			x: this.x + 10,
+			y: this.y + 10,
+			width: this.width - 15,
+			height: this.height - 15,
+		};
 	}
 
 	update(gameState) {
@@ -93,16 +99,16 @@ export class Player {
 
 		// Move player left or right
 		if (this.userControls.left) {
-			this.velocity.x = -this.runningSpeed;
+			this.velocity.x = -Player.HORIZONTAL_SPEED;
 		} else if (this.userControls.right) {
-			this.velocity.x = this.runningSpeed;
+			this.velocity.x = Player.HORIZONTAL_SPEED;
 		} else if (!this.jumping) { // Drift while jumping, but stop instantly on ground
 			this.velocity.x = 0;
 		}
 
 		// Make player jump when space is pressed
 		if (!this.jumping && this.userControls.jump) {
-			this.velocity.y = this.jumpSpeed;
+			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
 			this.jumpingLeftSprite.reset();
 			this.jumping = true;

@@ -7,7 +7,7 @@ export class Sprite {
 		this.height = height;
 		this.loaded = false;
 		this.image = new Image();
-		this.image.addEventListener('load', () => {
+		this.image.addEventListener("load", () => {
 			this.loaded = true;
 			if (this.width === 0) {
 				this.width = this.image.width;
@@ -19,7 +19,7 @@ export class Sprite {
 
 	render(renderContext, x, y) {
 		if (this.loaded) {
-			let ctx = renderContext.getCanvasContext();
+			const ctx = renderContext.getCanvasContext();
 			ctx.save();
 			ctx.globalAlpha = this.opacity;
 			ctx.drawImage(

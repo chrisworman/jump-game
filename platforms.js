@@ -1,6 +1,5 @@
 import { Game } from "./game.js";
 import { GameState } from "./gameState.js";
-import { Sprite } from "./sprite.js";
 
 export class Platforms {
     static HEIGHT = 100;
