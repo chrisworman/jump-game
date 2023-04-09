@@ -3,16 +3,18 @@ import { Velocity } from "./components.js";
 import { GameState } from "./gameState.js";
 import { Game } from "./game.js";
 import { Platforms } from "./platforms.js";
+import { Bullet } from "./bullet.js";
 
 export class Player {
 	static VERTICAL_SPEED = -8;
-	static HORIZONTAL_SPEED = 5;
+	static HORIZONTAL_SPEED = 4.5;
+	static SHOOT_DELAY_MS = 250;
 
 	constructor(
 		canvasWidth,
 		canvasHeight,
 		gravity,
-		userControls
+		userControls,
 	) {
 		this.animatingLevelComplete = false;
 		this.doneAnimatingLevelComplete = null;
@@ -33,7 +35,8 @@ export class Player {
 			this.height,
 			0,
 			6,
-			14
+			14,
+			false
 		);
 
 		this.standingRightSprite = new AnimatedSprite(
@@ -51,7 +54,8 @@ export class Player {
 			this.height,
 			0,
 			6,
-			14
+			14,
+			false
 		);
 
 		this.canvasWidth = canvasWidth;
@@ -63,6 +67,7 @@ export class Player {
 		this.velocity = new Velocity();
 		this.jumping = false;
 		this.facingRight = false;
+		this.lastShootTime = null;
 	}
 
 	resetPosition() {
@@ -78,10 +83,10 @@ export class Player {
 		};
 	}
 
-	update(gameState) {
+	update(gameState, onShoot) {
 		switch (gameState) {
 			case GameState.PLAYING:
-				this.updatePlaying();
+				this.updatePlaying(onShoot);
 				break;
 			case GameState.LEVEL_TRANSITION:
 				this.updateLevelTransition();
@@ -89,12 +94,21 @@ export class Player {
 		}
 	}
 
-	updatePlaying() {
+	updatePlaying(onShoot) {
 		// Apply the direction of the player
 		if (this.userControls.left) {
 			this.facingRight = false;
 		} else if (this.userControls.right) {
 			this.facingRight = true;
+		}
+
+		// Shooting?
+		if (this.userControls.shoot) {
+			const now = Date.now();
+			if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) { // Time to shoot
+				onShoot(Bullet.spawn(this));
+				this.lastShootTime = now;
+			}
 		}
 
 		// Move player left or right

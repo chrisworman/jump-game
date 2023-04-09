@@ -2,11 +2,14 @@ import { Collectable } from "./collectable.js";
 import { Game } from "./game.js";
 import { Enemy } from "./enemy.js";
 import { randomIntBetween } from "./utils.js";
+import { Walker } from "./walker.js";
 
 export class Level {
     static ENEMY_SPAWN_DELAY_MS = 2000;
+    static NO_ENEMY_BUFFER = 300;
 
-	constructor(canvas, player, collectableCount, collectableProbabilities, platformSprite) {
+	constructor(number, canvas, player, collectableCount, collectableProbabilities, platformSprite) {
+        this.number = number;
 		this.canvas = canvas;
 		this.player = player;
 		this.collectableCount = collectableCount;
@@ -17,14 +20,13 @@ export class Level {
 
 	spawnEnemies(currentEnemies) {
 		// Based upon some rules (eg. rolling dice, player's position), spawn 0 or more enemies
-        const noEnemyBuffer = 200;
 		if (
-			currentEnemies.length === 0 &&
-			this.player.y < this.canvas.height - noEnemyBuffer &&
-            this.player.y > noEnemyBuffer
+			currentEnemies.filter(x => x.enemyType == 'fire-ball').length === 0 &&
+			this.player.y < this.canvas.height - Level.NO_ENEMY_BUFFER &&
+            this.player.y > Level.NO_ENEMY_BUFFER
 		) {
             const now = Date.now();
-            if (!this.enemySpawnTime || now - this.enemySpawnTime >= Level.ENEMY_SPAWN_DELAY_MS) {
+            if (!this.enemySpawnTime || now - this.enemySpawnTime >= (Level.ENEMY_SPAWN_DELAY_MS - this.number)) {
                 this.enemySpawnTime = now;
 			    currentEnemies.push(Enemy.spawn(this.canvas.width, Game.GRAVITY));
             }
@@ -32,7 +34,11 @@ export class Level {
 	}
 
 	spawnInitialEnemies() {
-        return []; // TODO: spawn platform walkers
+        let initialEnemies = [];
+        for (let i=1; i<Math.floor(this.number / 2); i++) {
+            initialEnemies.push(Walker.spawn(this.canvas.width));
+        }
+        return initialEnemies;
 	}
 
 	spawnCollectables() {

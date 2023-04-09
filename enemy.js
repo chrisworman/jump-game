@@ -1,6 +1,5 @@
 import { randomIntBetween } from "./utils.js";
 import { Velocity } from "./components.js";
-import { Sprite } from "./sprite.js";
 import { AnimatedSprite } from "./animatedSprite.js";
 
 export class Enemy {
@@ -8,12 +7,13 @@ export class Enemy {
 	static HEIGHT = 48;
 
 	constructor(x, y, gravity, sprite) {
+		this.enemyType = 'fire-ball';
 		this.x = x;
 		this.y = y;
 		this.width = Enemy.WIDTH;
 		this.height = Enemy.HEIGHT;
 		this.sprite = sprite;
-		this.gravity = gravity;
+		this.gravity = gravity - 0.1; // TODO
 		this.velocity = new Velocity();
 	}
 
@@ -22,9 +22,12 @@ export class Enemy {
 			randomIntBetween(0, canvasWidth - Enemy.WIDTH),
 			0,
 			gravity,
-			//new Sprite('rock-2.png'),
 			new AnimatedSprite("fire-ball.png", 48, 48, 0, 5, 8)
 		);
+	}
+
+	isDead() {
+		return false;
 	}
 
 	render(renderContext) {
@@ -32,7 +35,6 @@ export class Enemy {
 	}
 
 	update(onOffscreen) {
-		this.sprite.angle = 45;
 		this.velocity.y += this.gravity;
 		this.y += this.velocity.y;
 		this.x += this.velocity.x;

@@ -26,6 +26,14 @@ export class Platforms {
         this.gameState = gameState;
     }
 
+    static getPlatformYs() {
+        let result = [];
+        for (let i=1; i<Platforms.COUNT; i++) {
+            result.push(i * Platforms.HEIGHT);
+        }
+        return result;
+    }
+
     render(renderContext) {
         const totalHeight = Platforms.COUNT * Platforms.HEIGHT;
         switch (this.gameState) {

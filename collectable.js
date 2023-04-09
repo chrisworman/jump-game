@@ -12,7 +12,6 @@ export class Collectable {
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
-		this.sprite.opacity = 0.75;
 		this.points = points;
 	}
 

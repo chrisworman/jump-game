@@ -87,4 +87,22 @@ function randomIntBetween(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export { rectanglesOverlap, findOverlapping, randomXYIn, randomIntBetween };
+function randomFromArray(array) {
+	return array[randomIntBetween(0, array.length - 1)];
+}
+
+function randomSign() {
+	if (randomIntBetween(0,1) <= 0.5) {
+		return -1;
+	}
+	return 1;
+}
+
+export {
+	rectanglesOverlap,
+	findOverlapping,
+	randomXYIn,
+	randomIntBetween,
+	randomFromArray,
+	randomSign,
+};

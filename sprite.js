@@ -1,8 +1,9 @@
+import { FilterManager } from "./filterManager.js";
+
 export class Sprite {
 	constructor(imagePath, x = 0, y = 0, width = 0, height = 0) {
 		this.x = x;
 		this.y = y;
-		this.opacity = 1.0;
 		this.width = width;
 		this.height = height;
 		this.loaded = false;
@@ -15,25 +16,25 @@ export class Sprite {
 			}
 		});
 		this.image.src = imagePath;
+		this.filterManager = new FilterManager();
 	}
 
 	render(renderContext, x, y) {
 		if (this.loaded) {
 			const ctx = renderContext.getCanvasContext();
-			ctx.save();
-			ctx.globalAlpha = this.opacity;
-			ctx.drawImage(
-				this.image,
-				this.x,
-				this.y,
-				this.width,
-				this.height,
-				x,
-				y,
-				this.width,
-				this.height
-			);
-			ctx.restore();
+			this.filterManager.applyFilters(ctx, () => {
+				ctx.drawImage(
+					this.image,
+					this.x,
+					this.y,
+					this.width,
+					this.height,
+					x,
+					y,
+					this.width,
+					this.height
+				);
+			});
 		}
 	}
 }

@@ -3,16 +3,12 @@ export class UserControls {
 		this.left = false;
 		this.right = false;
 		this.jump = false;
-		// this.restartHandler = restartHandler;
+		this.shoot = false;
 	}
 
 	enable() {
 		document.addEventListener("keydown", this.#handleKeyDown.bind(this));
 		document.addEventListener("keyup", this.#handleKeyUp.bind(this));
-		// document.getElementById('restartButton').addEventListener(
-		// 	'click',
-		// 	() => { this.restartHandler(); },
-		// );
 	}
 
 	#handleKeyDown(event) {
@@ -20,8 +16,10 @@ export class UserControls {
 			this.left = true;
 		} else if (event.code === "ArrowRight") {
 			this.right = true;
-		} else if (event.code === "Space" || event.code === "ArrowUp") {
+		} else if (event.code === "ArrowUp") {
 			this.jump = true;
+		} else if (event.code === "Space") {
+			this.shoot = true;
 		}
 	}
 
@@ -30,8 +28,10 @@ export class UserControls {
 			this.left = false;
 		} else if (event.code === "ArrowRight") {
 			this.right = false;
-		} else if (event.code === "Space" || event.code === "ArrowUp") {
+		} else if (event.code === "ArrowUp") {
 			this.jump = false;
+		} else if (event.code === "Space") {
+			this.shoot = false;
 		}
 	}
 }

@@ -10,11 +10,12 @@ export class LevelManager {
 	}
 
 	getNextLevel() {
-		if (this.collectableCount < 25) {
-			this.collectableCount += 5;
+		if (this.collectableCount < 50) {
+			this.collectableCount += 2;
 		}
 		this.levelNumber++;
 		return new Level(
+			this.levelNumber,
 			this.canvas,
 			this.player,
 			this.collectableCount,
