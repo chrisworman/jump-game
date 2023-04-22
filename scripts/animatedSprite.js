@@ -19,6 +19,7 @@ export class AnimatedSprite {
 		this.loaded = false;
 		this.image = new Image();
 		this.image.addEventListener('load', () => {
+			console.log(`AnimatedSprite :: loaded ${imagePath}`);
 			this.loaded = true;
 		});
 		this.image.src = imagePath;

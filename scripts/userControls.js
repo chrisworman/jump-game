@@ -4,14 +4,11 @@ export class UserControls {
 		this.right = false;
 		this.jump = false;
 		this.shoot = false;
+		document.addEventListener("keydown", this.handleKeyDown.bind(this));
+		document.addEventListener("keyup", this.handleKeyUp.bind(this));
 	}
 
-	enable() {
-		document.addEventListener("keydown", this.#handleKeyDown.bind(this));
-		document.addEventListener("keyup", this.#handleKeyUp.bind(this));
-	}
-
-	#handleKeyDown(event) {
+	handleKeyDown(event) {
 		if (event.code === "ArrowLeft") {
 			this.left = true;
 		} else if (event.code === "ArrowRight") {
@@ -23,7 +20,7 @@ export class UserControls {
 		}
 	}
 
-	#handleKeyUp(event) {
+	handleKeyUp(event) {
 		if (event.code === "ArrowLeft") {
 			this.left = false;
 		} else if (event.code === "ArrowRight") {

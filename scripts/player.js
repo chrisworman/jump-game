@@ -1,10 +1,11 @@
-import { AnimatedSprite } from "./animatedSprite.js";
 import { Velocity } from "./components.js";
 import { GameState } from "./gameState.js";
 import { Game } from "./game.js";
 import { Platforms } from "./platforms.js";
 import { Bullet } from "./bullet.js";
 import { rectanglesOverlap } from "./utils.js";
+import { AudioManager } from "./audioManager.js";
+import { SpriteLibrary } from "./spriteLibrary.js";
 
 export class Player {
 	static VERTICAL_SPEED = -8;
@@ -15,59 +16,24 @@ export class Player {
 	constructor(game) {
 		this.game = game;
 		this.setHealth(Player.INITIAL_HEALTH);
-		this.width = 64;
-		this.height = 48;
-		this.game.audioManager.load("jump", "jump.mp3");
-		this.game.audioManager.load("shoot", "shoot.mp3");
-		this.standingLeftSprite = new AnimatedSprite(
-			"blob-facing-left.png",
-			this.width,
-			this.height,
-			0,
-			2,
-			1
-		);
-		this.jumpingLeftSprite = new AnimatedSprite(
-			"blob-facing-left.png",
-			this.width,
-			this.height,
-			0,
-			6,
-			14,
-			false
-		);
-		this.standingRightSprite = new AnimatedSprite(
-			"blob-facing-right.png",
-			this.width,
-			this.height,
-			0,
-			2,
-			1
-		);
-		this.jumpingRightSprite = new AnimatedSprite(
-			"blob-facing-right.png",
-			this.width,
-			this.height,
-			0,
-			6,
-			14,
-			false
-		);
 
-		// TODO: Clean this up
-		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
-		this.resetPosition();
+		this.standingLeftSprite = SpriteLibrary.playerStandingLeft();
+		this.standingRightSprite = SpriteLibrary.playerStandingRight();
+		this.jumpingLeftSprite = SpriteLibrary.playerJumpingLeft();
+		this.jumpingRightSprite = SpriteLibrary.playerJumpingRight();
 
+		this.width = SpriteLibrary.SIZES.PLAYER.width;
+		this.height = SpriteLibrary.SIZES.PLAYER.height;
+		
 		this.velocity = new Velocity();
+		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
+		this.y = Math.floor(this.game.canvas.height - this.height);
+
 		this.jumping = false;
 		this.facingRight = false;
 		this.lastShootTime = null;
 		this.recovering = false;
 		this.recoveringStartTime = null;
-	}
-
-	resetPosition() {
-		this.y = Math.floor(this.game.canvas.height - this.height);
 	}
 
 	getHitBox() {
@@ -129,7 +95,9 @@ export class Player {
 				now - this.lastShootTime >= Player.SHOOT_DELAY_MS
 			) {
 				// Time to shoot
-				this.game.audioManager.play("shoot");
+				this.game.audioManager.play(
+					AudioManager.AUDIO_FILES.PLAYER_SHOOT
+				);
 				this.game.bullets.push(Bullet.spawn(this.game));
 				this.lastShootTime = now;
 			}
@@ -147,7 +115,7 @@ export class Player {
 
 		// Make player jump when space is pressed
 		if (!this.jumping && this.game.userControls.jump) {
-			this.game.audioManager.play("jump");
+			this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
 			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
 			this.jumpingLeftSprite.reset();

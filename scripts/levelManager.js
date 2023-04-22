@@ -1,5 +1,5 @@
 import { Level } from "./level.js";
-import { Sprite } from "./sprite.js";
+import { SpriteLibrary } from "./spriteLibrary.js";
 
 export class LevelManager {
 	constructor(game) {
@@ -19,8 +19,8 @@ export class LevelManager {
 			this.collectableCount,
 			"TODO: probabilities",
 			this.levelNumber % 2 === 0
-				? new Sprite("ground.png")
-				: new Sprite("ground-2.png")
+				? SpriteLibrary.groundGreen()
+				: SpriteLibrary.groundPurple()
 		);
 	}
 

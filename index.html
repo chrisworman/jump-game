@@ -34,7 +34,7 @@
             font-size: 32px;
             font-family: 'VT323', monospace;
             border: 10px solid transparent; /* padding for border-image */
-            border-image: url('hud.png') 6 round;
+            border-image: url('images/hud.png') 6 round;
         }
 
         .hearts {
@@ -48,7 +48,7 @@
             margin-left: 2px;
             width: 32px;
             height: 32px;
-            background-image: url('heart.png');
+            background-image: url('images/heart.png');
             background-repeat: no-repeat;
         }
 
@@ -57,7 +57,7 @@
             margin-left: 2px;
             width: 32px;
             height: 32px;
-            background-image: url('heart-empty.png');
+            background-image: url('images/heart-empty.png');
             background-repeat: no-repeat;
         }
 
@@ -83,8 +83,6 @@
             background-position: center center;
             font-size: 60px;
             color: white;
-            /*text-shadow: 5px 5px black;*/
-            /* text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18; */
             text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00, 0 -18px 42px #000;
             text-align: center;
             font-family: 'VT323', monospace;
@@ -105,12 +103,12 @@
         </div>
         <div class ="game-play-panel">
             <canvas id="canvas" class="game-canvas" width="550" height="800"></canvas>
-            <!-- <div id="animationOverlay" class="overlay" style="background-image: url('starburst-animation.gif');"></div> -->
-            <!-- <div id="grainyOverlay" class="overlay" style="background-image: url('grainy-overlay.png');"></div> -->
+            <!-- <div id="animationOverlay" class="overlay" style="background-image: url('images/starburst-animation.gif');"></div> -->
+            <!-- <div id="grainyOverlay" class="overlay" style="background-image: url('images/grainy-overlay.png');"></div> -->
             <div id="textOverlay" class="overlay"></div>
         </div>
     </div>
     
-    <script src="game.js" type="module"></script>
+    <script src="scripts/game.js" type="module"></script>
 </body>
 </html>

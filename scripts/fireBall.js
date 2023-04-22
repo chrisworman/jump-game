@@ -1,36 +1,35 @@
+import { EnemyTypes } from "./enemyTypes.js";
+import { SpriteLibrary } from "./spriteLibrary.js";
 import { randomIntBetween } from "./utils.js";
 import { Velocity } from "./components.js";
-import { AnimatedSprite } from "./animatedSprite.js";
-import { EnemyTypes } from "./enemyTypes.js";
 
 export class FireBall {
-	static WIDTH = 48;
-	static HEIGHT = 48;
-
 	constructor(x, y, gravity, sprite) {
+		this.enemyType = EnemyTypes.FIRE_BALL;
+		this.sprite = sprite;
+
+		this.isDead = false;
 		this.isShootable = false;
 		this.isOffScreen = false;
-		this.enemyType = EnemyTypes.FIRE_BALL;
+
 		this.x = x;
 		this.y = y;
-		this.width = FireBall.WIDTH;
-		this.height = FireBall.HEIGHT;
-		this.sprite = sprite;
+		this.width = SpriteLibrary.SIZES.FIRE_BALL.width;
+		this.height = SpriteLibrary.SIZES.FIRE_BALL.height;
 		this.gravity = gravity - 0.1; // TODO
 		this.velocity = new Velocity();
 	}
 
 	static spawn(canvasWidth, gravity) {
 		return new FireBall(
-			randomIntBetween(0, canvasWidth - FireBall.WIDTH),
+			randomIntBetween(
+				0,
+				canvasWidth - SpriteLibrary.SIZES.FIRE_BALL.width
+			),
 			0,
 			gravity,
-			new AnimatedSprite("fire-ball.png", 48, 48, 0, 5, 8)
+			SpriteLibrary.fireBall()
 		);
-	}
-
-	isDead() {
-		return false;
 	}
 
 	render(renderContext) {

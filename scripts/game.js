@@ -37,17 +37,18 @@ export class Game {
 	}
 
 	start() {
-		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
-		setTimeout(() => {
-			$(this.textOverlay).fadeOut("slow");
-		}, 2000);
-		this.collectables = this.level.spawnCollectables();
-		this.enemies = this.level.spawnInitialEnemies();
-		this.userControls.enable();
+		// Start intro animations
+		this.fadeOutTextOverlay(`Level ${this.levelManager.levelNumber}`);
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = 10 - 10 * amountDone;
 			this.filterManager.brightnessPercent = 100 * amountDone;
 		}, 1000);
+
+		// Prepare the entities for the level
+		this.collectables = this.level.spawnCollectables();
+		this.enemies = this.level.spawnInitialEnemies();
+		
+		// Let's go!
 		this.state = GameState.PLAYING;
 		this.gameLoop();
 	}
@@ -89,9 +90,8 @@ export class Game {
 		this.enemies = this.enemies.filter((x) => !x.isOffScreen);
 
 		this.bullets.forEach((bullet) => bullet.update());
-		this.bullets = this.bullets.filter((x) => !x.isOffScreen);
-		this.bullets = this.bullets.filter((x) => !x.hitEnemy);
-		this.enemies = this.enemies.filter((x) => !x.isDead());
+		this.bullets = this.bullets.filter((x) => !x.isOffScreen && !x.hitEnemy);
+		this.enemies = this.enemies.filter((x) => !x.isDead);
 
 		this.collectables.forEach((x) => x.update());
 
@@ -123,8 +123,7 @@ export class Game {
 	}
 
 	handlePlayerDead() {
-		this.textOverlay.innerText = `Game Over`;
-		$(this.textOverlay).fadeIn("slow");
+		this.fadeInTextOverlay('Game Over');
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = amountDone * 8;
 			this.filterManager.brightnessPercent =
@@ -135,14 +134,25 @@ export class Game {
 
 	handleLevelComplete() {
 		this.level = this.levelManager.getNextLevel();
-		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
-		$(this.textOverlay).fadeIn("slow");
+		this.fadeInTextOverlay(`Level ${this.levelManager.levelNumber}`);
 		this.platforms.nextSprite = this.level.platformSprite;
 		this.collectables = [];
 		this.enemies = [];
 		this.bullets = [];
 		this.player.handelLevelComplete();
 		this.state = GameState.LEVEL_TRANSITION;
+	}
+
+	fadeInTextOverlay(text) {
+		this.textOverlay.innerText = text;
+		$(this.textOverlay).fadeIn("slow");
+	}
+
+	fadeOutTextOverlay(text) {
+		this.textOverlay.innerText = text;
+		setTimeout(() => {
+			$(this.textOverlay).fadeOut("slow");
+		}, 2000);
 	}
 
 	render() {

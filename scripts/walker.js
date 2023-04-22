@@ -1,38 +1,35 @@
-import { AnimatedSprite } from "./animatedSprite.js";
 import { EnemyTypes } from "./enemyTypes.js";
 import { Platforms } from "./platforms.js";
+import { SpriteLibrary } from "./spriteLibrary.js";
 import { randomFromArray, randomIntBetween, randomSign } from "./utils.js";
 
 export class Walker {
-	static WIDTH = 24;
-	static HEIGHT = 63;
 	static SPEED = 2;
 
-	constructor(x, y, speed, walkingSprite, dyingSprite) {
+	constructor(x, y, initialSpeed, walkingSprite, dyingSprite) {
+        this.enemyType = EnemyTypes.WALKER;
+        this.isDead = false;
 		this.isShootable = true;
-		this.enemyType = EnemyTypes.WALKER;
-		this.x = x;
-		this.y = y;
-		this.speed = speed;
+        this.isShot = false;
+	
 		this.walkingSprite = walkingSprite;
 		this.dyingSprite = dyingSprite;
-		this.width = Walker.WIDTH;
-		this.height = Walker.HEIGHT;
-		this.isShot = false;
+
+        this.x = x;
+		this.y = y;
+        this.width = this.walkingSprite.width;
+		this.height = this.walkingSprite.height;
+        this.speed = initialSpeed;
 	}
 
 	static spawn(canvasWidth) {
 		return new Walker(
-			randomIntBetween(1, canvasWidth - Walker.WIDTH - 1),
-			randomFromArray(Platforms.getPlatformYs()) - Walker.HEIGHT,
+			randomIntBetween(1, canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1),
+			randomFromArray(Platforms.getPlatformYs()) - SpriteLibrary.SIZES.WALKER.height,
 			randomSign() * Walker.SPEED,
-			new AnimatedSprite("cubes.png", 24, 63, 0, 2, 3),
-			new AnimatedSprite("cubes.png", 24, 63, 0, 10, 9, false)
+			SpriteLibrary.walkerWalking(),
+			SpriteLibrary.walkerDying(),
 		);
-	}
-
-	isDead() {
-		return this.dyingSprite.reachedEnd;
 	}
 
 	render(renderContext) {
@@ -44,7 +41,11 @@ export class Walker {
 	}
 
 	update() {
+        if (this.isDead) {
+            return;
+        }
 		if (this.isShot) {
+            this.isDead = this.dyingSprite.reachedEnd;
 			return;
 		}
 		this.x += this.speed;
