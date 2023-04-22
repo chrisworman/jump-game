@@ -15,7 +15,6 @@ export class Player {
 
 	constructor(game) {
 		this.game = game;
-		this.setHealth(Player.INITIAL_HEALTH);
 
 		this.standingLeftSprite = SpriteLibrary.playerStandingLeft();
 		this.standingRightSprite = SpriteLibrary.playerStandingRight();
@@ -25,15 +24,7 @@ export class Player {
 		this.width = SpriteLibrary.SIZES.PLAYER.width;
 		this.height = SpriteLibrary.SIZES.PLAYER.height;
 		
-		this.velocity = new Velocity();
-		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
-		this.y = Math.floor(this.game.canvas.height - this.height);
-
-		this.jumping = false;
-		this.facingRight = false;
-		this.lastShootTime = null;
-		this.recovering = false;
-		this.recoveringStartTime = null;
+		this.reset();
 	}
 
 	getHitBox() {
@@ -228,5 +219,17 @@ export class Player {
 			heartsHtmlBuffer.push('<div class="heart-empty"></div>');
 		}
 		this.game.heartsDisplay.innerHTML = heartsHtmlBuffer.join("");
+	}
+
+	reset() {
+		this.setHealth(Player.INITIAL_HEALTH);
+		this.velocity = new Velocity();
+		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
+		this.y = Math.floor(this.game.canvas.height - this.height);
+		this.jumping = false;
+		this.facingRight = false;
+		this.lastShootTime = null;
+		this.recovering = false;
+		this.recoveringStartTime = null;
 	}
 }

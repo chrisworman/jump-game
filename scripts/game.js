@@ -23,6 +23,10 @@ export class Game {
 		this.textOverlay = document.getElementById("textOverlay");
 		this.scoreDisplay = document.getElementById("score");
 		this.canvas = document.getElementById("canvas");
+		this.restartButton = document.getElementById("restartButton");
+		this.restartButton.addEventListener("click", () => {
+			this.restart();
+		});
 
 		// State
 		this.state = GameState.INITIALIZING;
@@ -40,6 +44,8 @@ export class Game {
 		this.enemies = [];
 	}
 
+	// Figure out DRYer constructor / start / restart
+
 	start() {
 		// Start intro animations
 		this.fadeOutTextOverlay(`Level ${this.levelManager.levelNumber}`);
@@ -55,6 +61,31 @@ export class Game {
 		// Let's go!
 		this.state = GameState.PLAYING;
 		this.gameLoop();
+	}
+
+	restart() {
+		$(this.restartButton).fadeOut("slow");
+		this.player.reset();
+		this.setScore(0);
+		this.bullets = [];
+		this.collectables = [];
+		this.enemies = [];
+		this.levelManager = new LevelManager(this);
+		this.level = this.levelManager.getNextLevel();
+		this.platforms = new Platforms(this);
+
+		// Start intro animations
+		this.fadeOutTextOverlay(`Level ${this.levelManager.levelNumber}`);
+		this.filterManager.animate((amountDone) => {
+			this.filterManager.blurPixels = 10 - 10 * amountDone;
+			this.filterManager.brightnessPercent = 100 * amountDone;
+		}, 1000);
+
+		// Prepare the entities for the level
+		this.collectables = this.level.spawnCollectables();
+		this.enemies = this.level.spawnInitialEnemies();
+
+		this.state = GameState.PLAYING;
 	}
 
 	gameLoop() {
@@ -128,6 +159,7 @@ export class Game {
 
 	handlePlayerDead() {
 		this.fadeInTextOverlay('Game Over');
+		$(this.restartButton).fadeIn("slow");
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = amountDone * 8;
 			this.filterManager.brightnessPercent =
