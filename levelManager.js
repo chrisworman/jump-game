@@ -27,8 +27,4 @@ export class LevelManager {
 	hasNextLevel() {
 		return true;
 	}
-
-	reset() {
-		this.collectableCount = 0;
-	}
 }

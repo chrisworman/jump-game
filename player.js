@@ -4,18 +4,21 @@ import { GameState } from "./gameState.js";
 import { Game } from "./game.js";
 import { Platforms } from "./platforms.js";
 import { Bullet } from "./bullet.js";
+import { rectanglesOverlap } from "./utils.js";
 
 export class Player {
 	static VERTICAL_SPEED = -8;
 	static HORIZONTAL_SPEED = 4.5;
 	static SHOOT_DELAY_MS = 250;
+	static INITIAL_HEALTH = 3;
 
 	constructor(game) {
 		this.game = game;
+		this.setHealth(Player.INITIAL_HEALTH);
 		this.width = 64;
 		this.height = 48;
-		this.game.audioManager.load('jump', 'jump.mp3');
-		this.game.audioManager.load('shoot', 'shoot.mp3');
+		this.game.audioManager.load("jump", "jump.mp3");
+		this.game.audioManager.load("shoot", "shoot.mp3");
 		this.standingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
 			this.width,
@@ -51,7 +54,7 @@ export class Player {
 			false
 		);
 
-		// TODO: Clean this up 
+		// TODO: Clean this up
 		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
 		this.resetPosition();
 
@@ -59,7 +62,6 @@ export class Player {
 		this.jumping = false;
 		this.facingRight = false;
 		this.lastShootTime = null;
-		this.health = 3; // TODO: constant
 		this.recovering = false;
 		this.recoveringStartTime = null;
 	}
@@ -89,9 +91,25 @@ export class Player {
 	}
 
 	updatePlaying() {
+		// Check enemy collisions
+		if (!this.recovering) {
+			const playerHitBox = this.getHitBox();
+			for (let enemy of this.game.enemies) {
+				if (!enemy.isShot && rectanglesOverlap(playerHitBox, enemy)) {
+					// We hit an enemy!!
+					if (this.health > 1) {
+						this.setHealth(this.health - 1);
+						break; // Still alive, but recovering, so no need to keep checking enemies
+					} else {
+						this.setHealth(0); // XXX DEAD! XXX
+						return; // No need to update anything else if we are dead
+					}
+				}
+			}
+		}
 
 		// Done recovering?
-		if (this.recovering && (Date.now() - this.recoveringStartTime > 4000)) {
+		if (this.recovering && Date.now() - this.recoveringStartTime > 4000) {
 			this.recovering = false;
 			this.recoveringStartTime = null;
 		}
@@ -106,9 +124,13 @@ export class Player {
 		// Shooting?
 		if (this.game.userControls.shoot) {
 			const now = Date.now();
-			if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) { // Time to shoot
-				this.game.audioManager.play('shoot');
-				this.game.bullets.push(Bullet.spawn(this));
+			if (
+				!this.lastShootTime ||
+				now - this.lastShootTime >= Player.SHOOT_DELAY_MS
+			) {
+				// Time to shoot
+				this.game.audioManager.play("shoot");
+				this.game.bullets.push(Bullet.spawn(this.game));
 				this.lastShootTime = now;
 			}
 		}
@@ -118,13 +140,14 @@ export class Player {
 			this.velocity.x = -Player.HORIZONTAL_SPEED;
 		} else if (this.game.userControls.right) {
 			this.velocity.x = Player.HORIZONTAL_SPEED;
-		} else if (!this.jumping) { // Drift while jumping, but stop instantly on ground
+		} else if (!this.jumping) {
+			// Drift while jumping, but stop instantly on ground
 			this.velocity.x = 0;
 		}
 
 		// Make player jump when space is pressed
 		if (!this.jumping && this.game.userControls.jump) {
-			this.game.audioManager.play('jump');
+			this.game.audioManager.play("jump");
 			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
 			this.jumpingLeftSprite.reset();
@@ -171,7 +194,6 @@ export class Player {
 	}
 
 	render(renderContext) {
-
 		// Semi transparent when recovering
 		// TODO: pulsate the opacity
 		if (this.recovering) {
@@ -214,7 +236,29 @@ export class Player {
 		this.velocity.x = 0;
 	}
 
-	handleGameOver() {
-		this.jumping = false;
+	setHealth(health) {
+		// Reduction in health, but still alive?
+		if (health > 0 && this.health > health) {
+			this.recovering = true;
+			this.recoveringStartTime = Date.now();
+			// TODO: start pulsating opacity or brightness
+		}
+
+		if (health === 0) {
+			// Dead
+			this.jumping = false;
+		}
+
+		this.health = health;
+
+		// Update display
+		const heartsHtmlBuffer = [];
+		for (let i = 0; i < this.health; i++) {
+			heartsHtmlBuffer.push('<div class="heart"></div>');
+		}
+		for (let i = 0; i < 3 - this.health; i++) {
+			heartsHtmlBuffer.push('<div class="heart-empty"></div>');
+		}
+		this.game.heartsDisplay.innerHTML = heartsHtmlBuffer.join("");
 	}
 }

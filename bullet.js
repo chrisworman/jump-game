@@ -1,11 +1,15 @@
 import { Sprite } from "./sprite.js";
+import { rectanglesOverlap } from "./utils.js";
 
 export class Bullet {
-    static WIDTH = 24;
+	static WIDTH = 24;
 	static HEIGHT = 12;
-    static SPEED = 8;
+	static SPEED = 8;
 
-	constructor(x, y, sprite, speed) {
+	constructor(game, x, y, sprite, speed) {
+		this.game = game;
+		this.isOffScreen = false;
+		this.hitEnemy = false;
 		this.x = x;
 		this.y = y;
 		this.width = Bullet.WIDTH;
@@ -14,12 +18,14 @@ export class Bullet {
 		this.speed = speed;
 	}
 
-	static spawn(player) {
+	static spawn(game) {
 		return new Bullet(
-			player.x + (player.facingRight ? player.width - 15 : 15),
-			player.y + (player.width / 2) - (Bullet.WIDTH / 2),
+			game,
+			game.player.x +
+				(game.player.facingRight ? game.player.width - 15 : 15),
+			game.player.y + game.player.width / 2 - Bullet.WIDTH / 2,
 			new Sprite("bullet.png"),
-            player.facingRight ? Bullet.SPEED : -Bullet.SPEED,
+			game.player.facingRight ? Bullet.SPEED : -Bullet.SPEED
 		);
 	}
 
@@ -27,10 +33,16 @@ export class Bullet {
 		this.sprite.render(renderContext, this.x, this.y);
 	}
 
-	update(onOffscreen) {
+	update() {
 		this.x += this.speed;
-		if (this.x > 550 || this.x + this.width < 0) {
-			onOffscreen(this);
+		this.isOffScreen = this.x > 550 || this.x + this.width < 0;
+
+		// Check for shot enemies
+		for (let enemy of this.game.enemies) {
+			if (enemy.isShootable && rectanglesOverlap(enemy, this)) {
+				enemy.isShot = true;
+				this.hitEnemy = true;
+			}
 		}
 	}
 }

@@ -3,10 +3,10 @@ import { GameState } from "./gameState.js";
 import { Player } from "./player.js";
 import { RenderContext } from "./renderContext.js";
 import { UserControls } from "./userControls.js";
-import { rectanglesOverlap } from "./utils.js";
 import { LevelManager } from "./levelManager.js";
 import { FilterManager } from "./filterManager.js";
 import { AudioManager } from "./audioManager.js";
+import { EnemyTypes } from "./enemyTypes.js";
 
 export class Game {
 	static GRAVITY = 0.3;
@@ -21,12 +21,11 @@ export class Game {
 		this.canvas = document.getElementById("canvas");
 
 		// State
-		this.userControls = new UserControls();
-		this.audioManager = new AudioManager();
 		this.state = GameState.INITIALIZING;
 		this.setScore(0);
+		this.userControls = new UserControls();
+		this.audioManager = new AudioManager();
 		this.player = new Player(this);
-		this.setPlayerHealth(3);
 		this.levelManager = new LevelManager(this);
 		this.level = this.levelManager.getNextLevel();
 		this.renderContext = new RenderContext(this.canvas);
@@ -38,13 +37,10 @@ export class Game {
 	}
 
 	start() {
-		this.hueAngle = 0;
-		
 		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
 		setTimeout(() => {
 			$(this.textOverlay).fadeOut("slow");
 		}, 2000);
-		
 		this.collectables = this.level.spawnCollectables();
 		this.enemies = this.level.spawnInitialEnemies();
 		this.userControls.enable();
@@ -62,148 +58,59 @@ export class Game {
 		requestAnimationFrame(this.gameLoop.bind(this));
 	}
 
-	/*
-
-	Changes:
-
-		Pass Game object insted of its properties
-
-		Mark Don't Remove Stuff
-		1. Mark enemies as isShot or isOffscreen
-		2. Implement enemy.inPlay() => isShot && isOffscreen (also bullets)
-		3. Only consider enemy.inPlay()
-		4. Enemies don't render themselves if they are !inPlay
-		5. Implement sprite.hide() and sprte.show() to help here
-		6. Don't remove enemies or bullets from arrays, instead clear arrays at the end of a level
-
-		Proper Enemies
-		1. Rename enemy.js -> fireBall.js
-		2. Create enemyTypes.js
-
-		Health
-		1. Current health (HTML!)
-		2. Perfect level => +heart
-		3. Getting hit => -heart && recovering flash
-		
-	*/
-
 	update() {
-		if (this.state === GameState.GAME_OVER) {
-			return;
+		switch (this.state) {
+			case GameState.PLAYING:
+				this.updatePlaying();
+				break;
+			case GameState.LEVEL_TRANSITION:
+				this.updateLevelTransition();
+				break;
 		}
+	}
 
+	updatePlaying() {
 		this.player.update();
 		this.platforms.update();
 
-		const offScreenBullets = [];
-		this.bullets.forEach((bullet) => {
-			bullet.update((bullet) => {
-				offScreenBullets.push(bullet);
-			});
-		});
-		this.bullets = this.bullets.filter(
-			(x) => offScreenBullets.indexOf(x) < 0
-		);
-
-		// Level transition?
-		if (this.state === GameState.LEVEL_TRANSITION) {
-			if (this.player.y + this.player.height >= this.canvas.height) {
-				// Done transitioning
-				$(this.textOverlay).fadeOut("slow");
-				this.platforms.currentSprite = this.level.platformSprite;
-				this.player.handleLevelTransitionDone();
-				this.collectables = this.level.spawnCollectables();
-				this.enemies = this.level.spawnInitialEnemies();
-				this.state = GameState.PLAYING;
-			}
+		// Player dead?
+		if (this.player.health === 0) {
+			this.handlePlayerDead();
 			return;
 		}
 
-		// Everything below will not be run during level transition
+		// Level complete?
+		if (this.player.y + this.player.height <= 0) {
+			this.handleLevelComplete();
+			return;
+		}
 
-		// Update other entities
-		const offScreenEnemies = [];
-		this.enemies.forEach((x) =>
-			x.update((offScreenEnemy) => {
-				offScreenEnemies.push(offScreenEnemy);
-			})
-		);
-		this.enemies = this.enemies.filter(
-			(x) => offScreenEnemies.indexOf(x) < 0
-		);
+		this.enemies.forEach((enemy) => enemy.update());
+		this.enemies = this.enemies.filter((x) => !x.isOffScreen);
+
+		this.bullets.forEach((bullet) => bullet.update());
+		this.bullets = this.bullets.filter((x) => !x.isOffScreen);
+		this.bullets = this.bullets.filter((x) => !x.hitEnemy);
+		this.enemies = this.enemies.filter((x) => !x.isDead());
 
 		this.collectables.forEach((x) => x.update());
 
-		// Check level end condition
-		if (this.player.y + this.player.height <= 0) {
-			// END OF LEVEL
-			this.level = this.levelManager.getNextLevel();
-			this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
-			$(this.textOverlay).fadeIn("slow");
-			this.platforms.nextSprite = this.level.platformSprite;
-			this.state = GameState.LEVEL_TRANSITION;
-			this.collectables = [];
-			this.enemies = [];
-			this.player.handelLevelComplete();
-			return;
+		this.level.spawnEnemies();
+	}
+
+	updateLevelTransition() {
+		this.player.update();
+		this.platforms.update();
+
+		// Has the player reached the bottom of the screen?
+		if (this.player.y + this.player.height >= this.canvas.height) { // We are done transitioning
+			$(this.textOverlay).fadeOut("slow");
+			this.platforms.currentSprite = this.level.platformSprite;
+			this.player.handleLevelTransitionDone();
+			this.collectables = this.level.spawnCollectables();
+			this.enemies = this.level.spawnInitialEnemies();
+			this.state = GameState.PLAYING;
 		}
-
-		// Check for shot walkers
-		const spentBullets = [];
-		if (this.bullets.length > 0) {
-			const walkers = this.enemies.filter(
-				(x) => x.enemyType === "walker" && !x.isShot
-			);
-			for (let walker of walkers) {
-				for (let bullet of this.bullets) {
-					if (rectanglesOverlap(walker, bullet)) {
-						walker.isShot = true;
-						spentBullets.push(bullet);
-					}
-				}
-			}
-		}
-
-		// Remove spent bullets
-		if (spentBullets.length > 0) {
-			this.bullets = this.bullets.filter(
-				(x) => spentBullets.indexOf(x) < 0
-			);
-		}
-
-		// Remove dead enemies
-		this.enemies = this.enemies.filter((x) => !x.isDead());
-
-		// TODO: move to player
-		// Check enemy collisions
-		if (!this.player.recovering) {
-			for (let enemy of this.enemies) {
-				if (enemy.isShot) {
-					continue;
-				}
-				if (rectanglesOverlap(this.player.getHitBox(), enemy)) {
-					// Player hit an enemy!!
-					if (this.player.health > 1) {
-						this.setPlayerHealth(this.player.health - 1);
-					} else {
-						this.setPlayerHealth(0);
-						this.player.handleGameOver();
-						this.textOverlay.innerText = `Game Over`;
-						$(this.textOverlay).fadeIn("slow");
-						this.filterManager.animate((amountDone) => {
-							this.filterManager.blurPixels = amountDone * 8;
-							this.filterManager.brightnessPercent =
-								100 - 50 * amountDone;
-						}, 1000);
-						this.state = GameState.GAME_OVER;
-						return;
-					}
-				}
-			}
-		}
-
-		// Spawn enemies
-		this.level.spawnEnemies(this.enemies);
 	}
 
 	incrementScore(points) {
@@ -215,25 +122,27 @@ export class Game {
 		this.scoreDisplay.innerText = String(this.score).padStart(6, "0");
 	}
 
-	setPlayerHealth(health) {
-		// TODO: move to player
-		// Reduction in health, but still alive?
-		if (health > 0 && this.player.health > health) {
-			this.player.recovering = true;
-			this.player.recoveringStartTime = Date.now();
-		}
+	handlePlayerDead() {
+		this.textOverlay.innerText = `Game Over`;
+		$(this.textOverlay).fadeIn("slow");
+		this.filterManager.animate((amountDone) => {
+			this.filterManager.blurPixels = amountDone * 8;
+			this.filterManager.brightnessPercent =
+				100 - 50 * amountDone;
+		}, 1000);
+		this.state = GameState.GAME_OVER;
+	}
 
-		this.player.health = health;
-
-		// Update display
-		const heartsHtmlBuffer = [];
-		for (let i = 0; i < this.player.health; i++) {
-			heartsHtmlBuffer.push('<div class="heart"></div>');
-		}
-		for (let i = 0; i < 3 - this.player.health; i++) {
-			heartsHtmlBuffer.push('<div class="heart-empty"></div>');
-		}
-		this.heartsDisplay.innerHTML = heartsHtmlBuffer.join("");
+	handleLevelComplete() {
+		this.level = this.levelManager.getNextLevel();
+		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
+		$(this.textOverlay).fadeIn("slow");
+		this.platforms.nextSprite = this.level.platformSprite;
+		this.collectables = [];
+		this.enemies = [];
+		this.bullets = [];
+		this.player.handelLevelComplete();
+		this.state = GameState.LEVEL_TRANSITION;
 	}
 
 	render() {
@@ -241,13 +150,13 @@ export class Game {
 		this.filterManager.applyFilters(ctx, () => {
 			this.platforms.render(this.renderContext);
 			this.enemies
-				.filter((x) => x.enemyType == "walker")
+				.filter((x) => x.enemyType == EnemyTypes.WALKER)
 				.forEach((x) => x.render(this.renderContext));
 			this.player.render(this.renderContext);
 			this.bullets.forEach((x) => x.render(this.renderContext));
 			this.collectables.forEach((x) => x.render(this.renderContext));
 			this.enemies
-				.filter((x) => x.enemyType == "fire-ball")
+				.filter((x) => x.enemyType == EnemyTypes.FIRE_BALL)
 				.forEach((x) => x.render(this.renderContext));
 		});
 	}
