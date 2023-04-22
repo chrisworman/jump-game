@@ -15,11 +15,15 @@ export class Player {
 		canvasHeight,
 		gravity,
 		userControls,
+		audioManager,
 	) {
 		this.animatingLevelComplete = false;
 		this.doneAnimatingLevelComplete = null;
 		this.width = 64;
 		this.height = 48;
+		this.audioManager = audioManager;
+		this.audioManager.load('jump', 'jump.mp3');
+		this.audioManager.load('shoot', 'shoot.mp3');
 		this.standingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
 			this.width,
@@ -68,6 +72,9 @@ export class Player {
 		this.jumping = false;
 		this.facingRight = false;
 		this.lastShootTime = null;
+		this.health = 3;
+		this.recovering = false;
+		this.recoveringStartTime = null;
 	}
 
 	resetPosition() {
@@ -95,6 +102,13 @@ export class Player {
 	}
 
 	updatePlaying(onShoot) {
+
+		// Done recovering?
+		if (this.recovering && (Date.now() - this.recoveringStartTime > 4000)) {
+			this.recovering = false;
+			this.recoveringStartTime = null;
+		}
+
 		// Apply the direction of the player
 		if (this.userControls.left) {
 			this.facingRight = false;
@@ -106,6 +120,7 @@ export class Player {
 		if (this.userControls.shoot) {
 			const now = Date.now();
 			if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) { // Time to shoot
+				this.audioManager.play('shoot');
 				onShoot(Bullet.spawn(this));
 				this.lastShootTime = now;
 			}
@@ -122,6 +137,7 @@ export class Player {
 
 		// Make player jump when space is pressed
 		if (!this.jumping && this.userControls.jump) {
+			this.audioManager.play('jump');
 			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
 			this.jumpingLeftSprite.reset();
@@ -168,6 +184,17 @@ export class Player {
 	}
 
 	render(renderContext) {
+		if (this.recovering) {
+			this.jumpingLeftSprite.filterManager.opacityPercent = 50;
+			this.jumpingRightSprite.filterManager.opacityPercent = 50;
+			this.standingLeftSprite.filterManager.opacityPercent = 50;
+			this.standingRightSprite.filterManager.opacityPercent = 50;
+		} else {
+			this.jumpingLeftSprite.filterManager.opacityPercent = 100;
+			this.jumpingRightSprite.filterManager.opacityPercent = 100;
+			this.standingLeftSprite.filterManager.opacityPercent = 100;
+			this.standingRightSprite.filterManager.opacityPercent = 100;
+		}
 		if (this.jumping) {
 			if (this.facingRight) {
 				this.jumpingRightSprite.render(renderContext, this.x, this.y);

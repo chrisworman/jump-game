@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -13,10 +16,49 @@
 
     <title>Mountain Leap</title>
     <style>
-        html, body {
+        html, body { 
             padding: 0;
             margin: 0;
             background-color: black;
+        }
+
+        .middle-content {
+            width: 550px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .hud {
+            color : white;
+            padding : 5px;
+            font-size: 32px;
+            font-family: 'VT323', monospace;
+            border: 10px solid transparent; /* padding for border-image */
+            border-image: url('hud.png') 6 round;
+        }
+
+        .hearts {
+            font-size: 0;
+            float: right;
+            height: 32px;
+        }
+
+        .heart {
+            display: inline-block;
+            margin-left: 2px;
+            width: 32px;
+            height: 32px;
+            background-image: url('heart.png');
+            background-repeat: no-repeat;
+        }
+
+        .heart-empty {
+            display: inline-block;
+            margin-left: 2px;
+            width: 32px;
+            height: 32px;
+            background-image: url('heart-empty.png');
+            background-repeat: no-repeat;
         }
 
         .game-play-panel {
@@ -24,7 +66,6 @@
             width: 550px;
             height: 800px;
             overflow: hidden;
-            margin: 0 auto;
         }
 
         .game-canvas {
@@ -50,19 +91,17 @@
             line-height: 800px;
         }
 
-        .text-panel {
-            font-size: 11px;
-            font-family: 'VT323', monospace;
-            width: 550px;
-            margin: 0 auto;
-            color : white;
-        }
     </style>
 </head>
 <body>
-    <div>
-        <div class="text-panel">
-            <span id="score">0</span> <span id="high-score">0</span> Debug: <span id="debug"></span>
+    <div class="middle-content">
+        <div class="hud">
+            <span>SCORE: </span><span id="score">0</span>
+            <div id="hearts" class="hearts">
+                <span class="heart"></span>
+                <span class="heart"></span>
+                <span class="heart-empty"></span>
+            </div>
         </div>
         <div class ="game-play-panel">
             <canvas id="canvas" class="game-canvas" width="550" height="800"></canvas>

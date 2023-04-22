@@ -12,7 +12,7 @@ export class Collectable {
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
-		this.points = points;
+		this.points = points;		
 	}
 
 	static spawn(entitiesToAvoid, canvas, probabilities) {

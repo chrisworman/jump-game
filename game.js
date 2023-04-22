@@ -6,6 +6,7 @@ import { UserControls } from "./userControls.js";
 import { rectanglesOverlap } from "./utils.js";
 import { LevelManager } from "./levelManager.js";
 import { FilterManager } from "./filterManager.js";
+import { AudioManager } from "./audioManager.js";
 
 export class Game {
 	static GRAVITY = 0.3;
@@ -14,37 +15,40 @@ export class Game {
 
 	constructor() {
 		// DOM
-		this.debug = document.getElementById("debug");
+		this.heartsDisplay = document.getElementById("hearts");
 		this.textOverlay = document.getElementById("textOverlay");
 		this.scoreDisplay = document.getElementById("score");
-		this.highScoreDisplay = document.getElementById("high-score");
 		this.canvas = document.getElementById("canvas");
 
 		// State
 		this.state = GameState.PLAYING;
-		this.highScore = 0;
 		this.animatingLevelComplete = false;
-		this.score = 0;
+		this.setScore(0);
 		this.canvasContext = canvas.getContext("2d");
 		this.userControls = new UserControls();
+		this.audioManager = new AudioManager();
+		this.audioManager.load('collected', 'collected.mp3');
 		this.player = new Player(
 			this.canvas.width,
 			this.canvas.height,
 			Game.GRAVITY,
-			this.userControls
+			this.userControls,
+			this.audioManager,
 		);
+		this.setPlayerHealth(3);
 		this.levelManager = new LevelManager(this.canvas, this.player);
 		this.renderContext = new RenderContext(this.canvas);
-        this.bullets = [];
-        this.collectables = [];
-        this.platforms = [];
-        this.enemies = [];
-        this.level = null;
-        this.filterManager = new FilterManager();
+		this.bullets = [];
+		this.collectables = [];
+		this.platforms = [];
+		this.enemies = [];
+		this.level = null;
+		this.filterManager = new FilterManager();
+		
 	}
 
 	start() {
-        this.hueAngle = 0;
+		this.hueAngle = 0;
 		this.level = this.levelManager.getNextLevel();
 		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
 		setTimeout(() => {
@@ -54,10 +58,10 @@ export class Game {
 		this.collectables = this.level.spawnCollectables();
 		this.enemies = this.level.spawnInitialEnemies();
 		this.userControls.enable();
-        this.filterManager.animate((amountDone) => {
-            this.filterManager.blurPixels = 10 - (10 * amountDone);
-            this.filterManager.brightnessPercent = 100 * amountDone;
-        }, 1000);
+		this.filterManager.animate((amountDone) => {
+			this.filterManager.blurPixels = 10 - 10 * amountDone;
+			this.filterManager.brightnessPercent = 100 * amountDone;
+		}, 1000);
 		this.gameLoop();
 	}
 
@@ -67,25 +71,50 @@ export class Game {
 		requestAnimationFrame(this.gameLoop.bind(this));
 	}
 
+	/*
+
+	Changes:
+
+		Pass Game object insted of its properties
+
+		Mark Don't Remove Stuff
+		1. Mark enemies as isShot or isOffscreen
+		2. Implement enemy.inPlay() => isShot && isOffscreen (also bullets)
+		3. Only consider enemy.inPlay()
+		4. Enemies don't render themselves if they are !inPlay
+		5. Implement sprite.hide() and sprte.show() to help here
+		6. Don't remove enemies or bullets from arrays, instead clear arrays at the end of a level
+
+		Proper Enemies
+		1. Rename enemy.js -> fireBall.js
+		2. Create enemyTypes.js
+
+		Health
+		1. Current health (HTML!)
+		2. Perfect level => +heart
+		3. Getting hit => -heart && recovering flash
+		
+	*/
+
 	update() {
-        // this.hueAngle = this.hueAngle + 1 % 360;
+		// this.hueAngle = this.hueAngle + 1 % 360;
 		if (this.state === GameState.GAME_OVER) {
 			return;
 		}
 
 		this.player.update(this.state, (bullet) => {
-            this.bullets.push(bullet);
-        });
-		
-        this.platforms.update(this.state);
+			this.bullets.push(bullet);
+		});
 
-        const offScreenBullets = [];
-        this.bullets.forEach((bullet) => {
-            bullet.update((bullet) => {
-                offScreenBullets.push(bullet);
-            });
-        });
-        this.bullets = this.bullets.filter(
+		this.platforms.update(this.state);
+
+		const offScreenBullets = [];
+		this.bullets.forEach((bullet) => {
+			bullet.update((bullet) => {
+				offScreenBullets.push(bullet);
+			});
+		});
+		this.bullets = this.bullets.filter(
 			(x) => offScreenBullets.indexOf(x) < 0
 		);
 
@@ -100,10 +129,10 @@ export class Game {
 				this.enemies = this.level.spawnInitialEnemies();
 				this.state = GameState.PLAYING;
 			}
-            return;
+			return;
 		}
 
-        // Everything below will not be run during level transition
+		// Everything below will not be run during level transition
 
 		// Update other entities
 		const offScreenEnemies = [];
@@ -118,7 +147,8 @@ export class Game {
 
 		this.collectables.forEach((x) =>
 			x.update(this.player, (points) => {
-				this.score += points;
+				this.setScore(this.score + points);
+				this.audioManager.play('collected');
 			})
 		);
 
@@ -131,75 +161,109 @@ export class Game {
 			this.platforms.nextSprite = this.level.platformSprite;
 			this.state = GameState.LEVEL_TRANSITION;
 			this.collectables = [];
-            this.enemies = [];
+			this.enemies = [];
 			this.player.handelLevelComplete();
 			return;
 		}
 
-        // Check for shot walkers
-        const spentBullets = [];
-        if (this.bullets.length > 0) {
-            const walkers = this.enemies.filter(x => x.enemyType === 'walker' && !x.isShot);
-            for (let walker of walkers) {
-                for (let bullet of this.bullets) {
-                    if (rectanglesOverlap(walker, bullet)) {
-                        walker.isShot = true;
-                        spentBullets.push(bullet);
-                    }
-                }
-            }
-        }
+		// Check for shot walkers
+		const spentBullets = [];
+		if (this.bullets.length > 0) {
+			const walkers = this.enemies.filter(
+				(x) => x.enemyType === "walker" && !x.isShot
+			);
+			for (let walker of walkers) {
+				for (let bullet of this.bullets) {
+					if (rectanglesOverlap(walker, bullet)) {
+						walker.isShot = true;
+						spentBullets.push(bullet);
+					}
+				}
+			}
+		}
 
-        // Remove spent bullets
-        if (spentBullets.length > 0) {
-            this.bullets = this.bullets.filter(
-                (x) => spentBullets.indexOf(x) < 0
-            );
-        }
+		// Remove spent bullets
+		if (spentBullets.length > 0) {
+			this.bullets = this.bullets.filter(
+				(x) => spentBullets.indexOf(x) < 0
+			);
+		}
 
-        // Remove dead enemies
-        this.enemies = this.enemies.filter(x => !x.isDead());
+		// Remove dead enemies
+		this.enemies = this.enemies.filter((x) => !x.isDead());
 
+		// TODO: move to player
 		// Check enemy collisions
-		for (let enemy of this.enemies) {
-            if (enemy.isShot) {
-                continue;
-            }
-			if (rectanglesOverlap(this.player.getHitBox(), enemy)) {
-				this.player.handleGameOver();
-				this.highScore =
-					this.score > this.highScore ? this.score : this.highScore;
-                this.textOverlay.innerText = `Game Over`;
-                $(this.textOverlay).fadeIn("slow");
-                this.filterManager.animate((amountDone) => {
-                    this.filterManager.blurPixels = amountDone * 8;
-                    this.filterManager.brightnessPercent = 100 - (50 * amountDone);
-                }, 1000);
-				this.state = GameState.GAME_OVER;
-				return;
+		if (!this.player.recovering) {
+			for (let enemy of this.enemies) {
+				if (enemy.isShot) {
+					continue;
+				}
+				if (rectanglesOverlap(this.player.getHitBox(), enemy)) {
+					// Player hit an enemy!!
+					if (this.player.health > 1) {
+						this.setPlayerHealth(this.player.health - 1);
+					} else {
+						this.setPlayerHealth(0);
+						this.player.handleGameOver();
+						this.textOverlay.innerText = `Game Over`;
+						$(this.textOverlay).fadeIn("slow");
+						this.filterManager.animate((amountDone) => {
+							this.filterManager.blurPixels = amountDone * 8;
+							this.filterManager.brightnessPercent =
+								100 - 50 * amountDone;
+						}, 1000);
+						this.state = GameState.GAME_OVER;
+						return;
+					}
+				}
 			}
 		}
 
 		// Spawn enemies
 		this.level.spawnEnemies(this.enemies);
-    }
+	}
+
+	setScore(score) {
+		this.score = score;
+		this.scoreDisplay.innerText = String(this.score).padStart(6, "0");
+	}
+
+	setPlayerHealth(health) {
+		// TODO: move to player
+		// Reduction in health, but still alive?
+		if (health > 0 && this.player.health > health) {
+			this.player.recovering = true;
+			this.player.recoveringStartTime = Date.now();
+		}
+
+		this.player.health = health;
+
+		// Update display
+		const heartsHtmlBuffer = [];
+		for (let i = 0; i < this.player.health; i++) {
+			heartsHtmlBuffer.push('<div class="heart"></div>');
+		}
+		for (let i = 0; i < 3 - this.player.health; i++) {
+			heartsHtmlBuffer.push('<div class="heart-empty"></div>');
+		}
+		this.heartsDisplay.innerHTML = heartsHtmlBuffer.join("");
+	}
 
 	render() {
-		// DOM
-		this.scoreDisplay.innerText = this.score;
-		this.highScoreDisplay.innerText = this.highScore;
-		this.debug.innerText = this.state;
-
-		// Canvas
-        const ctx = this.renderContext.getCanvasContext();
-        this.filterManager.applyFilters(ctx, () => {
-            this.platforms.render(this.renderContext);
-            this.enemies.filter(x => x.enemyType == 'walker').forEach((x) => x.render(this.renderContext));
-            this.player.render(this.renderContext);
-            this.bullets.forEach((x) => x.render(this.renderContext));
-            this.collectables.forEach((x) => x.render(this.renderContext));
-            this.enemies.filter(x => x.enemyType == 'fire-ball').forEach((x) => x.render(this.renderContext));
-        });
+		const ctx = this.renderContext.getCanvasContext();
+		this.filterManager.applyFilters(ctx, () => {
+			this.platforms.render(this.renderContext);
+			this.enemies
+				.filter((x) => x.enemyType == "walker")
+				.forEach((x) => x.render(this.renderContext));
+			this.player.render(this.renderContext);
+			this.bullets.forEach((x) => x.render(this.renderContext));
+			this.collectables.forEach((x) => x.render(this.renderContext));
+			this.enemies
+				.filter((x) => x.enemyType == "fire-ball")
+				.forEach((x) => x.render(this.renderContext));
+		});
 	}
 }
 

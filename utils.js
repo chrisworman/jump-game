@@ -92,10 +92,30 @@ function randomFromArray(array) {
 }
 
 function randomSign() {
-	if (randomIntBetween(0,1) <= 0.5) {
+	if (randomIntBetween(0, 1) <= 0.5) {
 		return -1;
 	}
 	return 1;
+}
+
+function createOscillator(min, max, rate) {
+	let currentValue = min;
+	let increasing = true;
+
+	return () => {
+		if (increasing) {
+			currentValue += (rate * (max - min)) / 1000;
+			if (currentValue >= max) {
+				increasing = false;
+			}
+		} else {
+			currentValue -= (rate * (max - min)) / 1000;
+			if (currentValue <= min) {
+				increasing = true;
+			}
+		}
+		return currentValue;
+	};
 }
 
 export {
