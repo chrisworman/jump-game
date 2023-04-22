@@ -7,6 +7,7 @@ import { LevelManager } from "./levelManager.js";
 import { FilterManager } from "./filterManager.js";
 import { AudioManager } from "./audioManager.js";
 import { EnemyTypes } from "./enemyTypes.js";
+import { SpriteLibrary } from "./spriteLibrary.js";
 
 export class Game {
 	static GRAVITY = 0.3;
@@ -14,6 +15,9 @@ export class Game {
 	static LEVEL_SCROLL_SPEED = 8;
 
 	constructor() {
+		// Immediately pre-load images
+		SpriteLibrary.preloadImages();
+
 		// DOM
 		this.heartsDisplay = document.getElementById("hearts");
 		this.textOverlay = document.getElementById("textOverlay");

@@ -9,7 +9,6 @@ export class Sprite {
 		this.loaded = false;
 		this.image = new Image();
 		this.image.addEventListener("load", () => {
-			console.log(`Sprite :: loaded ${imagePath}`);
 			this.loaded = true;
 			if (this.width === 0) {
 				this.width = this.image.width;

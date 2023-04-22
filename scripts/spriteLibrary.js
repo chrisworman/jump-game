@@ -19,11 +19,22 @@ export class SpriteLibrary {
 			width: 24,
 			height: 63,
 		},
-        BULLET: {
-            width: 24,
-            height: 12,
-        },
+		BULLET: {
+			width: 24,
+			height: 12,
+		},
 	};
+
+	static preloadImages() {
+		console.log('SpriteLibrary :: preloadImages()');
+		Object.getOwnPropertyNames(SpriteLibrary)
+			.filter((propName) => propName !== "preloadImages")
+			.filter((propName) => typeof SpriteLibrary[propName] === "function")
+			.forEach((methodName) => {
+				console.log(`SpriteLibrary :: preloadImages.${methodName}()`);
+				SpriteLibrary[methodName]();
+			});
+	}
 
 	static playerStandingLeft() {
 		return new AnimatedSprite(
@@ -124,7 +135,7 @@ export class SpriteLibrary {
 		);
 	}
 
-    static bullet() {
-        return new Sprite("images/bullet.png");
-    }
+	static bullet() {
+		return new Sprite("images/bullet.png");
+	}
 }
