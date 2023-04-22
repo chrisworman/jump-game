@@ -5,25 +5,26 @@ export class Platforms {
     static HEIGHT = 100;
     static COUNT = 8;
 
-    constructor(gameState, currentSprite) {
-        this.currentSprite = currentSprite;
+    constructor(game) {
+        this.game = game;
+        this.lastGameState = this.game.state;
+        this.currentSprite = this.game.level.platformSprite;
         this.nextSprite = null;
-        this.gameState = gameState;
         this.y = 0;
     }
 
-    update(gameState) {
-        if (gameState !== this.gameState) { // transitioning game state
-            if (gameState === GameState.LEVEL_TRANSITION) {
+    update() {
+        if (this.game.state !== this.lastGameState) { // transitioning game state
+            if (this.game.state === GameState.LEVEL_TRANSITION) {
                 this.y = 0;
             }
         }
 
-        if (gameState === GameState.LEVEL_TRANSITION) {
+        if (this.game.state === GameState.LEVEL_TRANSITION) {
             this.y += Game.LEVEL_SCROLL_SPEED;
         }
 
-        this.gameState = gameState;
+        this.lastGameState = this.game.state;
     }
 
     static getPlatformYs() {
@@ -36,7 +37,7 @@ export class Platforms {
 
     render(renderContext) {
         const totalHeight = Platforms.COUNT * Platforms.HEIGHT;
-        switch (this.gameState) {
+        switch (this.game.state) {
             case GameState.PLAYING:
             case GameState.GAME_OVER:
                 for (let y=0; y < totalHeight; y += Platforms.HEIGHT) {

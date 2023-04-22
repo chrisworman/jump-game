@@ -10,20 +10,12 @@ export class Player {
 	static HORIZONTAL_SPEED = 4.5;
 	static SHOOT_DELAY_MS = 250;
 
-	constructor(
-		canvasWidth,
-		canvasHeight,
-		gravity,
-		userControls,
-		audioManager,
-	) {
-		this.animatingLevelComplete = false;
-		this.doneAnimatingLevelComplete = null;
+	constructor(game) {
+		this.game = game;
 		this.width = 64;
 		this.height = 48;
-		this.audioManager = audioManager;
-		this.audioManager.load('jump', 'jump.mp3');
-		this.audioManager.load('shoot', 'shoot.mp3');
+		this.game.audioManager.load('jump', 'jump.mp3');
+		this.game.audioManager.load('shoot', 'shoot.mp3');
 		this.standingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
 			this.width,
@@ -32,7 +24,6 @@ export class Player {
 			2,
 			1
 		);
-
 		this.jumpingLeftSprite = new AnimatedSprite(
 			"blob-facing-left.png",
 			this.width,
@@ -42,7 +33,6 @@ export class Player {
 			14,
 			false
 		);
-
 		this.standingRightSprite = new AnimatedSprite(
 			"blob-facing-right.png",
 			this.width,
@@ -51,7 +41,6 @@ export class Player {
 			2,
 			1
 		);
-
 		this.jumpingRightSprite = new AnimatedSprite(
 			"blob-facing-right.png",
 			this.width,
@@ -62,23 +51,21 @@ export class Player {
 			false
 		);
 
-		this.canvasWidth = canvasWidth;
-		this.canvasHeight = canvasHeight;
-		this.userControls = userControls;
-		this.x = Math.floor(this.canvasWidth / 2.0 - this.width / 2.0);
+		// TODO: Clean this up 
+		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
 		this.resetPosition();
-		this.gravity = gravity;
+
 		this.velocity = new Velocity();
 		this.jumping = false;
 		this.facingRight = false;
 		this.lastShootTime = null;
-		this.health = 3;
+		this.health = 3; // TODO: constant
 		this.recovering = false;
 		this.recoveringStartTime = null;
 	}
 
 	resetPosition() {
-		this.y = Math.floor(this.canvasHeight - this.height);
+		this.y = Math.floor(this.game.canvas.height - this.height);
 	}
 
 	getHitBox() {
@@ -90,10 +77,10 @@ export class Player {
 		};
 	}
 
-	update(gameState, onShoot) {
-		switch (gameState) {
+	update() {
+		switch (this.game.state) {
 			case GameState.PLAYING:
-				this.updatePlaying(onShoot);
+				this.updatePlaying();
 				break;
 			case GameState.LEVEL_TRANSITION:
 				this.updateLevelTransition();
@@ -101,7 +88,7 @@ export class Player {
 		}
 	}
 
-	updatePlaying(onShoot) {
+	updatePlaying() {
 
 		// Done recovering?
 		if (this.recovering && (Date.now() - this.recoveringStartTime > 4000)) {
@@ -110,34 +97,34 @@ export class Player {
 		}
 
 		// Apply the direction of the player
-		if (this.userControls.left) {
+		if (this.game.userControls.left) {
 			this.facingRight = false;
-		} else if (this.userControls.right) {
+		} else if (this.game.userControls.right) {
 			this.facingRight = true;
 		}
 
 		// Shooting?
-		if (this.userControls.shoot) {
+		if (this.game.userControls.shoot) {
 			const now = Date.now();
 			if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) { // Time to shoot
-				this.audioManager.play('shoot');
-				onShoot(Bullet.spawn(this));
+				this.game.audioManager.play('shoot');
+				this.game.bullets.push(Bullet.spawn(this));
 				this.lastShootTime = now;
 			}
 		}
 
 		// Move player left or right
-		if (this.userControls.left) {
+		if (this.game.userControls.left) {
 			this.velocity.x = -Player.HORIZONTAL_SPEED;
-		} else if (this.userControls.right) {
+		} else if (this.game.userControls.right) {
 			this.velocity.x = Player.HORIZONTAL_SPEED;
 		} else if (!this.jumping) { // Drift while jumping, but stop instantly on ground
 			this.velocity.x = 0;
 		}
 
 		// Make player jump when space is pressed
-		if (!this.jumping && this.userControls.jump) {
-			this.audioManager.play('jump');
+		if (!this.jumping && this.game.userControls.jump) {
+			this.game.audioManager.play('jump');
 			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
 			this.jumpingLeftSprite.reset();
@@ -158,19 +145,19 @@ export class Player {
 
 		// Apply gravity and jump velocity
 		if (this.jumping) {
-			this.velocity.y += this.gravity;
+			this.velocity.y += Game.GRAVITY;
 		}
 		this.y += this.velocity.y;
 		this.x += this.velocity.x;
 
 		// Apply collision detection main canvas
-		if (this.y + this.height > this.canvasHeight) {
-			this.y = this.canvasHeight - this.height;
+		if (this.y + this.height > this.game.canvas.height) {
+			this.y = this.game.canvas.height - this.height;
 			this.velocity.y = 0;
 			this.jumping = false;
 		}
-		if (this.x + this.width > this.canvasWidth) {
-			this.x = this.canvasWidth - this.width;
+		if (this.x + this.width > this.game.canvas.width) {
+			this.x = this.game.canvas.width - this.width;
 			this.velocity.x = 0;
 		}
 		if (this.x <= 0) {
@@ -180,10 +167,13 @@ export class Player {
 	}
 
 	updateLevelTransition() {
-		this.y += this.velocity.y;
+		this.y += this.velocity.y; // TODO: this should just be something like this.game.LEVEL_TRANSITION_SCROLL_SPEED
 	}
 
 	render(renderContext) {
+
+		// Semi transparent when recovering
+		// TODO: pulsate the opacity
 		if (this.recovering) {
 			this.jumpingLeftSprite.filterManager.opacityPercent = 50;
 			this.jumpingRightSprite.filterManager.opacityPercent = 50;
@@ -195,6 +185,8 @@ export class Player {
 			this.standingLeftSprite.filterManager.opacityPercent = 100;
 			this.standingRightSprite.filterManager.opacityPercent = 100;
 		}
+
+		// Render the current sprite
 		if (this.jumping) {
 			if (this.facingRight) {
 				this.jumpingRightSprite.render(renderContext, this.x, this.y);
@@ -217,7 +209,7 @@ export class Player {
 	}
 
 	handleLevelTransitionDone() {
-		this.y = this.canvasHeight - this.height;
+		this.y = this.game.canvas.height - this.height;
 		this.velocity.y = 0;
 		this.velocity.x = 0;
 	}

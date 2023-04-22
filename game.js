@@ -21,40 +21,30 @@ export class Game {
 		this.canvas = document.getElementById("canvas");
 
 		// State
-		this.state = GameState.PLAYING;
-		this.animatingLevelComplete = false;
-		this.setScore(0);
-		this.canvasContext = canvas.getContext("2d");
 		this.userControls = new UserControls();
 		this.audioManager = new AudioManager();
-		this.audioManager.load('collected', 'collected.mp3');
-		this.player = new Player(
-			this.canvas.width,
-			this.canvas.height,
-			Game.GRAVITY,
-			this.userControls,
-			this.audioManager,
-		);
+		this.state = GameState.INITIALIZING;
+		this.setScore(0);
+		this.player = new Player(this);
 		this.setPlayerHealth(3);
-		this.levelManager = new LevelManager(this.canvas, this.player);
+		this.levelManager = new LevelManager(this);
+		this.level = this.levelManager.getNextLevel();
 		this.renderContext = new RenderContext(this.canvas);
+		this.filterManager = new FilterManager();
+		this.platforms = new Platforms(this);
 		this.bullets = [];
 		this.collectables = [];
-		this.platforms = [];
 		this.enemies = [];
-		this.level = null;
-		this.filterManager = new FilterManager();
-		
 	}
 
 	start() {
 		this.hueAngle = 0;
-		this.level = this.levelManager.getNextLevel();
+		
 		this.textOverlay.innerText = `Level ${this.levelManager.levelNumber}`;
 		setTimeout(() => {
 			$(this.textOverlay).fadeOut("slow");
 		}, 2000);
-		this.platforms = new Platforms(this.state, this.level.platformSprite);
+		
 		this.collectables = this.level.spawnCollectables();
 		this.enemies = this.level.spawnInitialEnemies();
 		this.userControls.enable();
@@ -62,6 +52,7 @@ export class Game {
 			this.filterManager.blurPixels = 10 - 10 * amountDone;
 			this.filterManager.brightnessPercent = 100 * amountDone;
 		}, 1000);
+		this.state = GameState.PLAYING;
 		this.gameLoop();
 	}
 
@@ -97,16 +88,12 @@ export class Game {
 	*/
 
 	update() {
-		// this.hueAngle = this.hueAngle + 1 % 360;
 		if (this.state === GameState.GAME_OVER) {
 			return;
 		}
 
-		this.player.update(this.state, (bullet) => {
-			this.bullets.push(bullet);
-		});
-
-		this.platforms.update(this.state);
+		this.player.update();
+		this.platforms.update();
 
 		const offScreenBullets = [];
 		this.bullets.forEach((bullet) => {
@@ -145,12 +132,7 @@ export class Game {
 			(x) => offScreenEnemies.indexOf(x) < 0
 		);
 
-		this.collectables.forEach((x) =>
-			x.update(this.player, (points) => {
-				this.setScore(this.score + points);
-				this.audioManager.play('collected');
-			})
-		);
+		this.collectables.forEach((x) => x.update());
 
 		// Check level end condition
 		if (this.player.y + this.player.height <= 0) {
@@ -222,6 +204,10 @@ export class Game {
 
 		// Spawn enemies
 		this.level.spawnEnemies(this.enemies);
+	}
+
+	incrementScore(points) {
+		this.setScore(this.score + points);
 	}
 
 	setScore(score) {

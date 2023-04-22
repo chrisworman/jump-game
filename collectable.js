@@ -1,21 +1,22 @@
-import { Sprite } from "./sprite.js";
 import { AnimatedSprite } from "./animatedSprite.js";
 import { randomXYIn, findOverlapping, rectanglesOverlap } from "./utils.js";
 
 export class Collectable {
 	static SPAWN_BOTTOM_BUFFER = 100;
 
-	constructor(x, y, sprite, points, width, height) {
+	constructor(game, x, y, sprite, points, width, height) {
+		this.game = game;
+		this.game.audioManager.load("collected", "collected.mp3");
 		this.collected = false;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
-		this.points = points;		
+		this.points = points;
 	}
 
-	static spawn(entitiesToAvoid, canvas, probabilities) {
+	static spawn(game, entitiesToAvoid, probabilities) {
 		let xy = null;
 		let overlapping = null;
 		let maxLoops = 100;
@@ -24,8 +25,8 @@ export class Collectable {
 			xy = randomXYIn(
 				50,
 				50,
-				canvas.width,
-				canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
+				game.canvas.width,
+				game.canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
 			);
 			overlapping = findOverlapping(
 				{
@@ -41,6 +42,7 @@ export class Collectable {
 
 		// TODO: apply probabilities
 		return new Collectable(
+			game,
 			xy.x,
 			xy.y,
 			new AnimatedSprite("red-gem-48-48.png", 48, 48, 0, 22, 12),
@@ -50,10 +52,11 @@ export class Collectable {
 		);
 	}
 
-	update(player, onCollected) {
-		if (!this.collected && rectanglesOverlap(player, this)) {
+	update() {
+		if (!this.collected && rectanglesOverlap(this.game.player, this)) {
 			this.collected = true;
-			onCollected(this.points);
+			this.game.incrementScore(this.points);
+			this.game.audioManager.play("collected");
 		}
 	}
 
