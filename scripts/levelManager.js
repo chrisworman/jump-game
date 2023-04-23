@@ -3,8 +3,8 @@ import { SpriteLibrary } from "./spriteLibrary.js";
 import { Walker } from "./walker.js";
 
 export class LevelManager {
-	static LEVELS_PER_WORLD = 2;
-	static WORLDS = 2;
+	static LEVELS_PER_WORLD = 20;
+	static WORLD_COUNT = 5;
 
 	constructor(game) {
 		this.game = game;
@@ -23,12 +23,17 @@ export class LevelManager {
 	}
 
 	getNextLevel() {
+
+		if (this.worldNumber > LevelManager.WORLD_COUNT) {
+			return null;
+		}
+
 		// Advance to the next level & world
 		this.levelNumber++;
 		if (this.levelNumber > LevelManager.LEVELS_PER_WORLD) {
 			this.levelNumber = 1;
 			this.worldNumber++;
-			if (this.worldNumber > LevelManager.WORLDS) {
+			if (this.worldNumber > LevelManager.WORLD_COUNT) {
 				return null; // Finished last level
 			}
 		}

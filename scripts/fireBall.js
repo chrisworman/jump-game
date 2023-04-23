@@ -49,5 +49,7 @@ export class FireBall {
 		this.isOffScreen = this.y > 800; // TODO: reference this.game.height
 	}
 
-	handleShot() {}
+	handleShot() {
+		/* fireBalls are invincible */
+	}
 }

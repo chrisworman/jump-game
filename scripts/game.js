@@ -8,39 +8,21 @@ import { FilterManager } from "./filterManager.js";
 import { AudioManager } from "./audioManager.js";
 import { EnemyTypes } from "./enemyTypes.js";
 import { SpriteLibrary } from "./spriteLibrary.js";
+import { Hud } from "./hud.js";
 
 export class Game {
 	static GRAVITY = 0.3;
-	static COLLECTABLE_COUNT = 10;
 	static LEVEL_SCROLL_SPEED = 8;
+	static MAX_PLAYER_HEALTH = 3;
 
 	constructor() {
-		// Immediately pre-load images
+		this.state = GameState.INITIALIZING;
+
 		SpriteLibrary.preloadImages();
 
-		// DOM
-		this.heartsDisplay = document.getElementById("hearts");
-		this.textOverlay = document.getElementById("textOverlay");
-		this.scoreDisplay = document.getElementById("score");
 		this.canvas = document.getElementById("canvas");
-		this.restartButton = document.getElementById("restartButton");
-		this.restartButton.addEventListener("click", () => {
-			this.restart();
-		});
-		this.startButton = document.getElementById("startButton");
-		this.startButton.addEventListener("click", () => {
-			$(this.startButton).fadeOut("slow");
-			this.start();
-		});
-		this.audioButton = document.getElementById("audioButton");
-		this.audioButton.addEventListener("click", () => {
-			this.toggleAudioMute();
-		});
-
-		// State
-		this.state = GameState.INITIALIZING;
-		this.setScore(0);
-		this.userControls = new UserControls();
+		this.hud = new Hud(this);
+		this.userControls = new UserControls(this);
 		this.audioManager = new AudioManager();
 		this.player = new Player(this);
 		this.levelManager = new LevelManager(this);
@@ -52,52 +34,55 @@ export class Game {
 		this.collectables = [];
 		this.enemies = [];
 
-		this.fadeInTextOverlay("Blobby the Jumper");
-		$(this.startButton).fadeIn("slow");
+		this.setScore(0);
+		this.hud.textOverlayFadeIn("Blobby the Jumper");
+		this.hud.showStartButton();
+		this.gameLoop();
 	}
 
 	// Figure out DRYer constructor / start / restart
 
-	start() {
-		// Start intro animations
-		this.fadeOutTextOverlay(`${this.level.world.title} - ${this.level.title}`);
-		this.filterManager.animate((amountDone) => {
-			this.filterManager.blurPixels = 10 - 10 * amountDone;
-			this.filterManager.brightnessPercent = 100 * amountDone;
-		}, 1000);
+	// start() {
+	// 	// Start intro animations
+	// 	this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
+	// 	this.filterManager.animate((amountDone) => {
+	// 		this.filterManager.blurPixels = 10 - 10 * amountDone;
+	// 		this.filterManager.brightnessPercent = 100 * amountDone;
+	// 	}, 1000);
 
-		// Prepare the entities for the level
-		this.collectables = this.level.spawnCollectables();
-		this.enemies = this.level.spawnInitialEnemies();
+	// 	// Prepare the entities for the level
+	// 	this.collectables = this.level.spawnCollectables();
+	// 	this.enemies = this.level.spawnInitialEnemies();
 
-		// Let's go!
-		this.state = GameState.PLAYING;
-		this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
-		this.gameLoop();
-	}
+	// 	// Let's go!
+	// 	this.state = GameState.PLAYING;
+	// 	// this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
+	// 	// this.gameLoop();
+	// }
 
-	restart() {
-		$(this.restartButton).fadeOut("slow");
-		this.player.reset();
+	startNewGame() {
+		// Update state before UI
 		this.levelManager.reset();
 		this.level = this.levelManager.getNextLevel();
+		this.player.reset();
 		this.setScore(0);
 		this.bullets = [];
 		this.collectables = [];
 		this.enemies = [];
 		this.platforms = new Platforms(this);
+		this.collectables = this.level.spawnCollectables();
+		this.enemies = this.level.spawnInitialEnemies();
 
-		// Start intro animations
-		this.fadeOutTextOverlay(`${this.level.world.title} - ${this.level.title}`);
+		// Update UI
+		this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = 10 - 10 * amountDone;
 			this.filterManager.brightnessPercent = 100 * amountDone;
 		}, 1000);
+		this.hud.hideStartButton();
+		this.hud.hideRestartButton();
 
-		// Prepare the entities for the level
-		this.collectables = this.level.spawnCollectables();
-		this.enemies = this.level.spawnInitialEnemies();
-
+		this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
 		this.state = GameState.PLAYING;
 	}
 
@@ -148,7 +133,7 @@ export class Game {
 		// Has the player reached the bottom of the screen?
 		if (this.player.y + this.player.height >= this.canvas.height) {
 			// We are done transitioning
-			$(this.textOverlay).fadeOut("slow");
+			this.hud.textOverlayFadeOut();
 			this.platforms.currentSprite = this.level.platformSprite;
 			this.player.handleLevelTransitionDone();
 			this.collectables = this.level.spawnCollectables();
@@ -163,12 +148,12 @@ export class Game {
 
 	setScore(score) {
 		this.score = score;
-		this.scoreDisplay.innerText = String(this.score).padStart(6, "0");
+		this.hud.displayScore(score);
 	}
 
 	handlePlayerDead() {
-		this.fadeInTextOverlay("Game Over");
-		$(this.restartButton).fadeIn("slow");
+		this.hud.textOverlayFadeIn("Game Over");
+		this.hud.showRestartButton();
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = amountDone * 8;
 			this.filterManager.brightnessPercent = 100 - 50 * amountDone;
@@ -181,8 +166,8 @@ export class Game {
 
 		if (!this.level) {
 			// Beat the game!
-			this.fadeInTextOverlay("You Beat the Game!");
-			$(this.restartButton).fadeIn("slow");
+			this.hud.textOverlayFadeIn("You Beat the Game!");
+			this.hud.showRestartButton();
 			this.filterManager.animate((amountDone) => {
 				this.filterManager.blurPixels = amountDone * 8;
 				this.filterManager.brightnessPercent = 100 - 50 * amountDone;
@@ -192,25 +177,13 @@ export class Game {
 		}
 
 		// Transition to next level
-		this.fadeInTextOverlay(`${this.level.world.title} - ${this.level.title}`);
+		this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
 		this.platforms.nextSprite = this.level.platformSprite;
 		this.collectables = [];
 		this.enemies = [];
 		this.bullets = [];
 		this.player.handelLevelComplete();
 		this.state = GameState.LEVEL_TRANSITION;
-	}
-
-	fadeInTextOverlay(text) {
-		this.textOverlay.innerText = text;
-		$(this.textOverlay).fadeIn("slow");
-	}
-
-	fadeOutTextOverlay(text) {
-		this.textOverlay.innerText = text;
-		setTimeout(() => {
-			$(this.textOverlay).fadeOut("slow");
-		}, 2000);
 	}
 
 	toggleAudioMute() {
@@ -220,10 +193,7 @@ export class Game {
 			} else {
 				this.audioManager.mute();
 			}
-			this.audioButton.style.backgroundPosition = this.audioManager
-				.isMuted
-				? "0px -32px"
-				: "0px 0px";
+			this.hud.displayAudioMuted(this.audioManager.isMuted);
 		}
 	}
 

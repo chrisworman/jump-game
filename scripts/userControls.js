@@ -1,10 +1,11 @@
 export class UserControls {
-	constructor() {
+	constructor(game) {
 		this.left = false;
 		this.right = false;
 		this.jump = false;
 		this.drop = false;
 		this.shoot = false;
+
 		document.addEventListener("keydown", this.handleKeyDown.bind(this));
 		document.addEventListener("keyup", this.handleKeyUp.bind(this));
 	}

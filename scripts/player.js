@@ -163,8 +163,10 @@ export class Player {
 		}
 
 		// Apply collision detection main canvas
-		if (this.game.level.world.boss) { // Boss level?
-			if (this.y <= 0) { // Stop at the top of the level
+		if (this.game.level.world.boss) {
+			// Boss level?
+			if (this.y <= 0) {
+				// Stop at the top of the level
 				this.y = 0;
 			}
 		}
@@ -245,19 +247,11 @@ export class Player {
 		if (health === 0) {
 			// Dead
 			this.jumping = false;
+			this.dropping = false;
 		}
 
 		this.health = health;
-
-		// Update display
-		const heartsHtmlBuffer = [];
-		for (let i = 0; i < this.health; i++) {
-			heartsHtmlBuffer.push('<div class="heart"></div>');
-		}
-		for (let i = 0; i < 3 - this.health; i++) {
-			heartsHtmlBuffer.push('<div class="heart-empty"></div>');
-		}
-		this.game.heartsDisplay.innerHTML = heartsHtmlBuffer.join("");
+		this.game.hud.displayHealth(this.health);
 	}
 
 	reset() {

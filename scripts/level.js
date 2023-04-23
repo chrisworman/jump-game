@@ -5,7 +5,7 @@ import { Walker } from "./walker.js";
 import { EnemyTypes } from "./enemyTypes.js";
 
 export class Level {
-	static ENEMY_SPAWN_DELAY_MS = 2000;
+	static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
 	static NO_ENEMY_BUFFER = 300;
 
 	constructor(
@@ -29,20 +29,22 @@ export class Level {
 		if (this.world.boss) {
 			return; // TODO: For now we won't spawn other enemies during boss levels, but this can change
 		}
+
 		if (
 			this.number > 1 &&
 			this.game.player.y <
 				this.game.canvas.height - Level.NO_ENEMY_BUFFER &&
 			this.game.player.y > Level.NO_ENEMY_BUFFER &&
-			this.game.enemies.filter((x) => x.enemyType == EnemyTypes.FIRE_BALL)
-				.length === 0
+			this.game.enemies.filter(
+				(x) => x.enemyType === EnemyTypes.FIRE_BALL && !x.isOffScreen
+			).length === 0
 		) {
 			const now = Date.now();
 			if (
 				!this.enemySpawnTime ||
 				now - this.enemySpawnTime >=
-					Level.ENEMY_SPAWN_DELAY_MS -
-						5 * this.world.number * this.number
+					Level.MAX_FIRE_BALL_SPAWN_DELAY_MS -
+						15 * this.world.number * this.number
 			) {
 				this.enemySpawnTime = now;
 				this.game.enemies.push(
@@ -71,10 +73,10 @@ export class Level {
 
 		const collectables = [];
 		const collectableCount = Math.ceil(
-			(this.world.number + this.number) * 1.5
+			this.world.number + this.number * 0.5
 		);
 		for (let i = 0; i < collectableCount; i++) {
-			let collectable = Collectable.spawn(
+			const collectable = Collectable.spawn(
 				this.game,
 				[...collectables, this.game.player], // Prevent overlapping collectables
 				this.collectableProbabilities
@@ -90,7 +92,7 @@ export class Level {
 			return this.world.boss.isDead;
 		}
 
-		// Normal level complete when player reaches the top
+		// Normal level is complete when player reaches the top
 		return this.game.player.y + this.game.player.height <= 0;
 	}
 }
