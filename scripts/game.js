@@ -26,7 +26,7 @@ export class Game {
 		this.audioManager = new AudioManager();
 		this.player = new Player(this);
 		this.levelManager = new LevelManager(this);
-		this.level = this.levelManager.getNextLevel();
+		// this.level = this.levelManager.getNextLevel();
 		this.renderContext = new RenderContext(this.canvas);
 		this.filterManager = new FilterManager();
 		this.platforms = new Platforms(this);
@@ -40,26 +40,6 @@ export class Game {
 		this.gameLoop();
 	}
 
-	// Figure out DRYer constructor / start / restart
-
-	// start() {
-	// 	// Start intro animations
-	// 	this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
-	// 	this.filterManager.animate((amountDone) => {
-	// 		this.filterManager.blurPixels = 10 - 10 * amountDone;
-	// 		this.filterManager.brightnessPercent = 100 * amountDone;
-	// 	}, 1000);
-
-	// 	// Prepare the entities for the level
-	// 	this.collectables = this.level.spawnCollectables();
-	// 	this.enemies = this.level.spawnInitialEnemies();
-
-	// 	// Let's go!
-	// 	this.state = GameState.PLAYING;
-	// 	// this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
-	// 	// this.gameLoop();
-	// }
-
 	startNewGame() {
 		// Update state before UI
 		this.levelManager.reset();
@@ -69,7 +49,7 @@ export class Game {
 		this.bullets = [];
 		this.collectables = [];
 		this.enemies = [];
-		this.platforms = new Platforms(this);
+		this.platforms.currentSprite = this.level.platformSprite;
 		this.collectables = this.level.spawnCollectables();
 		this.enemies = this.level.spawnInitialEnemies();
 

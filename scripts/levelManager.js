@@ -3,8 +3,8 @@ import { SpriteLibrary } from "./spriteLibrary.js";
 import { Walker } from "./walker.js";
 
 export class LevelManager {
-	static LEVELS_PER_WORLD = 20;
-	static WORLD_COUNT = 5;
+	static LEVELS_PER_WORLD = 2;
+	static WORLD_COUNT = 2;
 
 	constructor(game) {
 		this.game = game;
