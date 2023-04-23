@@ -52,7 +52,7 @@ export class Game {
 		this.collectables = [];
 		this.enemies = [];
 
-		this.fadeInTextOverlay('Blobby the Jumper');
+		this.fadeInTextOverlay("Blobby the Jumper");
 		$(this.startButton).fadeIn("slow");
 	}
 
@@ -60,7 +60,7 @@ export class Game {
 
 	start() {
 		// Start intro animations
-		this.fadeOutTextOverlay(`Level ${this.levelManager.levelNumber}`);
+		this.fadeOutTextOverlay(`${this.level.world.title} - ${this.level.title}`);
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = 10 - 10 * amountDone;
 			this.filterManager.brightnessPercent = 100 * amountDone;
@@ -79,16 +79,16 @@ export class Game {
 	restart() {
 		$(this.restartButton).fadeOut("slow");
 		this.player.reset();
+		this.levelManager.reset();
+		this.level = this.levelManager.getNextLevel();
 		this.setScore(0);
 		this.bullets = [];
 		this.collectables = [];
 		this.enemies = [];
-		this.levelManager = new LevelManager(this);
-		this.level = this.levelManager.getNextLevel();
 		this.platforms = new Platforms(this);
 
 		// Start intro animations
-		this.fadeOutTextOverlay(`Level ${this.levelManager.levelNumber}`);
+		this.fadeOutTextOverlay(`${this.level.world.title} - ${this.level.title}`);
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = 10 - 10 * amountDone;
 			this.filterManager.brightnessPercent = 100 * amountDone;
@@ -129,7 +129,7 @@ export class Game {
 		}
 
 		// Level complete?
-		if (this.player.y + this.player.height <= 0) {
+		if (this.level.isComplete()) {
 			this.handleLevelComplete();
 			return;
 		}
@@ -178,7 +178,21 @@ export class Game {
 
 	handleLevelComplete() {
 		this.level = this.levelManager.getNextLevel();
-		this.fadeInTextOverlay(`Level ${this.levelManager.levelNumber}`);
+
+		if (!this.level) {
+			// Beat the game!
+			this.fadeInTextOverlay("You Beat the Game!");
+			$(this.restartButton).fadeIn("slow");
+			this.filterManager.animate((amountDone) => {
+				this.filterManager.blurPixels = amountDone * 8;
+				this.filterManager.brightnessPercent = 100 - 50 * amountDone;
+			}, 1000);
+			this.state = GameState.GAME_BEAT;
+			return;
+		}
+
+		// Transition to next level
+		this.fadeInTextOverlay(`${this.level.world.title} - ${this.level.title}`);
 		this.platforms.nextSprite = this.level.platformSprite;
 		this.collectables = [];
 		this.enemies = [];
@@ -206,7 +220,8 @@ export class Game {
 			} else {
 				this.audioManager.mute();
 			}
-			this.audioButton.style.backgroundPosition = this.audioManager.isMuted
+			this.audioButton.style.backgroundPosition = this.audioManager
+				.isMuted
 				? "0px -32px"
 				: "0px 0px";
 		}

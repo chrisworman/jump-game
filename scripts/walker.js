@@ -7,28 +7,33 @@ export class Walker {
 	static SPEED = 2;
 
 	constructor(x, y, initialSpeed, walkingSprite, dyingSprite) {
-        this.enemyType = EnemyTypes.WALKER;
-        this.isDead = false;
+		this.enemyType = EnemyTypes.WALKER;
+		this.isDead = false;
+		this.isShot = false;
 		this.isShootable = true;
-        this.isShot = false;
-	
+		this.isOffScreen = false;
+
 		this.walkingSprite = walkingSprite;
 		this.dyingSprite = dyingSprite;
 
-        this.x = x;
+		this.x = x;
 		this.y = y;
-        this.width = this.walkingSprite.width;
+		this.width = this.walkingSprite.width;
 		this.height = this.walkingSprite.height;
-        this.speed = initialSpeed;
+		this.speed = initialSpeed;
 	}
 
 	static spawn(canvasWidth) {
 		return new Walker(
-			randomIntBetween(1, canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1),
-			randomFromArray(Platforms.getPlatformYs()) - SpriteLibrary.SIZES.WALKER.height,
+			randomIntBetween(
+				1,
+				canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1
+			),
+			randomFromArray(Platforms.getPlatformYs()) -
+				SpriteLibrary.SIZES.WALKER.height,
 			randomSign() * Walker.SPEED,
 			SpriteLibrary.walkerWalking(),
-			SpriteLibrary.walkerDying(),
+			SpriteLibrary.walkerDying()
 		);
 	}
 
@@ -44,11 +49,11 @@ export class Walker {
 	}
 
 	update() {
-        if (this.isDead) {
-            return;
-        }
+		if (this.isDead) {
+			return;
+		}
 		if (this.isShot) {
-            this.isDead = this.dyingSprite.reachedEnd;
+			this.isDead = this.dyingSprite.reachedEnd;
 			return;
 		}
 		this.x += this.speed;
@@ -60,5 +65,9 @@ export class Walker {
 			this.x = 1;
 			this.speed = Walker.SPEED;
 		}
+	}
+
+	handleShot() {
+		this.isShot = true;
 	}
 }

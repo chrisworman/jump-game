@@ -11,19 +11,24 @@ export class Level {
 	constructor(
 		game,
 		number,
-		collectableCount,
+		world,
+		title,
 		collectableProbabilities,
 		platformSprite
 	) {
-		this.number = number;
 		this.game = game;
-		this.collectableCount = collectableCount;
+		this.number = number;
+		this.world = world;
+		this.title = title;
 		this.collectableProbabilities = collectableProbabilities;
 		this.platformSprite = platformSprite;
 		this.enemySpawnTime = null;
 	}
 
 	spawnEnemies() {
+		if (this.world.boss) {
+			return; // TODO: For now we won't spawn other enemies during boss levels, but this can change
+		}
 		if (
 			this.number > 1 &&
 			this.game.player.y <
@@ -36,7 +41,8 @@ export class Level {
 			if (
 				!this.enemySpawnTime ||
 				now - this.enemySpawnTime >=
-					Level.ENEMY_SPAWN_DELAY_MS - this.number
+					Level.ENEMY_SPAWN_DELAY_MS -
+						5 * this.world.number * this.number
 			) {
 				this.enemySpawnTime = now;
 				this.game.enemies.push(
@@ -47,17 +53,27 @@ export class Level {
 	}
 
 	spawnInitialEnemies() {
-		let initialEnemies = [];
-		for (let i = 1; i < Math.floor(this.number / 2); i++) {
+		if (this.world.boss) {
+			return [this.world.boss]; // TODO: For now we won't spawn other enemies during boss levels, but this can change
+		}
+		const initialEnemies = [];
+		const numberToSpawn = this.world.number + this.number - 1;
+		for (let i = 1; i < numberToSpawn; i++) {
 			initialEnemies.push(Walker.spawn(this.game.canvas.width));
 		}
 		return initialEnemies;
 	}
 
 	spawnCollectables() {
-		// return an array of collectables for the level
-		let collectables = [];
-		for (let i = 0; i < this.collectableCount; i++) {
+		if (this.world.boss) {
+			return [];
+		}
+
+		const collectables = [];
+		const collectableCount = Math.ceil(
+			(this.world.number + this.number) * 1.5
+		);
+		for (let i = 0; i < collectableCount; i++) {
 			let collectable = Collectable.spawn(
 				this.game,
 				[...collectables, this.game.player], // Prevent overlapping collectables
@@ -66,5 +82,15 @@ export class Level {
 			collectables.push(collectable);
 		}
 		return collectables;
+	}
+
+	isComplete() {
+		// Fighting a boss?
+		if (this.world.boss) {
+			return this.world.boss.isDead;
+		}
+
+		// Normal level complete when player reaches the top
+		return this.game.player.y + this.game.player.height <= 0;
 	}
 }

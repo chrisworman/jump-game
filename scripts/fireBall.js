@@ -6,13 +6,12 @@ import { Velocity } from "./components.js";
 export class FireBall {
 	constructor(x, y, gravity, sprite) {
 		this.enemyType = EnemyTypes.FIRE_BALL;
-		this.sprite = sprite;
-
 		this.isDead = false;
 		this.isShot = false;
 		this.isShootable = false;
 		this.isOffScreen = false;
 
+		this.sprite = sprite;
 		this.x = x;
 		this.y = y;
 		this.width = SpriteLibrary.SIZES.FIRE_BALL.width;
@@ -49,4 +48,6 @@ export class FireBall {
 		this.x += this.velocity.x;
 		this.isOffScreen = this.y > 800; // TODO: reference this.game.height
 	}
+
+	handleShot() {}
 }

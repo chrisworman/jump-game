@@ -40,6 +40,7 @@ export class Platforms {
         switch (this.game.state) {
             case GameState.PLAYING:
             case GameState.GAME_OVER:
+            case GameState.GAME_BEAT:
                 for (let y=0; y < totalHeight; y += Platforms.HEIGHT) {
                     this.currentSprite.render(renderContext, 0, y);
                 }

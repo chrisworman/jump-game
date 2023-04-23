@@ -138,8 +138,8 @@ export class Player {
 
 		// Platform detection while dropping
 		if (
-			(this.dropping && this.velocity.y > Game.GRAVITY) || 	// Dropping, but after already falling
-			(this.jumping && this.velocity.y > 0.1) 				// "Jumping", but just after apex (> 0.1)
+			(this.dropping && this.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
+			(this.jumping && this.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
 		) {
 			// See if we have crossed a platform while falling
 			let roundedLastBottomY = Math.ceil(this.lastY + this.height);
@@ -163,6 +163,11 @@ export class Player {
 		}
 
 		// Apply collision detection main canvas
+		if (this.game.level.world.boss) { // Boss level?
+			if (this.y <= 0) { // Stop at the top of the level
+				this.y = 0;
+			}
+		}
 		if (this.y + this.height > this.game.canvas.height) {
 			this.y = this.game.canvas.height - this.height;
 			this.velocity.y = 0;
@@ -220,7 +225,7 @@ export class Player {
 	handelLevelComplete() {
 		this.jumping = false;
 		this.dropping = false;
-		this.y = -this.height;
+		this.y = -this.height; // TODO: this needs to be fixed for boss levels; not sure what to do
 	}
 
 	handleLevelTransitionDone() {

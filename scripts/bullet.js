@@ -52,7 +52,7 @@ export class Bullet {
 				!enemy.isDead &&
 				rectanglesOverlap(enemy, this)
 			) {
-				enemy.isShot = true;
+				enemy.handleShot();
 				this.hitEnemy = true;
 			}
 		}
