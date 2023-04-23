@@ -25,7 +25,6 @@
 
         .middle-content {
             width: 550px;
-            overflow: hidden;
             margin: 0 auto;
         }
 
@@ -42,6 +41,16 @@
             font-size: 0;
             float: right;
             height: 32px;
+        }
+
+        .audio-button {
+            float: right;
+            margin-right: 10px;
+            width: 32px;
+            height: 32px;
+            background-image: url('images/audio.png');
+            background-repeat: no-repeat;
+            cursor: pointer;
         }
 
         .heart {
@@ -66,7 +75,8 @@
             position: relative;
             width: 550px;
             height: 800px;
-            overflow: hidden;
+            outline: solid 6px #aaa;
+            box-shadow: 0px 15px 45px 5px #aaa;
         }
 
         .game-canvas {
@@ -90,13 +100,13 @@
             line-height: 800px;
         }
 
-        .restart-button {
+        .overlay-button {
             cursor: pointer;
             font-family: 'VT323', monospace;
             display: none;
             position: absolute;
-            top: 55%;
-            left: 41%;
+            top: 450px;
+            left: 240px;
             font-size: 22px;
         }
 
@@ -111,13 +121,17 @@
                 <span class="heart"></span>
                 <span class="heart-empty"></span>
             </div>
+            <div id="audioButton" class="audio-button"></div>
         </div>
         <div class ="game-play-panel">
             <canvas id="canvas" class="game-canvas" width="550" height="800"></canvas>
             <!-- <div id="animationOverlay" class="overlay" style="background-image: url('images/starburst-animation.gif');"></div> -->
             <!-- <div id="grainyOverlay" class="overlay" style="background-image: url('images/grainy-overlay.png');"></div> -->
             <div id="textOverlay" class="overlay"></div>
-            <button id="restartButton" class="restart-button">
+            <button id="startButton" class="overlay-button">
+                Start
+            </button>
+            <button id="restartButton" class="overlay-button">
                 Restart
             </button>
         </div>

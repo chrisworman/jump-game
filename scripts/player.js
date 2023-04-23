@@ -12,6 +12,7 @@ export class Player {
 	static HORIZONTAL_SPEED = 4.5;
 	static SHOOT_DELAY_MS = 250;
 	static INITIAL_HEALTH = 3;
+	static RECOVERY_TIME_MS = 4000;
 
 	constructor(game) {
 		this.game = game;
@@ -23,7 +24,7 @@ export class Player {
 
 		this.width = SpriteLibrary.SIZES.PLAYER.width;
 		this.height = SpriteLibrary.SIZES.PLAYER.height;
-		
+
 		this.reset();
 	}
 
@@ -52,7 +53,11 @@ export class Player {
 		if (!this.recovering) {
 			const playerHitBox = this.getHitBox();
 			for (let enemy of this.game.enemies) {
-				if (!enemy.isShot && rectanglesOverlap(playerHitBox, enemy)) {
+				if (
+					!enemy.isShot &&
+					!enemy.isDead &&
+					rectanglesOverlap(playerHitBox, enemy)
+				) {
 					// We hit an enemy!!
 					if (this.health > 1) {
 						this.setHealth(this.health - 1);
@@ -66,7 +71,10 @@ export class Player {
 		}
 
 		// Done recovering?
-		if (this.recovering && Date.now() - this.recoveringStartTime > 4000) {
+		if (
+			this.recovering &&
+			Date.now() - this.recoveringStartTime > Player.RECOVERY_TIME_MS
+		) {
 			this.recovering = false;
 			this.recoveringStartTime = null;
 		}
@@ -104,8 +112,8 @@ export class Player {
 			this.velocity.x = 0;
 		}
 
-		// Make player jump when space is pressed
-		if (!this.jumping && this.game.userControls.jump) {
+		// React to user jump
+		if (!this.dropping && !this.jumping && this.game.userControls.jump) {
 			this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
 			this.velocity.y = Player.VERTICAL_SPEED;
 			this.jumpingRightSprite.reset();
@@ -113,30 +121,53 @@ export class Player {
 			this.jumping = true;
 		}
 
-		// Platform detection
-		if (this.jumping && this.velocity.y > 0.1) {
-			// Just started falling after a jump apex
-			let roundedBottomY = Math.ceil(this.y + this.height);
-			if (roundedBottomY % Platforms.HEIGHT == 0) {
-				this.velocity.y = 0;
-				this.velocity.x = 0;
-				this.y = roundedBottomY - this.height;
-				this.jumping = false;
-			}
+		// React to user drop
+		if (!this.dropping && !this.jumping && this.game.userControls.drop) {
+			this.velocity.y = 0;
+			this.dropping = true;
 		}
 
-		// Apply gravity and jump velocity
-		if (this.jumping) {
+		// Platform detection while dropping or jumping
+
+		// Apply gravity if jumping or dropping
+		if (this.jumping || this.dropping) {
 			this.velocity.y += Game.GRAVITY;
 		}
 		this.y += this.velocity.y;
 		this.x += this.velocity.x;
+
+		// Platform detection while dropping
+		if (
+			(this.dropping && this.velocity.y > Game.GRAVITY) || 	// Dropping, but after already falling
+			(this.jumping && this.velocity.y > 0.1) 				// "Jumping", but just after apex (> 0.1)
+		) {
+			// See if we have crossed a platform while falling
+			let roundedLastBottomY = Math.ceil(this.lastY + this.height);
+			let roundedBottomY = Math.ceil(this.y + this.height);
+			if (roundedLastBottomY <= roundedBottomY) {
+				for (
+					let roundedBottom = roundedLastBottomY;
+					roundedBottom <= roundedBottomY;
+					roundedBottom++
+				) {
+					if (roundedBottom % Platforms.HEIGHT == 0) {
+						this.velocity.y = 0;
+						this.velocity.x = 0;
+						this.y = roundedBottom - this.height;
+						this.jumping = false;
+						this.dropping = false;
+						break;
+					}
+				}
+			}
+		}
 
 		// Apply collision detection main canvas
 		if (this.y + this.height > this.game.canvas.height) {
 			this.y = this.game.canvas.height - this.height;
 			this.velocity.y = 0;
 			this.jumping = false;
+			this.dropping = false;
 		}
 		if (this.x + this.width > this.game.canvas.width) {
 			this.x = this.game.canvas.width - this.width;
@@ -146,10 +177,12 @@ export class Player {
 			this.x = 0;
 			this.velocity.x = 0;
 		}
+
+		this.lastY = this.y;
 	}
 
 	updateLevelTransition() {
-		this.y += this.velocity.y; // TODO: this should just be something like this.game.LEVEL_TRANSITION_SCROLL_SPEED
+		this.y += Game.LEVEL_SCROLL_SPEED;
 	}
 
 	render(renderContext) {
@@ -175,6 +208,7 @@ export class Player {
 				this.jumpingLeftSprite.render(renderContext, this.x, this.y);
 			}
 		} else {
+			// standing or dropping
 			if (this.facingRight) {
 				this.standingRightSprite.render(renderContext, this.x, this.y);
 			} else {
@@ -185,7 +219,7 @@ export class Player {
 
 	handelLevelComplete() {
 		this.jumping = false;
-		this.velocity.y = Game.LEVEL_SCROLL_SPEED;
+		this.dropping = false;
 		this.y = -this.height;
 	}
 
@@ -226,7 +260,9 @@ export class Player {
 		this.velocity = new Velocity();
 		this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
 		this.y = Math.floor(this.game.canvas.height - this.height);
+		this.lastY = this.y;
 		this.jumping = false;
+		this.dropping = false;
 		this.facingRight = false;
 		this.lastShootTime = null;
 		this.recovering = false;

@@ -33,6 +33,9 @@ export class Walker {
 	}
 
 	render(renderContext) {
+		if (this.isDead) {
+			return;
+		}
 		if (this.isShot) {
 			this.dyingSprite.render(renderContext, this.x, this.y);
 		} else {

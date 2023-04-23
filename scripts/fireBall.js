@@ -9,6 +9,7 @@ export class FireBall {
 		this.sprite = sprite;
 
 		this.isDead = false;
+		this.isShot = false;
 		this.isShootable = false;
 		this.isOffScreen = false;
 
@@ -33,10 +34,16 @@ export class FireBall {
 	}
 
 	render(renderContext) {
+		if (this.isOffScreen) {
+			return;
+		}
 		this.sprite.render(renderContext, this.x, this.y);
 	}
 
 	update() {
+		if (this.isOffScreen) {
+			return;
+		}
 		this.velocity.y += this.gravity;
 		this.y += this.velocity.y;
 		this.x += this.velocity.x;

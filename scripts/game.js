@@ -27,6 +27,15 @@ export class Game {
 		this.restartButton.addEventListener("click", () => {
 			this.restart();
 		});
+		this.startButton = document.getElementById("startButton");
+		this.startButton.addEventListener("click", () => {
+			$(this.startButton).fadeOut("slow");
+			this.start();
+		});
+		this.audioButton = document.getElementById("audioButton");
+		this.audioButton.addEventListener("click", () => {
+			this.toggleAudioMute();
+		});
 
 		// State
 		this.state = GameState.INITIALIZING;
@@ -42,6 +51,9 @@ export class Game {
 		this.bullets = [];
 		this.collectables = [];
 		this.enemies = [];
+
+		this.fadeInTextOverlay('Blobby the Jumper');
+		$(this.startButton).fadeIn("slow");
 	}
 
 	// Figure out DRYer constructor / start / restart
@@ -57,9 +69,10 @@ export class Game {
 		// Prepare the entities for the level
 		this.collectables = this.level.spawnCollectables();
 		this.enemies = this.level.spawnInitialEnemies();
-		
+
 		// Let's go!
 		this.state = GameState.PLAYING;
+		this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
 		this.gameLoop();
 	}
 
@@ -121,15 +134,10 @@ export class Game {
 			return;
 		}
 
+		// Update enemies
 		this.enemies.forEach((enemy) => enemy.update());
-		this.enemies = this.enemies.filter((x) => !x.isOffScreen);
-
 		this.bullets.forEach((bullet) => bullet.update());
-		this.bullets = this.bullets.filter((x) => !x.isOffScreen && !x.hitEnemy);
-		this.enemies = this.enemies.filter((x) => !x.isDead);
-
 		this.collectables.forEach((x) => x.update());
-
 		this.level.spawnEnemies();
 	}
 
@@ -138,7 +146,8 @@ export class Game {
 		this.platforms.update();
 
 		// Has the player reached the bottom of the screen?
-		if (this.player.y + this.player.height >= this.canvas.height) { // We are done transitioning
+		if (this.player.y + this.player.height >= this.canvas.height) {
+			// We are done transitioning
 			$(this.textOverlay).fadeOut("slow");
 			this.platforms.currentSprite = this.level.platformSprite;
 			this.player.handleLevelTransitionDone();
@@ -158,12 +167,11 @@ export class Game {
 	}
 
 	handlePlayerDead() {
-		this.fadeInTextOverlay('Game Over');
+		this.fadeInTextOverlay("Game Over");
 		$(this.restartButton).fadeIn("slow");
 		this.filterManager.animate((amountDone) => {
 			this.filterManager.blurPixels = amountDone * 8;
-			this.filterManager.brightnessPercent =
-				100 - 50 * amountDone;
+			this.filterManager.brightnessPercent = 100 - 50 * amountDone;
 		}, 1000);
 		this.state = GameState.GAME_OVER;
 	}
@@ -191,6 +199,19 @@ export class Game {
 		}, 2000);
 	}
 
+	toggleAudioMute() {
+		if (this.audioManager) {
+			if (this.audioManager.isMuted) {
+				this.audioManager.unmute();
+			} else {
+				this.audioManager.mute();
+			}
+			this.audioButton.style.backgroundPosition = this.audioManager.isMuted
+				? "0px -32px"
+				: "0px 0px";
+		}
+	}
+
 	render() {
 		const ctx = this.renderContext.getCanvasContext();
 		this.filterManager.applyFilters(ctx, () => {
@@ -208,5 +229,4 @@ export class Game {
 	}
 }
 
-var game = new Game();
-game.start();
+new Game();

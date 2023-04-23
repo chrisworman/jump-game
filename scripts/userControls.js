@@ -3,6 +3,7 @@ export class UserControls {
 		this.left = false;
 		this.right = false;
 		this.jump = false;
+		this.drop = false;
 		this.shoot = false;
 		document.addEventListener("keydown", this.handleKeyDown.bind(this));
 		document.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -15,6 +16,8 @@ export class UserControls {
 			this.right = true;
 		} else if (event.code === "ArrowUp") {
 			this.jump = true;
+		} else if (event.code === "ArrowDown") {
+			this.drop = true;
 		} else if (event.code === "Space") {
 			this.shoot = true;
 		}
@@ -27,6 +30,8 @@ export class UserControls {
 			this.right = false;
 		} else if (event.code === "ArrowUp") {
 			this.jump = false;
+		} else if (event.code === "ArrowDown") {
+			this.drop = false;
 		} else if (event.code === "Space") {
 			this.shoot = false;
 		}
