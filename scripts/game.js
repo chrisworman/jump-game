@@ -18,15 +18,15 @@ export class Game {
 	constructor() {
 		this.state = GameState.INITIALIZING;
 
+		// Prioritize loading assets
 		SpriteLibrary.preloadImages();
+		this.audioManager = new AudioManager();
 
 		this.canvas = document.getElementById("canvas");
 		this.hud = new Hud(this);
 		this.userControls = new UserControls(this);
-		this.audioManager = new AudioManager();
 		this.player = new Player(this);
 		this.levelManager = new LevelManager(this);
-		// this.level = this.levelManager.getNextLevel();
 		this.renderContext = new RenderContext(this.canvas);
 		this.filterManager = new FilterManager();
 		this.platforms = new Platforms(this);
@@ -55,9 +55,9 @@ export class Game {
 
 		// Update UI
 		this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
-		this.filterManager.animate((amountDone) => {
-			this.filterManager.blurPixels = 10 - 10 * amountDone;
-			this.filterManager.brightnessPercent = 100 * amountDone;
+		this.filterManager.animate((fm, amountDone) => {
+			fm.blurPixels = 10 - 10 * amountDone;
+			fm.brightnessPercent = 100 * amountDone;
 		}, 1000);
 		this.hud.hideStartButton();
 		this.hud.hideRestartButton();
@@ -134,9 +134,9 @@ export class Game {
 	handlePlayerDead() {
 		this.hud.textOverlayFadeIn("Game Over");
 		this.hud.showRestartButton();
-		this.filterManager.animate((amountDone) => {
-			this.filterManager.blurPixels = amountDone * 8;
-			this.filterManager.brightnessPercent = 100 - 50 * amountDone;
+		this.filterManager.animate((fm, amountDone) => {
+			fm.blurPixels = amountDone * 8;
+			fm.brightnessPercent = 100 - 50 * amountDone;
 		}, 1000);
 		this.state = GameState.GAME_OVER;
 	}
@@ -148,9 +148,9 @@ export class Game {
 			// Beat the game!
 			this.hud.textOverlayFadeIn("You Beat the Game!");
 			this.hud.showRestartButton();
-			this.filterManager.animate((amountDone) => {
-				this.filterManager.blurPixels = amountDone * 8;
-				this.filterManager.brightnessPercent = 100 - 50 * amountDone;
+			this.filterManager.animate((fm, amountDone) => {
+				fm.blurPixels = amountDone * 8;
+				fm.brightnessPercent = 100 - 50 * amountDone;
 			}, 1000);
 			this.state = GameState.GAME_BEAT;
 			return;

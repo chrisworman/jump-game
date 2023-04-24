@@ -1,5 +1,9 @@
 export class FilterManager {
 	constructor() {
+		this.reset();
+	}
+
+	reset() {
 		this.hueDegrees = 0; // 0-360
 		this.invertPercent = 0; // 0-100
 		this.opacityPercent = 100; // 0-100
@@ -20,7 +24,7 @@ export class FilterManager {
 		if (this.animation) {
 			const elapsed = Date.now() - this.animation.startTime;
 			const amountDone = Math.min(1.0, elapsed / this.animation.lengthMs);
-			this.animation.onUpdate(amountDone);
+			this.animation.onUpdate(this, amountDone);
 			if (amountDone === 1.0) {
 				this.animation = null;
 			}

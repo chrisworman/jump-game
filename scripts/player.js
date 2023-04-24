@@ -21,6 +21,12 @@ export class Player {
 		this.standingRightSprite = SpriteLibrary.playerStandingRight();
 		this.jumpingLeftSprite = SpriteLibrary.playerJumpingLeft();
 		this.jumpingRightSprite = SpriteLibrary.playerJumpingRight();
+		this.sprites = [
+			this.standingLeftSprite,
+			this.standingRightSprite,
+			this.jumpingLeftSprite,
+			this.jumpingRightSprite,
+		];
 
 		this.width = SpriteLibrary.SIZES.PLAYER.width;
 		this.height = SpriteLibrary.SIZES.PLAYER.height;
@@ -58,14 +64,8 @@ export class Player {
 					!enemy.isDead &&
 					rectanglesOverlap(playerHitBox, enemy)
 				) {
-					// We hit an enemy!!
-					if (this.health > 1) {
-						this.setHealth(this.health - 1);
-						break; // Still alive, but recovering, so no need to keep checking enemies
-					} else {
-						this.setHealth(0); // XXX DEAD! XXX
-						return; // No need to update anything else if we are dead
-					}
+					this.setHealth(this.health - 1);
+					break;
 				}
 			}
 		}
@@ -77,6 +77,7 @@ export class Player {
 		) {
 			this.recovering = false;
 			this.recoveringStartTime = null;
+			this.sprites.forEach((x) => x.filterManager.reset());
 		}
 
 		// Apply the direction of the player
@@ -193,20 +194,6 @@ export class Player {
 	}
 
 	render(renderContext) {
-		// Semi transparent when recovering
-		// TODO: pulsate the opacity
-		if (this.recovering) {
-			this.jumpingLeftSprite.filterManager.opacityPercent = 50;
-			this.jumpingRightSprite.filterManager.opacityPercent = 50;
-			this.standingLeftSprite.filterManager.opacityPercent = 50;
-			this.standingRightSprite.filterManager.opacityPercent = 50;
-		} else {
-			this.jumpingLeftSprite.filterManager.opacityPercent = 100;
-			this.jumpingRightSprite.filterManager.opacityPercent = 100;
-			this.standingLeftSprite.filterManager.opacityPercent = 100;
-			this.standingRightSprite.filterManager.opacityPercent = 100;
-		}
-
 		// Render the current sprite
 		if (this.jumping) {
 			if (this.facingRight) {
@@ -227,6 +214,8 @@ export class Player {
 	handelLevelComplete() {
 		this.jumping = false;
 		this.dropping = false;
+		this.recovering = false;
+		this.recoveringStartTime = null;
 		this.y = -this.height; // TODO: this needs to be fixed for boss levels; not sure what to do
 	}
 
@@ -241,13 +230,24 @@ export class Player {
 		if (health > 0 && this.health > health) {
 			this.recovering = true;
 			this.recoveringStartTime = Date.now();
-			// TODO: start pulsating opacity or brightness
+
+			const recoveringAnimation = (filterManager, amountDone) => {
+				filterManager.hueDegrees = 360 - 360 * amountDone;
+				filterManager.opacityPercent = 20 + 30 * amountDone;
+			};
+			this.sprites.forEach((x) =>
+				x.filterManager.animate(
+					recoveringAnimation,
+					Player.RECOVERY_TIME_MS
+				)
+			);
 		}
 
 		if (health === 0) {
 			// Dead
 			this.jumping = false;
 			this.dropping = false;
+			this.recovering = false;
 		}
 
 		this.health = health;
