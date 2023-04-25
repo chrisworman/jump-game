@@ -3,6 +3,7 @@ import { Game } from "./game.js";
 import { FireBall } from "./fireBall.js";
 import { Walker } from "./walker.js";
 import { EnemyTypes } from "./enemyTypes.js";
+import { FireFlower } from "./fireFlower.js";
 
 export class Level {
 	static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
@@ -59,10 +60,14 @@ export class Level {
 			return [this.world.boss]; // TODO: For now we won't spawn other enemies during boss levels, but this can change
 		}
 		const initialEnemies = [];
-		const numberToSpawn = this.world.number + this.number - 1;
-		for (let i = 1; i < numberToSpawn; i++) {
+		
+		const walkerSpawnCount = this.world.number + this.number - 1;
+		for (let i = 1; i < walkerSpawnCount; i++) {
 			initialEnemies.push(Walker.spawn(this.game.canvas.width));
 		}
+
+		initialEnemies.push(new FireFlower(this.game, 200, 355));
+
 		return initialEnemies;
 	}
 

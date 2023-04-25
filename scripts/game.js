@@ -54,7 +54,9 @@ export class Game {
 		this.enemies = this.level.spawnInitialEnemies();
 
 		// Update UI
-		this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
+		this.hud.textOverlayFadeOut(
+			`${this.level.world.title} - ${this.level.title}`
+		);
 		this.filterManager.animate((fm, amountDone) => {
 			fm.blurPixels = 10 - 10 * amountDone;
 			fm.brightnessPercent = 100 * amountDone;
@@ -157,7 +159,9 @@ export class Game {
 		}
 
 		// Transition to next level
-		this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
+		this.hud.textOverlayFadeIn(
+			`${this.level.world.title} - ${this.level.title}`
+		);
 		this.platforms.nextSprite = this.level.platformSprite;
 		this.collectables = [];
 		this.enemies = [];
@@ -182,13 +186,20 @@ export class Game {
 		this.filterManager.applyFilters(ctx, () => {
 			this.platforms.render(this.renderContext);
 			this.enemies
-				.filter((x) => x.enemyType == EnemyTypes.WALKER)
+				.filter(
+					(x) =>
+						x.enemyType === EnemyTypes.WALKER ||
+						x.enemyType === EnemyTypes.FIRE_FLOWER
+				)
 				.forEach((x) => x.render(this.renderContext));
 			this.player.render(this.renderContext);
 			this.bullets.forEach((x) => x.render(this.renderContext));
 			this.collectables.forEach((x) => x.render(this.renderContext));
 			this.enemies
-				.filter((x) => x.enemyType == EnemyTypes.FIRE_BALL)
+				.filter((x) => x.enemyType === EnemyTypes.BOMB)
+				.forEach((x) => x.render(this.renderContext));
+			this.enemies
+				.filter((x) => x.enemyType === EnemyTypes.FIRE_BALL)
 				.forEach((x) => x.render(this.renderContext));
 		});
 	}
