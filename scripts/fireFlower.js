@@ -1,8 +1,8 @@
 import { Bomb } from './bomb.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
-import { randomSign } from './utils.js';
 import { Emitter } from './emitter.js';
+import { RandomGenerator } from './randomGenerator.js';
 
 export class FireFlower {
     constructor(game, x, y) {
@@ -28,7 +28,7 @@ export class FireFlower {
                     Bomb.spawnFrom(
                         this.spawn.x,
                         this.spawn.y,
-                        randomSign(),
+                        RandomGenerator.randomSign(),
                         SpriteLibrary.bullet() // TODO: proper sprite
                     )
                 );

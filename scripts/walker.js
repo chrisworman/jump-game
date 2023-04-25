@@ -1,7 +1,7 @@
 import { EnemyTypes } from './enemyTypes.js';
 import { Platforms } from './platforms.js';
 import { SpriteLibrary } from './spriteLibrary.js';
-import { randomFromArray, randomIntBetween, randomSign } from './utils.js';
+import { RandomGenerator } from './randomGenerator.js';
 
 export class Walker {
     static SPEED = 2;
@@ -25,9 +25,9 @@ export class Walker {
 
     static spawn(canvasWidth) {
         return new Walker(
-            randomIntBetween(1, canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1),
-            randomFromArray(Platforms.getPlatformYs()) - SpriteLibrary.SIZES.WALKER.height,
-            randomSign() * Walker.SPEED,
+            RandomGenerator.randomIntBetween(1, canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1),
+            RandomGenerator.randomFromArray(Platforms.getPlatformYs()) - SpriteLibrary.SIZES.WALKER.height,
+            RandomGenerator.randomSign() * Walker.SPEED,
             SpriteLibrary.walkerWalking(),
             SpriteLibrary.walkerDying()
         );

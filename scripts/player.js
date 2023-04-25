@@ -3,7 +3,7 @@ import { GameState } from './gameState.js';
 import { Game } from './game.js';
 import { Platforms } from './platforms.js';
 import { Bullet } from './bullet.js';
-import { rectanglesOverlap } from './utils.js';
+import { Collider } from './collider.js';
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 
@@ -59,7 +59,7 @@ export class Player {
         if (!this.recovering) {
             const playerHitBox = this.getHitBox();
             for (let enemy of this.game.enemies) {
-                if (!enemy.isShot && !enemy.isDead && rectanglesOverlap(playerHitBox, enemy)) {
+                if (!enemy.isShot && !enemy.isDead && Collider.intersects(playerHitBox, enemy)) {
                     this.setHealth(this.health - 1);
                     break;
                 }

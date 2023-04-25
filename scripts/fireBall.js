@@ -1,7 +1,7 @@
 import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
-import { randomIntBetween } from './utils.js';
 import { Velocity } from './components.js';
+import { RandomGenerator } from './randomGenerator.js';
 
 export class FireBall {
     constructor(x, y, gravity, sprite) {
@@ -22,7 +22,7 @@ export class FireBall {
 
     static spawn(canvasWidth, gravity) {
         return new FireBall(
-            randomIntBetween(0, canvasWidth - SpriteLibrary.SIZES.FIRE_BALL.width),
+            RandomGenerator.randomIntBetween(0, canvasWidth - SpriteLibrary.SIZES.FIRE_BALL.width),
             0,
             gravity,
             SpriteLibrary.fireBall()

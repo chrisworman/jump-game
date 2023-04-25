@@ -1,5 +1,5 @@
 import { SpriteLibrary } from './spriteLibrary.js';
-import { rectanglesOverlap } from './utils.js';
+import { Collider } from './collider.js';
 
 export class Bullet {
     static SPEED = 8;
@@ -47,7 +47,7 @@ export class Bullet {
                 enemy.isShootable &&
                 !enemy.isShot &&
                 !enemy.isDead &&
-                rectanglesOverlap(enemy, this)
+                Collider.intersects(enemy, this)
             ) {
                 enemy.handleShot();
                 this.hitEnemy = true;

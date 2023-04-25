@@ -1,4 +1,4 @@
-import { randomIntBetween } from './utils.js';
+import { RandomGenerator } from './randomGenerator.js';
 
 export class Emitter {
     constructor(options) {
@@ -27,7 +27,7 @@ export class Emitter {
 
     updateWithRandomDelays() {
         if (this.currentRandomDelay === null) {
-            this.currentRandomDelay = randomIntBetween(
+            this.currentRandomDelay = RandomGenerator.randomIntBetween(
                 this.options.randomDelays.min,
                 this.options.randomDelays.max
             );
