@@ -56,73 +56,73 @@
 // }
 
 function rectanglesOverlap(r1, r2) {
-	return (
-		r1.x <= r2.x + r2.width &&
-		r1.x + r1.width >= r2.x &&
-		r1.y <= r2.y + r2.height &&
-		r1.y + r1.height >= r2.y
-	);
+    return (
+        r1.x <= r2.x + r2.width &&
+        r1.x + r1.width >= r2.x &&
+        r1.y <= r2.y + r2.height &&
+        r1.y + r1.height >= r2.y
+    );
 }
 
 function findOverlapping(target, others) {
-	let overlapping = [];
-	for (let other of others) {
-		if (rectanglesOverlap(target, other)) {
-			overlapping.push(other);
-		}
-	}
-	return overlapping;
+    let overlapping = [];
+    for (let other of others) {
+        if (rectanglesOverlap(target, other)) {
+            overlapping.push(other);
+        }
+    }
+    return overlapping;
 }
 
 function randomXYIn(itemWidth, itemHeight, canvasWidth, canvasHeight) {
-	return {
-		x: randomIntBetween(0, canvasWidth - itemWidth),
-		y: randomIntBetween(0, canvasHeight - itemHeight),
-	};
+    return {
+        x: randomIntBetween(0, canvasWidth - itemWidth),
+        y: randomIntBetween(0, canvasHeight - itemHeight),
+    };
 }
 
 function randomIntBetween(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function randomFromArray(array) {
-	return array[randomIntBetween(0, array.length - 1)];
+    return array[randomIntBetween(0, array.length - 1)];
 }
 
 function randomSign() {
-	if (randomIntBetween(0, 1) <= 0.5) {
-		return -1;
-	}
-	return 1;
+    if (randomIntBetween(0, 1) <= 0.5) {
+        return -1;
+    }
+    return 1;
 }
 
 function createOscillator(min, max, rate) {
-	let currentValue = min;
-	let increasing = true;
+    let currentValue = min;
+    let increasing = true;
 
-	return () => {
-		if (increasing) {
-			currentValue += (rate * (max - min)) / 1000;
-			if (currentValue >= max) {
-				increasing = false;
-			}
-		} else {
-			currentValue -= (rate * (max - min)) / 1000;
-			if (currentValue <= min) {
-				increasing = true;
-			}
-		}
-		return currentValue;
-	};
+    return () => {
+        if (increasing) {
+            currentValue += (rate * (max - min)) / 1000;
+            if (currentValue >= max) {
+                increasing = false;
+            }
+        } else {
+            currentValue -= (rate * (max - min)) / 1000;
+            if (currentValue <= min) {
+                increasing = true;
+            }
+        }
+        return currentValue;
+    };
 }
 
 export {
-	rectanglesOverlap,
-	findOverlapping,
-	randomXYIn,
-	randomIntBetween,
-	randomFromArray,
-	randomSign,
+    rectanglesOverlap,
+    findOverlapping,
+    randomXYIn,
+    randomIntBetween,
+    randomFromArray,
+    randomSign,
 };
