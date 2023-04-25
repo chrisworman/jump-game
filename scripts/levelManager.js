@@ -23,7 +23,6 @@ export class LevelManager {
 	}
 
 	getNextLevel() {
-
 		if (this.worldNumber > LevelManager.WORLD_COUNT) {
 			return null;
 		}

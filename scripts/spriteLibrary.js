@@ -26,7 +26,7 @@ export class SpriteLibrary {
 	};
 
 	static preloadImages() {
-		console.log('SpriteLibrary :: preloadImages()');
+		console.log("SpriteLibrary :: preloadImages()");
 		Object.getOwnPropertyNames(SpriteLibrary)
 			.filter((propName) => propName !== "preloadImages")
 			.filter((propName) => typeof SpriteLibrary[propName] === "function")

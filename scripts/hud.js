@@ -2,7 +2,7 @@ import { Game } from "./game.js";
 
 export class Hud {
 	constructor(game) {
-        this.game = game;
+		this.game = game;
 		this.hearts = document.getElementById("hearts");
 		this.textOverlay = document.getElementById("textOverlay");
 		this.score = document.getElementById("score");

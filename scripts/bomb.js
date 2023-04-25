@@ -4,7 +4,7 @@ import { Game } from "./game.js";
 
 export class Bomb {
 	static SPAWN_SPEED_X = 3;
-    static SPAWN_SPEED_Y = 8;
+	static SPAWN_SPEED_Y = 8;
 
 	constructor(x, y, velocity, sprite) {
 		this.enemyType = EnemyTypes.BOMB;

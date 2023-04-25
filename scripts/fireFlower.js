@@ -33,7 +33,8 @@ export class FireFlower {
 					)
 				);
 			},
-			delays: [1000],
+			// randomDelays: { min: 500, max: 3000 },
+			delays: [200, 200, 200, 500, 200, 200, 200, 2000],
 		});
 	}
 
