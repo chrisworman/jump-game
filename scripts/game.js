@@ -84,8 +84,8 @@ export class Game {
     }
 
     updatePlaying() {
+        // Updating just the player first, which can die or complete the level
         this.player.update();
-        this.platforms.update();
 
         // Player dead?
         if (this.player.health === 0) {
@@ -99,7 +99,8 @@ export class Game {
             return;
         }
 
-        // Update enemies
+        // Update remaining entities
+        this.platforms.update();
         this.enemies.forEach((enemy) => enemy.update());
         this.bullets.forEach((bullet) => bullet.update());
         this.collectables.forEach((x) => x.update());
@@ -158,11 +159,11 @@ export class Game {
 
         // Transition to next level
         this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
-        this.platforms.nextSprite = this.level.platformSprite;
+        this.platforms.handleLevelComplete(this.level.platformSprite);
+        this.player.handelLevelComplete();
         this.collectables = [];
         this.enemies = [];
         this.bullets = [];
-        this.player.handelLevelComplete();
         this.state = GameState.LEVEL_TRANSITION;
     }
 

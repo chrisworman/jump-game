@@ -14,15 +14,14 @@ export class Platforms {
     }
 
     update() {
-        if (this.game.state !== this.lastGameState) {
-            if (this.game.state === GameState.LEVEL_TRANSITION) {
-                this.levelTransitionScrollY = 0;
-            }
-        } else if (this.game.state === GameState.LEVEL_TRANSITION) {
+        if (this.game.state === GameState.LEVEL_TRANSITION) {
             this.levelTransitionScrollY += Game.LEVEL_SCROLL_SPEED;
         }
+    }
 
-        this.lastGameState = this.game.state;
+    handleLevelComplete(nextSprite) {
+        this.levelTransitionScrollY = 0;
+        this.nextSprite = nextSprite;
     }
 
     static getPlatformYs() {

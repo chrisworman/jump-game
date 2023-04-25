@@ -204,6 +204,7 @@ export class Player {
         this.dropping = false;
         this.recovering = false;
         this.recoveringStartTime = null;
+        this.sprites.forEach((x) => x.filterManager.reset());
         this.y = -this.height; // TODO: this needs to be fixed for boss levels; not sure what to do
     }
 
@@ -251,5 +252,6 @@ export class Player {
         this.lastShootTime = null;
         this.recovering = false;
         this.recoveringStartTime = null;
+        this.sprites.forEach((x) => x.filterManager.reset());
     }
 }
