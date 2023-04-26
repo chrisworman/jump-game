@@ -36,10 +36,10 @@ export class Player {
 
     getHitBox() {
         return {
-            x: this.x + 10,
-            y: this.y + 10,
+            x: this.x,
+            y: this.y + 15,
             width: this.width - 15,
-            height: this.height - 15,
+            height: this.height,
         };
     }
 

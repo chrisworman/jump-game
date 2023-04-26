@@ -117,8 +117,8 @@ export class Game {
             this.hud.textOverlayFadeOut();
             this.platforms.currentSprite = this.level.platformSprite;
             this.player.handleLevelTransitionDone();
-            this.collectables = this.level.spawnCollectables();
             this.enemies = this.level.spawnInitialEnemies();
+            this.collectables = this.level.spawnCollectables();
             this.state = GameState.PLAYING;
         }
     }

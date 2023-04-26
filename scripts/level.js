@@ -69,7 +69,7 @@ export class Level {
         for (let i = 0; i < collectableCount; i++) {
             const collectable = Collectable.spawn(
                 this.game,
-                [...collectables, this.game.player], // Prevent overlapping collectables
+                [...collectables, this.game.player, ...this.game.enemies], // Prevent overlapping collectables
                 this.collectableProbabilities
             );
             collectables.push(collectable);
