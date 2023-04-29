@@ -1,16 +1,19 @@
 import { Velocity } from './components.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { Game } from './game.js';
+import { Mover } from './mover.js';
 
 export class Bomb {
     static SPAWN_SPEED_X = 3;
     static SPAWN_SPEED_Y = 8;
 
     constructor(x, y, velocity, sprite) {
+        // extract to .enemy = new Enemy(EnemyTypes.BOMB, false, ...)
         this.enemyType = EnemyTypes.BOMB;
         this.isDead = false;
         this.isShot = false;
         this.isShootable = false;
+
         this.isOffScreen = false;
 
         this.sprite = sprite;
@@ -18,7 +21,8 @@ export class Bomb {
         this.y = y;
         this.width = sprite.width;
         this.height = sprite.height;
-        this.velocity = velocity;
+        this.mover = new Mover(this);
+        this.mover.setVelocity(velocity);
     }
 
     render(renderContext) {
@@ -32,9 +36,7 @@ export class Bomb {
         if (this.isOffScreen) {
             return;
         }
-        this.velocity.y += Game.GRAVITY;
-        this.y += this.velocity.y;
-        this.x += this.velocity.x;
+        this.mover.update();
         this.isOffScreen = this.y > 800; // TODO: reference this.game.height
     }
 

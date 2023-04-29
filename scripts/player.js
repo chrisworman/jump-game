@@ -1,4 +1,3 @@
-import { Velocity } from './components.js';
 import { GameState } from './gameState.js';
 import { Game } from './game.js';
 import { Platforms } from './platforms.js';
@@ -6,6 +5,7 @@ import { Bullet } from './bullet.js';
 import { Collider } from './collider.js';
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
+import { Mover } from './mover.js';
 
 export class Player {
     static VERTICAL_SPEED = -8;
@@ -93,18 +93,18 @@ export class Player {
 
         // Move player left or right
         if (this.game.userControls.left) {
-            this.velocity.x = -Player.HORIZONTAL_SPEED;
+            this.mover.setVelocityX(-Player.HORIZONTAL_SPEED);
         } else if (this.game.userControls.right) {
-            this.velocity.x = Player.HORIZONTAL_SPEED;
+            this.mover.setVelocityX(Player.HORIZONTAL_SPEED);
         } else if (!this.jumping) {
             // Drift while jumping, but stop instantly on ground
-            this.velocity.x = 0;
+            this.mover.setVelocityX(0);
         }
 
         // React to user jump
         if (!this.dropping && !this.jumping && this.game.userControls.jump) {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
-            this.velocity.y = Player.VERTICAL_SPEED;
+            this.mover.setVelocityY(Player.VERTICAL_SPEED)
             this.jumpingRightSprite.reset();
             this.jumpingLeftSprite.reset();
             this.jumping = true;
@@ -112,23 +112,20 @@ export class Player {
 
         // React to user drop
         if (!this.dropping && !this.jumping && this.game.userControls.drop) {
-            this.velocity.y = 0;
+            this.mover.setVelocityY(0);
             this.dropping = true;
         }
 
         // Platform detection while dropping or jumping
 
         // Apply gravity if jumping or dropping
-        if (this.jumping || this.dropping) {
-            this.velocity.y += Game.GRAVITY;
-        }
-        this.y += this.velocity.y;
-        this.x += this.velocity.x;
+        this.mover.setGravity(this.jumping || this.dropping ? Game.GRAVITY : 0);
+        this.mover.update();
 
         // Platform detection while dropping
         if (
-            (this.dropping && this.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
-            (this.jumping && this.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
+            (this.dropping && this.mover.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
+            (this.jumping && this.mover.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
         ) {
             // See if we have crossed a platform while falling
             let roundedLastBottomY = Math.ceil(this.lastY + this.height);
@@ -140,8 +137,7 @@ export class Player {
                     roundedBottom++
                 ) {
                     if (roundedBottom % Platforms.HEIGHT == 0) {
-                        this.velocity.y = 0;
-                        this.velocity.x = 0;
+                        this.mover.stop();
                         this.y = roundedBottom - this.height;
                         this.jumping = false;
                         this.dropping = false;
@@ -161,17 +157,17 @@ export class Player {
         }
         if (this.y + this.height > this.game.canvas.height) {
             this.y = this.game.canvas.height - this.height;
-            this.velocity.y = 0;
+            this.mover.setVelocityY(0);
             this.jumping = false;
             this.dropping = false;
         }
         if (this.x + this.width > this.game.canvas.width) {
             this.x = this.game.canvas.width - this.width;
-            this.velocity.x = 0;
+            this.mover.setVelocityX(0);
         }
         if (this.x <= 0) {
             this.x = 0;
-            this.velocity.x = 0;
+            this.mover.setVelocityX(0);
         }
 
         this.lastY = this.y;
@@ -210,8 +206,7 @@ export class Player {
 
     handleLevelTransitionDone() {
         this.y = this.game.canvas.height - this.height;
-        this.velocity.y = 0;
-        this.velocity.x = 0;
+        this.mover.stop();
     }
 
     setHealth(health) {
@@ -242,10 +237,10 @@ export class Player {
 
     reset() {
         this.setHealth(Player.INITIAL_HEALTH);
-        this.velocity = new Velocity();
         this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
         this.y = Math.floor(this.game.canvas.height - this.height);
         this.lastY = this.y;
+        this.mover = new Mover(this, 0);
         this.jumping = false;
         this.dropping = false;
         this.facingRight = false;

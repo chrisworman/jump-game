@@ -2,6 +2,7 @@ import { EnemyTypes } from './enemyTypes.js';
 import { Platforms } from './platforms.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
+import { Mover } from './mover.js';
 
 export class Walker {
     static SPEED = 2;
@@ -20,7 +21,8 @@ export class Walker {
         this.y = y;
         this.width = this.walkingSprite.width;
         this.height = this.walkingSprite.height;
-        this.speed = initialSpeed;
+        this.mover = new Mover(this, 0);
+        this.mover.setVelocityX(initialSpeed);
     }
 
     static spawn(canvasWidth) {
@@ -52,14 +54,16 @@ export class Walker {
             this.isDead = this.dyingSprite.reachedEnd;
             return;
         }
-        this.x += this.speed;
+
+        this.mover.update();
+
         if (this.x + this.width >= 550) {
             // Change direction
             this.x = this.x - 1;
-            this.speed = -Walker.SPEED;
+            this.mover.setVelocityX(-Walker.SPEED);
         } else if (this.x <= 0) {
             this.x = 1;
-            this.speed = Walker.SPEED;
+            this.mover.setVelocityX(Walker.SPEED);
         }
     }
 

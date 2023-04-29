@@ -1,10 +1,11 @@
 import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
-import { Velocity } from './components.js';
 import { RandomGenerator } from './randomGenerator.js';
+import { Mover } from './mover.js';
+import { Game } from './game.js';
 
 export class FireBall {
-    constructor(x, y, gravity, sprite) {
+    constructor(x, y, sprite) {
         this.enemyType = EnemyTypes.FIRE_BALL;
         this.isDead = false;
         this.isShot = false;
@@ -16,15 +17,13 @@ export class FireBall {
         this.y = y;
         this.width = SpriteLibrary.SIZES.FIRE_BALL.width;
         this.height = SpriteLibrary.SIZES.FIRE_BALL.height;
-        this.gravity = gravity - 0.1; // TODO
-        this.velocity = new Velocity();
+        this.mover = new Mover(this, Game.GRAVITY - 0.1);
     }
 
-    static spawn(canvasWidth, gravity) {
+    static spawn(canvasWidth) {
         return new FireBall(
             RandomGenerator.randomIntBetween(0, canvasWidth - SpriteLibrary.SIZES.FIRE_BALL.width),
-            0,
-            gravity,
+            1, // Important: spawn on screen
             SpriteLibrary.fireBall()
         );
     }
@@ -40,9 +39,8 @@ export class FireBall {
         if (this.isOffScreen) {
             return;
         }
-        this.velocity.y += this.gravity;
-        this.y += this.velocity.y;
-        this.x += this.velocity.x;
+
+        this.mover.update();
         this.isOffScreen = this.y > 800; // TODO: reference this.game.height
     }
 

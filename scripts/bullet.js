@@ -1,5 +1,6 @@
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Collider } from './collider.js';
+import { Mover } from './mover.js';
 
 export class Bullet {
     static SPEED = 8;
@@ -13,7 +14,9 @@ export class Bullet {
         this.width = SpriteLibrary.SIZES.BULLET.width;
         this.height = SpriteLibrary.SIZES.BULLET.height;
         this.sprite = sprite;
-        this.speed = speed;
+
+        this.mover = new Mover(this, 0);
+        this.mover.setVelocityX(speed); // A bullet only moves left or right
     }
 
     static spawn(game) {
@@ -38,7 +41,7 @@ export class Bullet {
             return;
         }
 
-        this.x += this.speed;
+        this.mover.update();
         this.isOffScreen = this.x > this.game.width || this.x + this.width < 0;
 
         // Check for shot enemies
