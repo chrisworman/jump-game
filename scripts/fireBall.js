@@ -3,20 +3,19 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Mover } from './mover.js';
 import { Game } from './game.js';
+import { Enemy } from './enemy.js';
 
-export class FireBall {
+export class FireBall extends Enemy {
     constructor(x, y, sprite) {
-        this.enemyType = EnemyTypes.FIRE_BALL;
-        this.isDead = false;
-        this.isShot = false;
-        this.isShootable = false;
-        this.isOffScreen = false;
-
+        super(
+            x,
+            y,
+            SpriteLibrary.SIZES.FIRE_BALL.width,
+            SpriteLibrary.SIZES.FIRE_BALL.height,
+            EnemyTypes.FIRE_BALL,
+            false
+        );
         this.sprite = sprite;
-        this.x = x;
-        this.y = y;
-        this.width = SpriteLibrary.SIZES.FIRE_BALL.width;
-        this.height = SpriteLibrary.SIZES.FIRE_BALL.height;
         this.mover = new Mover(this, Game.GRAVITY - 0.1);
     }
 
@@ -42,9 +41,5 @@ export class FireBall {
 
         this.mover.update();
         this.isOffScreen = this.y > 800; // TODO: reference this.game.height
-    }
-
-    handleShot() {
-        /* fireBalls are invincible */
     }
 }

@@ -1,22 +1,18 @@
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
-import { Collider } from './collider.js';
+import { Box } from "./box.js";
+import { Entity } from './entity.js';
 
-export class Collectable {
+export class Collectable extends Entity {
     static SPAWN_BOTTOM_BUFFER = 100;
 
     constructor(game, x, y, sprite, points) {
+        super(x, y, sprite.width, sprite.height);
         this.game = game;
+        this.sprite = sprite;
         this.points = points;
         this.collected = false;
-
-        this.x = x;
-        this.y = y;
-
-        this.sprite = sprite;
-        this.width = sprite.width;
-        this.height = sprite.height;
     }
 
     static spawn(game, entitiesToAvoid, probabilities) {
@@ -31,15 +27,7 @@ export class Collectable {
                 game.canvas.width,
                 game.canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
             );
-            intersecting = Collider.filterIntersecting(
-                {
-                    x: xy.x,
-                    y: xy.y,
-                    width: 50,
-                    height: 50,
-                },
-                entitiesToAvoid
-            );
+            intersecting = entitiesToAvoid.filter((x) => x.intersects(new Box(xy.x, xy.y, 50, 50)));
             loops++;
         } while (intersecting.length > 0 && loops < maxLoops);
 
@@ -48,7 +36,7 @@ export class Collectable {
     }
 
     update() {
-        if (!this.collected && Collider.intersects(this.game.player, this)) {
+        if (!this.collected && this.intersects(this.game.player)) {
             this.collected = true;
             this.game.incrementScore(this.points);
             this.game.audioManager.play(AudioManager.AUDIO_FILES.COLLECTABLE_COLLECTED);

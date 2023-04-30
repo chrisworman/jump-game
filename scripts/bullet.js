@@ -1,20 +1,15 @@
 import { SpriteLibrary } from './spriteLibrary.js';
-import { Collider } from './collider.js';
 import { Mover } from './mover.js';
+import { Entity } from './entity.js';
 
-export class Bullet {
+export class Bullet extends Entity {
     static SPEED = 8;
 
     constructor(game, x, y, sprite, speed) {
+        super(x, y, SpriteLibrary.SIZES.BULLET.width, SpriteLibrary.SIZES.BULLET.height);
         this.game = game;
-        this.isOffScreen = false;
         this.hitEnemy = false;
-        this.x = x;
-        this.y = y;
-        this.width = SpriteLibrary.SIZES.BULLET.width;
-        this.height = SpriteLibrary.SIZES.BULLET.height;
         this.sprite = sprite;
-
         this.mover = new Mover(this, 0);
         this.mover.setVelocityX(speed); // A bullet only moves left or right
     }
@@ -46,12 +41,7 @@ export class Bullet {
 
         // Check for shot enemies
         for (let enemy of this.game.enemies) {
-            if (
-                enemy.isShootable &&
-                !enemy.isShot &&
-                !enemy.isDead &&
-                Collider.intersects(enemy, this)
-            ) {
+            if (enemy.isShootable && !enemy.isDead && this.intersects(enemy)) {
                 enemy.handleShot();
                 this.hitEnemy = true;
             }

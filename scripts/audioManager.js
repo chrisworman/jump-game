@@ -20,6 +20,7 @@ export class AudioManager {
         const sound = {
             audioElement: audioElement,
             isLoaded: false,
+            savedVolume: 0.1,
         };
         this.loadedAudioFiles.set(audioFile, sound);
         audioElement.addEventListener('loadeddata', () => {
@@ -57,14 +58,15 @@ export class AudioManager {
 
     mute() {
         Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
-            sound.audioElement.volume = 0; // TODO: same volume
+            sound.savedVolume = sound.audioElement.volume;
+            sound.audioElement.volume = 0;
         });
         this.isMuted = true;
     }
 
     unmute() {
         Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
-            sound.audioElement.volume = 0.1; // TODO: used cached / initial volume
+            sound.audioElement.volume = sound.savedVolume || 0.1;
         });
         this.isMuted = false;
     }

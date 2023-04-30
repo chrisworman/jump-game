@@ -1,4 +1,4 @@
-import { Velocity } from "./components.js";
+import { Velocity } from "./velocity.js";
 import { Game } from "./game.js";
 
 export class Mover {

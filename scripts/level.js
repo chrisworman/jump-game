@@ -1,5 +1,4 @@
 import { Collectable } from './collectable.js';
-import { Game } from './game.js';
 import { FireBall } from './fireBall.js';
 import { Walker } from './walker.js';
 import { EnemyTypes } from './enemyTypes.js';
@@ -21,14 +20,14 @@ export class Level {
 
     spawnEnemies() {
         if (this.world.boss) {
-            return; // TODO: For now we won't spawn other enemies during boss levels, but this can change
+            return;
         }
 
         if (
             this.number > 1 &&
             this.game.player.y < this.game.canvas.height - Level.NO_ENEMY_BUFFER &&
             this.game.player.y > Level.NO_ENEMY_BUFFER &&
-            this.game.enemies.filter((x) => x.enemyType === EnemyTypes.FIRE_BALL && !x.isOffScreen)
+            this.game.enemies.filter((x) => x.type === EnemyTypes.FIRE_BALL && !x.isOffScreen)
                 .length === 0
         ) {
             const now = Date.now();
@@ -45,10 +44,10 @@ export class Level {
 
     spawnInitialEnemies() {
         if (this.world.boss) {
-            return [this.world.boss]; // TODO: For now we won't spawn other enemies during boss levels, but this can change
+            return [this.world.boss];
         }
-        const initialEnemies = [];
 
+        const initialEnemies = [];
         const walkerSpawnCount = this.world.number + this.number - 1;
         for (let i = 1; i < walkerSpawnCount; i++) {
             initialEnemies.push(Walker.spawn(this.game.canvas.width));

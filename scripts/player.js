@@ -2,12 +2,13 @@ import { GameState } from './gameState.js';
 import { Game } from './game.js';
 import { Platforms } from './platforms.js';
 import { Bullet } from './bullet.js';
-import { Collider } from './collider.js';
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Mover } from './mover.js';
+import { Entity } from './entity.js';
+import { Box } from './box.js';
 
-export class Player {
+export class Player extends Entity {
     static VERTICAL_SPEED = -8;
     static HORIZONTAL_SPEED = 4.5;
     static SHOOT_DELAY_MS = 250;
@@ -15,6 +16,12 @@ export class Player {
     static RECOVERY_TIME_MS = 4000;
 
     constructor(game) {
+        super(
+            Math.floor(game.canvas.width / 2.0 - SpriteLibrary.SIZES.PLAYER.width / 2.0),
+            Math.floor(game.canvas.height - SpriteLibrary.SIZES.PLAYER.height),
+            SpriteLibrary.SIZES.PLAYER.width,
+            SpriteLibrary.SIZES.PLAYER.height
+        );
         this.game = game;
 
         this.standingLeftSprite = SpriteLibrary.playerStandingLeft();
@@ -28,19 +35,11 @@ export class Player {
             this.jumpingRightSprite,
         ];
 
-        this.width = SpriteLibrary.SIZES.PLAYER.width;
-        this.height = SpriteLibrary.SIZES.PLAYER.height;
-
         this.reset();
     }
 
     getHitBox() {
-        return {
-            x: this.x,
-            y: this.y + 15,
-            width: this.width - 15,
-            height: this.height,
-        };
+        return new Box(this.x, this.y + 15, this.width - 15, this.height);
     }
 
     update() {
@@ -55,11 +54,11 @@ export class Player {
     }
 
     updatePlaying() {
-        // Check enemy collisions
+        // Check enemy collisions: TODO: should this be in enemy?
         if (!this.recovering) {
-            const playerHitBox = this.getHitBox();
+            const hitBox = this.getHitBox();
             for (let enemy of this.game.enemies) {
-                if (!enemy.isShot && !enemy.isDead && Collider.intersects(playerHitBox, enemy)) {
+                if (!enemy.isDead && hitBox.intersects(enemy)) {
                     this.setHealth(this.health - 1);
                     break;
                 }
@@ -104,7 +103,7 @@ export class Player {
         // React to user jump
         if (!this.dropping && !this.jumping && this.game.userControls.jump) {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
-            this.mover.setVelocityY(Player.VERTICAL_SPEED)
+            this.mover.setVelocityY(Player.VERTICAL_SPEED);
             this.jumpingRightSprite.reset();
             this.jumpingLeftSprite.reset();
             this.jumping = true;

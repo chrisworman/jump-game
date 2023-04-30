@@ -185,17 +185,17 @@ export class Game {
             this.enemies
                 .filter(
                     (x) =>
-                        x.enemyType === EnemyTypes.WALKER || x.enemyType === EnemyTypes.FIRE_FLOWER
+                        x.type === EnemyTypes.WALKER || x.type === EnemyTypes.FIRE_FLOWER
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);
             this.bullets.forEach((x) => x.render(this.renderContext));
             this.collectables.forEach((x) => x.render(this.renderContext));
             this.enemies
-                .filter((x) => x.enemyType === EnemyTypes.BOMB)
+                .filter((x) => x.type === EnemyTypes.BOMB)
                 .forEach((x) => x.render(this.renderContext));
             this.enemies
-                .filter((x) => x.enemyType === EnemyTypes.FIRE_BALL)
+                .filter((x) => x.type === EnemyTypes.FIRE_BALL)
                 .forEach((x) => x.render(this.renderContext));
         });
     }

@@ -3,31 +3,30 @@ import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
+import { Enemy } from './enemy.js';
 
-export class FireFlower {
+export class FireFlower extends Enemy {
     constructor(game, x, y) {
-        this.enemyType = EnemyTypes.FIRE_FLOWER;
-        this.game = game;
-        this.isDead = false;
-        this.isShot = false;
-        this.isShootable = true;
-        this.isOffScreen = false;
-
-        this.x = x;
-        this.y = y;
+        super(
+            x,
+            y,
+            SpriteLibrary.SIZES.FIRE_BALL.width,
+            SpriteLibrary.SIZES.FIRE_BALL.height,
+            EnemyTypes.FIRE_FLOWER,
+            true
+        );
+        console.log(`Created ${EnemyTypes.FIRE_FLOWER}`);
         this.sprite = SpriteLibrary.fireBall(); // TODO: proper sprite
-        this.width = this.sprite.width;
-        this.height = this.sprite.height;
-        this.spawn = {
+        this.spawnPosition = {
             x: x + this.sprite.width * 0.5,
             y: y,
         };
-        this.bombEmitter = new Emitter({
+        this.bombSpawner = new Emitter({
             emit: () => {
                 game.enemies.push(
                     Bomb.spawnFrom(
-                        this.spawn.x,
-                        this.spawn.y,
+                        this.spawnPosition.x,
+                        this.spawnPosition.y,
                         RandomGenerator.randomSign(),
                         SpriteLibrary.bullet() // TODO: proper sprite
                     )
@@ -49,11 +48,6 @@ export class FireFlower {
         if (this.isDead) {
             return;
         }
-        this.bombEmitter.update();
-    }
-
-    handleShot() {
-        this.isShot = true;
-        this.isDead = true;
+        this.bombSpawner.update();
     }
 }
