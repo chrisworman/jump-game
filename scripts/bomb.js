@@ -8,8 +8,9 @@ export class Bomb extends Enemy {
     static SPAWN_SPEED_X = 3;
     static SPAWN_SPEED_Y = 8;
 
-    constructor(x, y, velocity, sprite) {
+    constructor(game, x, y, velocity, sprite) {
         super(
+            game,
             x,
             y,
             SpriteLibrary.SIZES.BULLET.width,
@@ -18,8 +19,9 @@ export class Bomb extends Enemy {
             false
         );
         this.sprite = sprite;
-        this.mover = new Mover(this);
+        this.mover = new Mover(game, this, false);
         this.mover.setVelocity(velocity);
+        this.mover.dropping = true;
     }
 
     render(renderContext) {
@@ -41,8 +43,8 @@ export class Bomb extends Enemy {
         verticalDirection = 1 => left to right
         verticalDirection = -1 => right to left
     */
-    static spawnFrom(x, y, verticalDirection, sprite) {
+    static spawn(game, x, y, verticalDirection, sprite) {
         const velocity = new Velocity(verticalDirection * Bomb.SPAWN_SPEED_X, -Bomb.SPAWN_SPEED_Y);
-        return new Bomb(x, y, velocity, sprite);
+        return new Bomb(game, x, y, velocity, sprite);
     }
 }

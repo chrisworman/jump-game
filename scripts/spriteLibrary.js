@@ -23,6 +23,10 @@ export class SpriteLibrary {
             width: 24,
             height: 12,
         },
+        BOSS: {
+            width: 64,
+            height: 76,
+        },
     };
 
     static preloadImages() {
@@ -137,5 +141,9 @@ export class SpriteLibrary {
 
     static bullet() {
         return new Sprite('images/bullet.png');
+    }
+
+    static boss() {
+        return new Sprite('images/boss.png')
     }
 }

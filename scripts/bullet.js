@@ -6,11 +6,10 @@ export class Bullet extends Entity {
     static SPEED = 8;
 
     constructor(game, x, y, sprite, speed) {
-        super(x, y, SpriteLibrary.SIZES.BULLET.width, SpriteLibrary.SIZES.BULLET.height);
-        this.game = game;
+        super(game, x, y, SpriteLibrary.SIZES.BULLET.width, SpriteLibrary.SIZES.BULLET.height);
         this.hitEnemy = false;
         this.sprite = sprite;
-        this.mover = new Mover(this, 0);
+        this.mover = new Mover(game, this, false);
         this.mover.setVelocityX(speed); // A bullet only moves left or right
     }
 

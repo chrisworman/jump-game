@@ -4,10 +4,12 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
+import { FilterManager } from './filterManager.js';
 
 export class FireFlower extends Enemy {
     constructor(game, x, y) {
         super(
+            game,
             x,
             y,
             SpriteLibrary.SIZES.FIRE_BALL.width,
@@ -15,7 +17,6 @@ export class FireFlower extends Enemy {
             EnemyTypes.FIRE_FLOWER,
             true
         );
-        console.log(`Created ${EnemyTypes.FIRE_FLOWER}`);
         this.sprite = SpriteLibrary.fireBall(); // TODO: proper sprite
         this.spawnPosition = {
             x: x + this.sprite.width * 0.5,
@@ -24,7 +25,8 @@ export class FireFlower extends Enemy {
         this.bombSpawner = new Emitter({
             emit: () => {
                 game.enemies.push(
-                    Bomb.spawnFrom(
+                    Bomb.spawn(
+                        game,
                         this.spawnPosition.x,
                         this.spawnPosition.y,
                         RandomGenerator.randomSign(),

@@ -3,8 +3,8 @@ import { Entity } from './entity.js';
 export class Enemy extends Entity {
     static DEFAULT_HEALTH = 1;
 
-    constructor(x, y, width, height, type, isShootable, health = Enemy.DEFAULT_HEALTH) {
-        super(x, y, width, height);
+    constructor(game, x, y, width, height, type, isShootable, health = Enemy.DEFAULT_HEALTH) {
+        super(game, x, y, width, height);
         this.type = type;
         this.isDead = false;
         this.isShootable = isShootable;

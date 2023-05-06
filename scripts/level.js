@@ -37,7 +37,7 @@ export class Level {
                     Level.MAX_FIRE_BALL_SPAWN_DELAY_MS - 15 * this.world.number * this.number
             ) {
                 this.enemySpawnTime = now;
-                this.game.enemies.push(FireBall.spawn(this.game.canvas.width));
+                this.game.enemies.push(FireBall.spawn(this.game));
             }
         }
     }
@@ -50,7 +50,7 @@ export class Level {
         const initialEnemies = [];
         const walkerSpawnCount = this.world.number + this.number - 1;
         for (let i = 1; i < walkerSpawnCount; i++) {
-            initialEnemies.push(Walker.spawn(this.game.canvas.width));
+            initialEnemies.push(Walker.spawn(this.game));
         }
 
         initialEnemies.push(new FireFlower(this.game, 200, 355));

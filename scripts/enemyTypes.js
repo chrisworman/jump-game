@@ -3,4 +3,5 @@ export class EnemyTypes {
     static WALKER = 'WALKER';
     static BOMB = 'BOMB';
     static FIRE_FLOWER = 'FIRE_FLOWER';
+    static BOSS = 'BOSS';
 }

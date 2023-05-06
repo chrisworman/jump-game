@@ -54,4 +54,11 @@ export class FilterManager {
             ctx.restore();
         }
     }
+
+    static blurFadeOutAnimation() {
+        return (fm, amountDone) => {
+            fm.blurPixels = 5 * amountDone;
+            fm.opacityPercent = 100 - 100 * amountDone;
+        };
+    }
 }

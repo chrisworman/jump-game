@@ -19,4 +19,8 @@ export class RandomGenerator {
     static randomSign() {
         return RandomGenerator.randomIntBetween(0, 1) === 0 ? -1 : 1;
     }
+
+    static randomBool(probability) {
+        return Math.random() < probability;
+    }
 }

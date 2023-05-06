@@ -6,8 +6,9 @@ import { Game } from './game.js';
 import { Enemy } from './enemy.js';
 
 export class FireBall extends Enemy {
-    constructor(x, y, sprite) {
+    constructor(game, x, y, sprite) {
         super(
+            game,
             x,
             y,
             SpriteLibrary.SIZES.FIRE_BALL.width,
@@ -16,12 +17,17 @@ export class FireBall extends Enemy {
             false
         );
         this.sprite = sprite;
-        this.mover = new Mover(this, Game.GRAVITY - 0.1);
+        this.mover = new Mover(game, this, false);
+        this.mover.dropping = true;
     }
 
-    static spawn(canvasWidth) {
+    static spawn(game) {
         return new FireBall(
-            RandomGenerator.randomIntBetween(0, canvasWidth - SpriteLibrary.SIZES.FIRE_BALL.width),
+            game,
+            RandomGenerator.randomIntBetween(
+                0,
+                game.canvas.width - SpriteLibrary.SIZES.FIRE_BALL.width
+            ),
             1, // Important: spawn on screen
             SpriteLibrary.fireBall()
         );

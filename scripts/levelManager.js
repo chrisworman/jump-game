@@ -14,11 +14,11 @@ export class LevelManager {
         // Bosses
         // TODO: invent and populate bosses!
         this.worldBossFactories = new Map([
-            [1, () => Walker.spawn(this.game.canvas.width)],
-            [2, () => Walker.spawn(this.game.canvas.width)],
-            [3, () => Walker.spawn(this.game.canvas.width)],
-            [4, () => Walker.spawn(this.game.canvas.width)],
-            [5, () => Walker.spawn(this.game.canvas.width)],
+            [1, () => Walker.spawn(this.game)],
+            [2, () => Walker.spawn(this.game)],
+            [3, () => Walker.spawn(this.game)],
+            [4, () => Walker.spawn(this.game)],
+            [5, () => Walker.spawn(this.game)],
         ]);
     }
 

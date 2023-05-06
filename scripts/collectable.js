@@ -1,15 +1,15 @@
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
-import { Box } from "./box.js";
+import { Box } from './box.js';
 import { Entity } from './entity.js';
+import { FilterManager } from './filterManager.js';
 
 export class Collectable extends Entity {
     static SPAWN_BOTTOM_BUFFER = 100;
 
     constructor(game, x, y, sprite, points) {
-        super(x, y, sprite.width, sprite.height);
-        this.game = game;
+        super(game, x, y, sprite.width, sprite.height);
         this.sprite = sprite;
         this.points = points;
         this.collected = false;
@@ -22,12 +22,21 @@ export class Collectable extends Entity {
         let loops = 0;
         do {
             xy = RandomGenerator.randomXYIn(
-                50,
-                50,
+                SpriteLibrary.SIZES.COLLECTABLE.width,
+                SpriteLibrary.SIZES.COLLECTABLE.height,
                 game.canvas.width,
                 game.canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
             );
-            intersecting = entitiesToAvoid.filter((x) => x.intersects(new Box(xy.x, xy.y, 50, 50)));
+            intersecting = entitiesToAvoid.filter((x) =>
+                x.intersects(
+                    new Box(
+                        xy.x,
+                        xy.y,
+                        SpriteLibrary.SIZES.COLLECTABLE.width,
+                        SpriteLibrary.SIZES.COLLECTABLE.height
+                    )
+                )
+            );
             loops++;
         } while (intersecting.length > 0 && loops < maxLoops);
 
@@ -38,6 +47,7 @@ export class Collectable extends Entity {
     update() {
         if (!this.collected && this.intersects(this.game.player)) {
             this.collected = true;
+            this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 150);
             this.game.incrementScore(this.points);
             this.game.audioManager.play(AudioManager.AUDIO_FILES.COLLECTABLE_COLLECTED);
         }
@@ -45,7 +55,9 @@ export class Collectable extends Entity {
 
     render(renderContext) {
         if (this.collected) {
-            return;
+            if (this.sprite.filterManager.animation == null) {
+                return;
+            }
         }
         this.sprite.render(renderContext, this.x, this.y);
     }

@@ -1,15 +1,21 @@
-import { Velocity } from "./velocity.js";
-import { Game } from "./game.js";
+import { Velocity } from './velocity.js';
+import { Game } from './game.js';
+import { Platforms } from './platforms.js';
 
 export class Mover {
-    constructor(target, gravity = Game.GRAVITY) {
+    constructor(game, target, collideWithPlatforms = true) {
+        this.game = game;
         this.target = target;
+        this.lastY = this.target.y;
+        this.collideWithPlatforms = collideWithPlatforms;
         this.velocity = new Velocity();
-        this.gravity = gravity;
+        this.jumping = false;
+        this.dropping = false;
+        this.onPlatform = null;
     }
 
     setGravity(gravity) {
-        this.gravity = gravity;
+        Game.GRAVITY = gravity;
     }
 
     setVelocity(velocity) {
@@ -29,9 +35,93 @@ export class Mover {
         this.velocity.y = 0;
     }
 
+    jump(velocityY = -8) {
+        if (!this.dropping && !this.jumping) {
+            this.jumping = true;
+            this.setVelocityY(velocityY);
+        }
+    }
+
+    drop() {
+        if (!this.dropping && !this.jumping) {
+            this.setVelocityY(0);
+            this.dropping = true;
+        }
+    }
+
+    left(velocityX = 4.5) {
+        this.setVelocityX(-velocityX);
+    }
+
+    right(velocityX = 4.5) {
+        this.setVelocityX(velocityX);
+    }
+
+    setOnPlatform(onPlatform) {
+        this.onPlatform = onPlatform;
+    }
+
     update() {
-        this.velocity.y += this.gravity;
+        // Apply gravity if we are not standing on a platform
+        if (this.jumping || this.dropping) {
+            this.velocity.y += Game.GRAVITY;
+        }
+
+        // Move the target according to their velocity
         this.target.y += this.velocity.y;
         this.target.x += this.velocity.x;
+
+        // Platform collision detection
+        if (this.collideWithPlatforms) {
+
+            // Check for platform collision while dropping
+            if (
+                (this.dropping && this.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
+                (this.jumping && this.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
+            ) {
+                // See if we have crossed a platform while falling
+                let roundedLastBottomY = Math.ceil(this.lastY + this.target.height);
+                let roundedBottomY = Math.ceil(this.target.y + this.target.height);
+                if (roundedLastBottomY <= roundedBottomY) {
+                    for (
+                        let roundedBottom = roundedLastBottomY;
+                        roundedBottom <= roundedBottomY;
+                        roundedBottom++
+                    ) {
+                        if (roundedBottom % Platforms.HEIGHT == 0) {
+                            this.stop();
+                            this.target.y = roundedBottom - this.target.height;
+                            this.jumping = false;
+                            this.dropping = false;
+                            if (this.onPlatform) {
+                                this.onPlatform();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Apply collision detection main canvas
+            const canvas = this.game.canvas;
+            if (this.target.y + this.target.height > canvas.height) {
+                this.target.y = canvas.height - this.target.height;
+                this.setVelocityY(0);
+                this.jumping = false;
+                this.dropping = false;
+            }
+            if (this.target.x + this.target.width > canvas.width) {
+                this.target.x = canvas.width - this.target.width;
+                this.setVelocityX(0);
+                this.dropping = false;
+            }
+            if (this.target.x <= 0) {
+                this.target.x = 0;
+                this.setVelocityX(0);
+                this.dropping = false;
+            }
+
+            this.lastY = this.target.y;
+        }
     }
 }

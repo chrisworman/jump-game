@@ -4,12 +4,14 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Mover } from './mover.js';
 import { Enemy } from './enemy.js';
+import { Emitter } from './emitter.js';
 
 export class Walker extends Enemy {
     static SPEED = 2;
 
-    constructor(x, y, initialSpeed, walkingSprite, dyingSprite) {
+    constructor(game, x, y, initialSpeed, walkingSprite, dyingSprite) {
         super(
+            game,
             x,
             y,
             SpriteLibrary.SIZES.WALKER.width,
@@ -17,15 +19,37 @@ export class Walker extends Enemy {
             EnemyTypes.WALKER,
             true
         );
+        
         this.walkingSprite = walkingSprite;
         this.dyingSprite = dyingSprite;
-        this.mover = new Mover(this, 0);
+        
+        this.mover = new Mover(game, this, true);
         this.mover.setVelocityX(initialSpeed);
+        this.mover.setOnPlatform(() => {
+            if (RandomGenerator.randomBool(0.5)) {
+                this.mover.left(Walker.SPEED);
+            } else {
+                this.mover.right(Walker.SPEED);
+            }
+        });
+
+        this.platformChanger = new Emitter({
+            emit: () => {
+                // TODO: check if on top or bottom platform
+                if (RandomGenerator.randomBool(0.5)) {
+                    this.mover.jump();
+                } else {
+                    this.mover.drop();
+                }
+            },
+            randomDelays: { min: 3000, max: 10000 },
+        });
     }
 
-    static spawn(canvasWidth) {
+    static spawn(game) {
         return new Walker(
-            RandomGenerator.randomIntBetween(1, canvasWidth - SpriteLibrary.SIZES.WALKER.width - 1),
+            game,
+            RandomGenerator.randomIntBetween(1, game.canvas.width - SpriteLibrary.SIZES.WALKER.width - 1),
             RandomGenerator.randomFromArray(Platforms.getPlatformYs()) -
                 SpriteLibrary.SIZES.WALKER.height,
             RandomGenerator.randomSign() * Walker.SPEED,
@@ -49,15 +73,16 @@ export class Walker extends Enemy {
             return;
         }
 
+        this.platformChanger.update();
         this.mover.update();
 
         if (this.x + this.width >= 550) {
             // Change direction
             this.x = this.x - 1;
-            this.mover.setVelocityX(-Walker.SPEED);
+            this.mover.left(Walker.SPEED);
         } else if (this.x <= 0) {
             this.x = 1;
-            this.mover.setVelocityX(Walker.SPEED);
+            this.mover.right(Walker.SPEED);
         }
     }
 }
