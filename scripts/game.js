@@ -9,6 +9,8 @@ import { AudioManager } from './audioManager.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Hud } from './hud.js';
+import { Bullet } from './bullet.js';
+import { Bomb } from './bomb.js';
 
 export class Game {
     static GRAVITY = 0.3;
@@ -47,8 +49,10 @@ export class Game {
         this.player.reset();
         this.setScore(0);
         this.bullets = [];
+        Bullet.SpawnReusePool = [];
         this.collectables = [];
         this.enemies = [];
+        Bomb.SpawnReusePool = [];
         this.platforms.currentSprite = this.level.platformSprite;
         this.collectables = this.level.spawnCollectables();
         this.enemies = this.level.spawnInitialEnemies();
@@ -163,7 +167,9 @@ export class Game {
         this.player.handelLevelComplete();
         this.collectables = [];
         this.enemies = [];
+        Bomb.SpawnReusePool = [];
         this.bullets = [];
+        Bullet.SpawnReusePool = [];
         this.state = GameState.LEVEL_TRANSITION;
     }
 
@@ -176,6 +182,10 @@ export class Game {
             }
             this.hud.displayAudioMuted(this.audioManager.isMuted);
         }
+    }
+
+    isBossLevel() {
+        return this.level && !!this.level.world.boss;
     }
 
     render() {

@@ -2,12 +2,15 @@ import { Velocity } from './velocity.js';
 import { Game } from './game.js';
 import { Platforms } from './platforms.js';
 
+// An entity behaviour that provides movement like jumping, dropping, and moving left or right.
+// Optionally provides platform collision detection for platform bound entities.
 export class Mover {
-    constructor(game, target, collideWithPlatforms = true) {
+    constructor(game, target, platformCollisions = true, ceilingCollisions = true) {
         this.game = game;
         this.target = target;
         this.lastY = this.target.y;
-        this.collideWithPlatforms = collideWithPlatforms;
+        this.platformCollisions = platformCollisions;
+        this.ceilingCollisions = ceilingCollisions;
         this.velocity = new Velocity();
         this.jumping = false;
         this.dropping = false;
@@ -28,6 +31,10 @@ export class Mover {
 
     setVelocityY(y) {
         this.velocity.y = y;
+    }
+
+    setCeilingCollisions(ceilingCollisions) {
+        this.ceilingCollisions = ceilingCollisions;
     }
 
     stop() {
@@ -72,7 +79,7 @@ export class Mover {
         this.target.x += this.velocity.x;
 
         // Platform collision detection
-        if (this.collideWithPlatforms) {
+        if (this.platformCollisions) {
 
             // Check for platform collision while dropping
             if (
@@ -102,8 +109,11 @@ export class Mover {
                 }
             }
 
-            // Apply collision detection main canvas
+            // Apply collision detection with the game play area
             const canvas = this.game.canvas;
+            if (this.ceilingCollisions && this.target.y <= 0) {
+                this.target.y = 0;
+            }
             if (this.target.y + this.target.height > canvas.height) {
                 this.target.y = canvas.height - this.target.height;
                 this.setVelocityY(0);

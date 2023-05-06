@@ -56,7 +56,7 @@ export class Player extends Entity {
         if (!this.recovering) {
             const hitBox = this.getHitBox();
             for (let enemy of this.game.enemies) {
-                if (!enemy.isDead && hitBox.intersects(enemy)) {
+                if (!enemy.isDead && !enemy.isOffScreen && hitBox.intersects(enemy)) {
                     this.setHealth(this.health - 1);
                     break;
                 }
@@ -76,7 +76,7 @@ export class Player extends Entity {
             if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) {
                 // Time to shoot
                 this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_SHOOT);
-                this.game.bullets.push(Bullet.spawn(this.game));
+                Bullet.spawn(this.game);
                 this.lastShootTime = now;
             }
         }
@@ -85,89 +85,30 @@ export class Player extends Entity {
         if (this.game.userControls.left) {
             this.facingRight = false;
             this.mover.left(Player.HORIZONTAL_SPEED);
-            // this.mover.setVelocityX(-Player.HORIZONTAL_SPEED);
         } else if (this.game.userControls.right) {
             this.facingRight = true;
             this.mover.right(Player.HORIZONTAL_SPEED);
-            // this.mover.setVelocityX(Player.HORIZONTAL_SPEED);
         } else if (!this.mover.jumping) {
             // Drift while jumping, but stop instantly on ground
-            // TODO: this should stay here since it is a feature of the player that the
-            // entity stops (x) in this case (I think). Other entities may not want this behaviour (I think?)
             this.mover.setVelocityX(0);
         }
 
         // React to user jump
         if (!this.mover.dropping && !this.mover.jumping && this.game.userControls.jump) {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
-            // this.mover.setVelocityY(Player.VERTICAL_SPEED);
             this.mover.jump(Player.VERTICAL_SPEED);
             this.jumpingRightSprite.reset();
             this.jumpingLeftSprite.reset();
-            // this.jumping = true;
         }
 
         // React to user drop
         if (!this.mover.dropping && !this.mover.jumping && this.game.userControls.drop) {
             this.mover.drop();
-            //this.mover.setVelocityY(0);
-            //this.dropping = true;
         }
 
-        // Platform detection while dropping or jumping
-
-        // Apply gravity if jumping or dropping
-        // this.mover.setGravity(this.jumping || this.dropping ? Game.GRAVITY : 0);
+        // Update the mover with level appropriate ceiling collision detection
+        this.mover.setCeilingCollisions(this.game.isBossLevel());
         this.mover.update();
-
-        // Platform detection while dropping
-        // if (
-        //     (this.dropping && this.mover.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
-        //     (this.jumping && this.mover.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
-        // ) {
-        //     // See if we have crossed a platform while falling
-        //     let roundedLastBottomY = Math.ceil(this.lastY + this.height);
-        //     let roundedBottomY = Math.ceil(this.y + this.height);
-        //     if (roundedLastBottomY <= roundedBottomY) {
-        //         for (
-        //             let roundedBottom = roundedLastBottomY;
-        //             roundedBottom <= roundedBottomY;
-        //             roundedBottom++
-        //         ) {
-        //             if (roundedBottom % Platforms.HEIGHT == 0) {
-        //                 this.mover.stop();
-        //                 this.y = roundedBottom - this.height;
-        //                 this.jumping = false;
-        //                 this.dropping = false;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // Boss level and outside the top of the level?
-        if (this.game.level.world.boss && this.y <= 0) {
-            // Stay completely within the level during boss levels
-            this.y = 0;
-        }
-
-        // Apply collision detection main canvas
-        // if (this.y + this.height > this.game.canvas.height) {
-        //     this.y = this.game.canvas.height - this.height;
-        //     this.mover.setVelocityY(0);
-        //     this.jumping = false;
-        //     this.dropping = false;
-        // }
-        // if (this.x + this.width > this.game.canvas.width) {
-        //     this.x = this.game.canvas.width - this.width;
-        //     this.mover.setVelocityX(0);
-        // }
-        // if (this.x <= 0) {
-        //     this.x = 0;
-        //     this.mover.setVelocityX(0);
-        // }
-
-        this.lastY = this.y;
     }
 
     updateLevelTransition() {

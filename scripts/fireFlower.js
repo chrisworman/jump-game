@@ -24,15 +24,13 @@ export class FireFlower extends Enemy {
         };
         this.bombSpawner = new Emitter({
             emit: () => {
-                game.enemies.push(
-                    Bomb.spawn(
-                        game,
-                        this.spawnPosition.x,
-                        this.spawnPosition.y,
-                        RandomGenerator.randomSign(),
-                        SpriteLibrary.bullet() // TODO: proper sprite
-                    )
-                );
+                Bomb.spawn(
+                    game,
+                    this.spawnPosition.x,
+                    this.spawnPosition.y,
+                    RandomGenerator.randomSign(),
+                    SpriteLibrary.bullet() // TODO: proper sprite
+                )
             },
             // randomDelays: { min: 500, max: 3000 },
             delays: [200, 200, 200, 500, 200, 200, 200, 2000],

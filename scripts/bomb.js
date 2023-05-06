@@ -7,6 +7,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 export class Bomb extends Enemy {
     static SPAWN_SPEED_X = 3;
     static SPAWN_SPEED_Y = 8;
+    static SpawnReusePool = [];
 
     constructor(game, x, y, velocity, sprite) {
         super(
@@ -19,7 +20,7 @@ export class Bomb extends Enemy {
             false
         );
         this.sprite = sprite;
-        this.mover = new Mover(game, this, false);
+        this.mover = new Mover(game, this, false, false);
         this.mover.setVelocity(velocity);
         this.mover.dropping = true;
     }
@@ -35,8 +36,21 @@ export class Bomb extends Enemy {
         if (this.isOffScreen) {
             return;
         }
+
         this.mover.update();
-        this.isOffScreen = this.y > 800; // TODO: reference this.game.height
+        
+        this.isOffScreen = this.y > this.game.canvas.height;
+        if (this.isOffScreen) {
+            Bomb.SpawnReusePool.push(this);
+        }
+    }
+
+    reuse(x, y, velocity, sprite) {
+        this.x = x;
+        this.y = y;
+        this.sprite = sprite;
+        this.mover.setVelocity(velocity);
+        this.isOffScreen = false;
     }
 
     /*
@@ -45,6 +59,10 @@ export class Bomb extends Enemy {
     */
     static spawn(game, x, y, verticalDirection, sprite) {
         const velocity = new Velocity(verticalDirection * Bomb.SPAWN_SPEED_X, -Bomb.SPAWN_SPEED_Y);
-        return new Bomb(game, x, y, velocity, sprite);
+        if (Bomb.SpawnReusePool.length > 0) {
+            Bomb.SpawnReusePool.pop().reuse(x, y, velocity, sprite);
+        } else {
+            game.enemies.push(new Bomb(game, x, y, velocity, sprite));
+        }
     }
 }
