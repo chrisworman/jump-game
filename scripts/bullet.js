@@ -19,10 +19,8 @@ export class Bullet extends Entity {
         const y = game.player.y + game.player.width / 2 - SpriteLibrary.SIZES.BULLET.width / 2;
         const speed = game.player.facingRight ? Bullet.SPEED : -Bullet.SPEED;
         if (Bullet.SpawnReusePool.length > 0) {
-            console.log('reused bullet');
             Bullet.SpawnReusePool.pop().reuse(x, y, speed);
         } else {
-            console.log('new bullet');
             game.bullets.push(new Bullet(game, x, y, SpriteLibrary.bullet(), speed));
         }
     }

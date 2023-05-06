@@ -6,4 +6,8 @@ export class Entity extends Box {
         this.game = game;
         this.isOffScreen = false;
     }
+
+    onFloor() {
+        return this.y + this.height === this.game.canvas.height;
+    }
 }

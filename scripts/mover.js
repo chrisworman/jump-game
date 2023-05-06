@@ -3,7 +3,7 @@ import { Game } from './game.js';
 import { Platforms } from './platforms.js';
 
 // An entity behaviour that provides movement like jumping, dropping, and moving left or right.
-// Optionally provides platform collision detection for platform bound entities.
+// Optionally provides platform and ceiling collision detection.
 export class Mover {
     constructor(game, target, platformCollisions = true, ceilingCollisions = true) {
         this.game = game;
@@ -50,7 +50,7 @@ export class Mover {
     }
 
     drop() {
-        if (!this.dropping && !this.jumping) {
+        if (!this.dropping && !this.jumping && !this.target.onFloor()) {
             this.setVelocityY(0);
             this.dropping = true;
         }
@@ -69,7 +69,7 @@ export class Mover {
     }
 
     update() {
-        // Apply gravity if we are not standing on a platform
+        // Apply gravity if we are not on a platform
         if (this.jumping || this.dropping) {
             this.velocity.y += Game.GRAVITY;
         }
@@ -80,24 +80,19 @@ export class Mover {
 
         // Platform collision detection
         if (this.platformCollisions) {
-
-            // Check for platform collision while dropping
             if (
                 (this.dropping && this.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
                 (this.jumping && this.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
             ) {
                 // See if we have crossed a platform while falling
-                let roundedLastBottomY = Math.ceil(this.lastY + this.target.height);
-                let roundedBottomY = Math.ceil(this.target.y + this.target.height);
-                if (roundedLastBottomY <= roundedBottomY) {
-                    for (
-                        let roundedBottom = roundedLastBottomY;
-                        roundedBottom <= roundedBottomY;
-                        roundedBottom++
-                    ) {
-                        if (roundedBottom % Platforms.HEIGHT == 0) {
+                let lastBase = Math.ceil(this.lastY + this.target.height);
+                let curBase = Math.ceil(this.target.y + this.target.height);
+                if (lastBase <= curBase) {
+                    for (let base = lastBase; base <= curBase; base++) {
+                        if (base % Platforms.HEIGHT == 0) {
+                            // We've hit a platform
                             this.stop();
-                            this.target.y = roundedBottom - this.target.height;
+                            this.target.y = base - this.target.height;
                             this.jumping = false;
                             this.dropping = false;
                             if (this.onPlatform) {
@@ -109,26 +104,22 @@ export class Mover {
                 }
             }
 
-            // Apply collision detection with the game play area
+            // Ceiling collision
             const canvas = this.game.canvas;
             if (this.ceilingCollisions && this.target.y <= 0) {
                 this.target.y = 0;
             }
-            if (this.target.y + this.target.height > canvas.height) {
-                this.target.y = canvas.height - this.target.height;
-                this.setVelocityY(0);
-                this.jumping = false;
-                this.dropping = false;
-            }
+
+            // Right wall collision
             if (this.target.x + this.target.width > canvas.width) {
                 this.target.x = canvas.width - this.target.width;
                 this.setVelocityX(0);
-                this.dropping = false;
             }
+
+            // Left wall collision
             if (this.target.x <= 0) {
                 this.target.x = 0;
                 this.setVelocityX(0);
-                this.dropping = false;
             }
 
             this.lastY = this.target.y;

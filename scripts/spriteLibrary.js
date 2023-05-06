@@ -144,6 +144,6 @@ export class SpriteLibrary {
     }
 
     static boss() {
-        return new Sprite('images/boss.png')
+        return new Sprite('images/boss-1.png')
     }
 }

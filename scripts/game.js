@@ -195,7 +195,9 @@ export class Game {
             this.enemies
                 .filter(
                     (x) =>
-                        x.type === EnemyTypes.WALKER || x.type === EnemyTypes.FIRE_FLOWER
+                        x.type === EnemyTypes.WALKER ||
+                        x.type === EnemyTypes.FIRE_FLOWER ||
+                        x.type === EnemyTypes.BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);

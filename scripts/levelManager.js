@@ -1,6 +1,6 @@
+import { Boss } from './boss.js';
 import { Level } from './level.js';
 import { SpriteLibrary } from './spriteLibrary.js';
-import { Walker } from './walker.js';
 
 export class LevelManager {
     static LEVELS_PER_WORLD = 2; //20;
@@ -11,15 +11,10 @@ export class LevelManager {
         this.levelNumber = 0;
         this.worldNumber = 1;
 
-        // Bosses
-        // TODO: invent and populate bosses!
-        this.worldBossFactories = new Map([
-            [1, () => Walker.spawn(this.game)],
-            [2, () => Walker.spawn(this.game)],
-            [3, () => Walker.spawn(this.game)],
-            [4, () => Walker.spawn(this.game)],
-            [5, () => Walker.spawn(this.game)],
-        ]);
+        this.worldBossFactories = new Map();
+        for (let i=1; i<=LevelManager.WORLD_COUNT; i++) {
+            this.worldBossFactories.set(i, () => Boss.spawn(game, i));
+        }
     }
 
     getNextLevel() {

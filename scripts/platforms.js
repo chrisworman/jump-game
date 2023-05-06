@@ -4,6 +4,7 @@ import { GameState } from './gameState.js';
 export class Platforms {
     static HEIGHT = 100;
     static COUNT = 8;
+    static _PlatformYs = null;
 
     constructor(game) {
         this.game = game;
@@ -17,19 +18,6 @@ export class Platforms {
         if (this.game.state === GameState.LEVEL_TRANSITION) {
             this.levelTransitionScrollY += Game.LEVEL_SCROLL_SPEED;
         }
-    }
-
-    handleLevelComplete(nextSprite) {
-        this.levelTransitionScrollY = 0;
-        this.nextSprite = nextSprite;
-    }
-
-    static getPlatformYs() {
-        let result = [];
-        for (let i = 1; i < Platforms.COUNT; i++) {
-            result.push(i * Platforms.HEIGHT);
-        }
-        return result;
     }
 
     render(renderContext) {
@@ -55,5 +43,21 @@ export class Platforms {
                 }
                 break;
         }
+    }
+
+    handleLevelComplete(nextSprite) {
+        this.levelTransitionScrollY = 0;
+        this.nextSprite = nextSprite;
+    }
+
+    static getPlatformYs() {
+        if (!Platforms._PlatformYs) {
+            Platforms._PlatformYs = [];
+            for (let i = 1; i < Platforms.COUNT; i++) {
+                Platforms._PlatformYs.push(i * Platforms.HEIGHT);
+            }
+        }
+        
+        return Platforms._PlatformYs;
     }
 }

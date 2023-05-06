@@ -19,31 +19,10 @@ export class Walker extends Enemy {
             EnemyTypes.WALKER,
             true
         );
-        
         this.walkingSprite = walkingSprite;
         this.dyingSprite = dyingSprite;
-        
         this.mover = new Mover(game, this, true);
         this.mover.setVelocityX(initialSpeed);
-        this.mover.setOnPlatform(() => {
-            if (RandomGenerator.randomBool(0.5)) {
-                this.mover.left(Walker.SPEED);
-            } else {
-                this.mover.right(Walker.SPEED);
-            }
-        });
-
-        this.platformChanger = new Emitter({
-            emit: () => {
-                // TODO: check if on top or bottom platform
-                if (RandomGenerator.randomBool(0.5)) {
-                    this.mover.jump();
-                } else {
-                    this.mover.drop();
-                }
-            },
-            randomDelays: { min: 3000, max: 10000 },
-        });
     }
 
     static spawn(game) {
@@ -73,7 +52,6 @@ export class Walker extends Enemy {
             return;
         }
 
-        this.platformChanger.update();
         this.mover.update();
 
         if (this.x + this.width >= 550) {
