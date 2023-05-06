@@ -39,7 +39,7 @@ export class Boss extends Enemy {
         });
 
         // Setup platform behaviour
-        this.mover = new Mover(game, this, true, true);
+        this.mover = new Mover(game, this);
         this.platformChanger = new Emitter({
             emit: () => {
                 // TODO: check if on top or bottom platform

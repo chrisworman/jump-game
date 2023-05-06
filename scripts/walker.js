@@ -21,7 +21,7 @@ export class Walker extends Enemy {
         );
         this.walkingSprite = walkingSprite;
         this.dyingSprite = dyingSprite;
-        this.mover = new Mover(game, this, true);
+        this.mover = new Mover(game, this);
         this.mover.setVelocityX(initialSpeed);
     }
 

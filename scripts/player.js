@@ -106,8 +106,7 @@ export class Player extends Entity {
             this.mover.drop();
         }
 
-        // Update the mover with level appropriate ceiling collision detection
-        this.mover.setCeilingCollisions(this.game.isBossLevel());
+        // Update the mover
         this.mover.update();
     }
 
@@ -145,6 +144,11 @@ export class Player extends Entity {
     handleLevelTransitionDone() {
         this.y = this.game.canvas.height - this.height;
         this.mover.stop();
+        this.mover.setCollideWith({
+            ceiling: this.game.isBossLevel(),
+            walls: true,
+            platforms: true,
+        });
     }
 
     setHealth(health) {
@@ -178,8 +182,11 @@ export class Player extends Entity {
         this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
         this.y = Math.floor(this.game.canvas.height - this.height);
         this.mover = new Mover(this.game, this);
-        // this.jumping = false;
-        // this.dropping = false;
+        this.mover.setCollideWith({
+            ceiling: this.game.isBossLevel(),
+            walls: true,
+            platforms: true,
+        });
         this.facingRight = false;
         this.lastShootTime = null;
         this.recovering = false;

@@ -20,7 +20,12 @@ export class Bomb extends Enemy {
             false
         );
         this.sprite = sprite;
-        this.mover = new Mover(game, this, false, false);
+        this.mover = new Mover(game, this);
+        this.mover.setCollideWith({
+            walls: false,
+            ceiling: false,
+            platforms: false,
+        });
         this.mover.setVelocity(velocity);
         this.mover.dropping = true;
     }
@@ -38,7 +43,7 @@ export class Bomb extends Enemy {
         }
 
         this.mover.update();
-        
+
         this.isOffScreen = this.y > this.game.canvas.height;
         if (this.isOffScreen) {
             Bomb.SpawnReusePool.push(this);

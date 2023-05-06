@@ -17,7 +17,12 @@ export class FireBall extends Enemy {
             false
         );
         this.sprite = sprite;
-        this.mover = new Mover(game, this, false);
+        this.mover = new Mover(game, this);
+        this.mover.setCollideWith({
+            walls: false,
+            ceiling: false,
+            platforms: false,
+        });
         this.mover.dropping = true;
     }
 

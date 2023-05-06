@@ -10,7 +10,12 @@ export class Bullet extends Entity {
         super(game, x, y, SpriteLibrary.SIZES.BULLET.width, SpriteLibrary.SIZES.BULLET.height);
         this.hitEnemy = false;
         this.sprite = sprite;
-        this.mover = new Mover(game, this, false, false);
+        this.mover = new Mover(game, this);
+        this.mover.setCollideWith({
+            walls: false,
+            ceiling: false,
+            platforms: false,
+        });
         this.mover.setVelocityX(speed); // A bullet only moves left or right
     }
 
