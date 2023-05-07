@@ -4,6 +4,8 @@ export class AudioManager {
         COLLECTABLE_COLLECTED: 'sounds/collected.mp3',
         PLAYER_JUMP: 'sounds/jump.mp3',
         PLAYER_SHOOT: 'sounds/shoot.mp3',
+        PLAYER_HIT: 'sounds/player-hit.mp3',
+        ENEMY_HIT: 'sounds/enemy-hit.mp3'
     };
 
     constructor() {
@@ -16,11 +18,11 @@ export class AudioManager {
 
     load(audioFile) {
         const audioElement = new Audio();
-        audioElement.volume = 0.1; // The sounds seem really loud!
+        audioElement.volume = audioFile === AudioManager.AUDIO_FILES.BACKGROUND_SONG ? 0.05 : 0.4; // The sounds seem really loud!
         const sound = {
             audioElement: audioElement,
             isLoaded: false,
-            savedVolume: 0.1,
+            savedVolume: audioElement.volume,
         };
         this.loadedAudioFiles.set(audioFile, sound);
         audioElement.addEventListener('loadeddata', () => {

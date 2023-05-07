@@ -11,6 +11,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { Hud } from './hud.js';
 import { Bullet } from './bullet.js';
 import { Bomb } from './bomb.js';
+import { Background } from './background.js';
 
 export class Game {
     static GRAVITY = 0.3;
@@ -32,6 +33,7 @@ export class Game {
         this.levelManager = new LevelManager(this);
         this.renderContext = new RenderContext(this.canvas);
         this.filterManager = new FilterManager();
+        this.background = new Background(this);
         this.platforms = new Platforms(this);
         this.bullets = [];
         this.collectables = [];
@@ -114,6 +116,7 @@ export class Game {
 
     updateLevelTransition() {
         this.player.update();
+        this.background.update();
         this.platforms.update();
 
         // Has the player reached the bottom of the screen?
@@ -200,6 +203,7 @@ export class Game {
     render() {
         const ctx = this.renderContext.getCanvasContext();
         this.filterManager.applyFilters(ctx, () => {
+            this.background.render(this.renderContext);
             this.platforms.render(this.renderContext);
             this.enemies
                 .filter(

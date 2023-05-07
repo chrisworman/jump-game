@@ -53,7 +53,9 @@ export class Level {
             initialEnemies.push(Walker.spawn(this.game));
         }
 
-        initialEnemies.push(new FireFlower(this.game, 200, 355));
+        if (this.number > 3) {
+            initialEnemies.push(FireFlower.spawn(this.game));
+        }
 
         return initialEnemies;
     }

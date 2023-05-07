@@ -1,3 +1,4 @@
+import { AudioManager } from './audioManager.js';
 import { Entity } from './entity.js';
 
 export class Enemy extends Entity {
@@ -13,6 +14,7 @@ export class Enemy extends Entity {
 
     handleShot() {
         if (this.isShootable) {
+            this.game.audioManager.play(AudioManager.AUDIO_FILES.ENEMY_HIT);
             this.health = Math.max(0, this.health - 1);
             this.isDead = this.health === 0;
         }

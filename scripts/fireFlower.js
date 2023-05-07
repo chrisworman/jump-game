@@ -5,6 +5,7 @@ import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
 import { FilterManager } from './filterManager.js';
+import { Platforms } from './platforms.js';
 
 export class FireFlower extends Enemy {
     constructor(game, x, y) {
@@ -28,18 +29,18 @@ export class FireFlower extends Enemy {
                     game,
                     this.spawnPosition.x,
                     this.spawnPosition.y,
-                    RandomGenerator.randomSign(),
-                    SpriteLibrary.bullet() // TODO: proper sprite
-                )
+                    RandomGenerator.randomSign()
+                );
             },
-            // randomDelays: { min: 500, max: 3000 },
-            delays: [200, 200, 200, 500, 200, 200, 200, 2000],
+            delays: [250, 250, 250, 2000, 250, 250, 250, 2000],
         });
     }
 
     render(renderContext) {
         if (this.isDead) {
-            return;
+            if (this.sprite.filterManager.animation == null) {
+                return;
+            }
         }
         this.sprite.render(renderContext, this.x, this.y);
     }
@@ -49,5 +50,25 @@ export class FireFlower extends Enemy {
             return;
         }
         this.bombSpawner.update();
+    }
+
+    static spawn(game) {
+        const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
+        return new FireFlower(
+            game,
+            RandomGenerator.randomIntBetween(
+                1,
+                game.canvas.width - SpriteLibrary.SIZES.FIRE_BALL.width - 1
+            ),
+            RandomGenerator.randomFromArray(eligiblePlatformYs) -
+                SpriteLibrary.SIZES.FIRE_BALL.height
+        );
+    }
+
+    handleShot() {
+        super.handleShot();
+        if (this.isDead) {
+            this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
+        }
     }
 }

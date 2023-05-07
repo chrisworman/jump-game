@@ -58,6 +58,7 @@ export class Player extends Entity {
             for (let enemy of this.game.enemies) {
                 if (!enemy.isDead && !enemy.isOffScreen && hitBox.intersects(enemy)) {
                     this.game.shake();
+                    this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_HIT);
                     this.setHealth(this.health - 1);
                     break;
                 }

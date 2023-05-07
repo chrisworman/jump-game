@@ -32,7 +32,6 @@ export class Boss extends Enemy {
                     this.x + this.sprite.width * 0.5,
                     this.y,
                     RandomGenerator.randomSign(),
-                    SpriteLibrary.bullet() // TODO: proper sprite
                 );
             },
             delays: [200, 200, 200, 3000, 200, 200, 200, 3000],

@@ -23,9 +23,17 @@ export class SpriteLibrary {
             width: 24,
             height: 12,
         },
+        BOMB: {
+            width: 24,
+            height: 24,
+        },
         BOSS: {
             width: 64,
             height: 76,
+        },
+        BACKGROUND: {
+            width: 550,
+            height: 1600,
         },
     };
 
@@ -109,11 +117,11 @@ export class SpriteLibrary {
     }
 
     static groundGreen() {
-        return new Sprite('images/ground.png');
+        return new Sprite('images/ground-dn.png');
     }
 
     static groundPurple() {
-        return new Sprite('images/ground-2.png');
+        return new Sprite('images/ground-dn.png');
     }
 
     static walkerWalking() {
@@ -143,7 +151,31 @@ export class SpriteLibrary {
         return new Sprite('images/bullet.png');
     }
 
+    static bomb() {
+        return new AnimatedSprite(
+            'images/bomb.png',
+            SpriteLibrary.SIZES.BOMB.width,
+            SpriteLibrary.SIZES.BOMB.height,
+            0,
+            8,
+            12,
+            true
+        );
+    }
+
     static boss() {
-        return new Sprite('images/boss-1.png')
+        return new Sprite('images/boss-1.png');
+    }
+
+    static backgroundLayer0() {
+        return new Sprite('images/bg-layer-0.png');
+    }
+
+    static backgroundLayer1() {
+        return new Sprite('images/bg-layer-1.png');
+    }
+
+    static backgroundLayer2() {
+        return new Sprite('images/bg-layer-2.png');
     }
 }
