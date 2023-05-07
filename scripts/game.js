@@ -25,6 +25,7 @@ export class Game {
         this.audioManager = new AudioManager();
 
         this.canvas = document.getElementById('canvas');
+        this.middleContent = document.getElementById('middleContent');
         this.hud = new Hud(this);
         this.userControls = new UserControls(this);
         this.player = new Player(this);
@@ -182,6 +183,14 @@ export class Game {
             }
             this.hud.displayAudioMuted(this.audioManager.isMuted);
         }
+    }
+
+    shake() {
+        if (this.middleContent.classList.contains('shake')) {
+            this.middleContent.classList.remove('shake');
+            this.middleContent.offsetWidth; // Force DOM reflow
+        }
+        this.middleContent.classList.add('shake');
     }
 
     isBossLevel() {

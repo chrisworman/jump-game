@@ -22,7 +22,7 @@ export class Walker extends Enemy {
         this.walkingSprite = walkingSprite;
         this.dyingSprite = dyingSprite;
         this.mover = new Mover(game, this);
-        this.mover.setVelocityX(initialSpeed);
+        this.mover.pace(initialSpeed);
     }
 
     static spawn(game) {
@@ -53,14 +53,5 @@ export class Walker extends Enemy {
         }
 
         this.mover.update();
-
-        if (this.x + this.width >= 550) {
-            // Change direction
-            this.x = this.x - 1;
-            this.mover.left(Walker.SPEED);
-        } else if (this.x <= 0) {
-            this.x = 1;
-            this.mover.right(Walker.SPEED);
-        }
     }
 }

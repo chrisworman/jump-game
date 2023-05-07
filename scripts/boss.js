@@ -40,6 +40,7 @@ export class Boss extends Enemy {
 
         // Setup platform behaviour
         this.mover = new Mover(game, this);
+        this.mover.pace(Boss.SPEED);
         this.platformChanger = new Emitter({
             emit: () => {
                 // TODO: check if on top or bottom platform
@@ -50,13 +51,6 @@ export class Boss extends Enemy {
                 }
             },
             randomDelays: { min: 3000, max: 5000 },
-        });
-        this.mover.setOnPlatform(() => {
-            if (RandomGenerator.randomBool(0.5)) {
-                this.mover.left(Boss.SPEED);
-            } else {
-                this.mover.right(Boss.SPEED);
-            }
         });
     }
 

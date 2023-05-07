@@ -18,6 +18,7 @@ export class Mover {
         this.jumping = false;
         this.dropping = false;
         this.onPlatform = null;
+        this.pacing = false;
     }
 
     setGravity(gravity) {
@@ -67,6 +68,12 @@ export class Mover {
         this.setVelocityX(velocityX);
     }
 
+    pace(velocityX = 4.5) {
+        this.setVelocityX(velocityX);
+        this.pacing = true;
+        this.collideWith.walls = true;
+    }
+
     setOnPlatform(onPlatform) {
         this.onPlatform = onPlatform;
     }
@@ -94,7 +101,11 @@ export class Mover {
                     for (let base = lastBase; base <= curBase; base++) {
                         if (base % Platforms.HEIGHT === 0) {
                             // We've hit a platform
-                            this.stop();
+                            if (this.pacing) {
+                                this.setVelocityY(0);
+                            } else {
+                                this.stop();
+                            }
                             this.target.y = base - this.target.height;
                             this.jumping = false;
                             this.dropping = false;
@@ -120,12 +131,22 @@ export class Mover {
             // Right wall
             if (this.target.x + this.target.width > canvas.width) {
                 this.target.x = canvas.width - this.target.width;
-                this.setVelocityX(0);
+                if (this.pacing) {
+                    this.target.x = this.target.x - 1;
+                    this.left(Math.abs(this.velocity.x));
+                } else {
+                    this.setVelocityX(0);
+                }
             }
             // Left wall
             if (this.target.x <= 0) {
                 this.target.x = 0;
-                this.setVelocityX(0);
+                if (this.pacing) {
+                    this.target.x = 1;
+                    this.right(Math.abs(this.velocity.x));
+                } else {
+                    this.setVelocityX(0);
+                }
             }
         }
 
