@@ -48,6 +48,7 @@ export class Walker extends Enemy {
     }
 
     update() {
+        super.update();
         if (this.isDead) {
             return;
         }

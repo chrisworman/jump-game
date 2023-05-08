@@ -46,6 +46,7 @@ export class Bullet extends Entity {
     }
 
     update() {
+        super.update();
         if (this.hitEnemy || this.isOffScreen) {
             return;
         }

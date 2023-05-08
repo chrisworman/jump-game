@@ -118,10 +118,21 @@ export class Game {
         this.player.update();
         this.background.update();
         this.platforms.update();
+        this.enemies.forEach((enemy) => enemy.update());
+        this.bullets.forEach((bullet) => bullet.update());
+        this.collectables.forEach((x) => x.update());
 
         // Has the player reached the bottom of the screen?
         if (this.player.y + this.player.height >= this.canvas.height) {
             // We are done transitioning
+
+            // TODO: confirm
+            this.collectables = [];
+            this.enemies = [];
+            Bomb.SpawnReusePool = [];
+            this.bullets = [];
+            Bullet.SpawnReusePool = [];
+
             this.hud.textOverlayFadeOut();
             this.platforms.currentSprites = this.level.platformSprites;
             this.player.handleLevelTransitionDone();
@@ -176,11 +187,16 @@ export class Game {
         this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
-        this.collectables = [];
-        this.enemies = [];
-        Bomb.SpawnReusePool = [];
-        this.bullets = [];
-        Bullet.SpawnReusePool = [];
+        // this.collectables = [];
+        // this.enemies = [];
+        // Bomb.SpawnReusePool = [];
+        // this.bullets = [];
+        // Bullet.SpawnReusePool = [];
+        this.enemies.forEach((enemy) => {
+            if (enemy.type === EnemyTypes.BOMB) {
+                enemy.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 1000);
+            }
+        });
         this.state = GameState.LEVEL_TRANSITION;
     }
 

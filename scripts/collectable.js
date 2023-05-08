@@ -44,6 +44,7 @@ export class Collectable extends Entity {
     }
 
     update() {
+        super.update();
         if (!this.collected && this.intersects(this.game.player)) {
             this.collected = true;
             this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 150);

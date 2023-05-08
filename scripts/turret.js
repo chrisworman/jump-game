@@ -6,6 +6,7 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
 import { FilterManager } from './filterManager.js';
 import { Platforms } from './platforms.js';
+import { GameState } from './gameState.js';
 
 export class Turret extends Enemy {
     constructor(game, x, y) {
@@ -50,6 +51,7 @@ export class Turret extends Enemy {
     }
 
     update() {
+        super.update();
         if (this.isDead) {
             return;
         }
@@ -57,7 +59,9 @@ export class Turret extends Enemy {
             this.currentSprite = this.spriteIdle;
             this.currentSprite.reset();
         }
-        this.bombSpawner.update();
+        if (this.game.state === GameState.PLAYING) {
+            this.bombSpawner.update();
+        }
     }
 
     static spawn(game) {

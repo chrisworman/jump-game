@@ -6,6 +6,7 @@ import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { EnemyTypes } from './enemyTypes.js';
+import { GameState } from './gameState.js';
 
 export class Boss extends Enemy {
     static HEALTH = 3;
@@ -23,13 +24,18 @@ export class Boss extends Enemy {
             Boss.HEALTH
         );
 
-        this.sprite = SpriteLibrary.boss();
+        this.spriteIdle = SpriteLibrary.bossIdle();
+        this.spriteJump = SpriteLibrary.bossJump();
+        this.spriteBomb = SpriteLibrary.bossBomb();
+        this.spriteCurrent = this.spriteIdle;
 
         this.bombSpawner = new Emitter({
             emit: () => {
+                this.spriteCurrent = this.spriteBomb;
+                this.spriteCurrent.reset();
                 Bomb.spawn(
                     game,
-                    this.x + this.sprite.width * 0.5,
+                    this.x + this.spriteCurrent.width * 0.5,
                     this.y,
                     RandomGenerator.randomSign(),
                 );
@@ -44,8 +50,12 @@ export class Boss extends Enemy {
             emit: () => {
                 // TODO: check if on top or bottom platform
                 if (RandomGenerator.randomBool(0.5)) {
+                    this.spriteCurrent = this.spriteJump;
+                    this.spriteCurrent.reset();
                     this.mover.jump();
                 } else {
+                    this.spriteCurrent = this.spriteIdle;
+                    this.spriteCurrent.reset();
                     this.mover.drop();
                 }
             },
@@ -58,17 +68,20 @@ export class Boss extends Enemy {
             return;
         }
 
-        this.sprite.render(renderContext, this.x, this.y);
+        this.spriteCurrent.render(renderContext, this.x, this.y);
     }
 
     update() {
+        super.update();
         if (this.isDead) {
             return;
         }
 
-        this.mover.update();
-        this.platformChanger.update();
-        this.bombSpawner.update();
+        if (this.game.state === GameState.PLAYING) {
+            this.mover.update();
+            this.platformChanger.update();
+            this.bombSpawner.update();
+        }
     }
 
     static spawn(game, levelNumber) {

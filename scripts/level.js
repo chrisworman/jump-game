@@ -6,6 +6,7 @@ import { Turret } from './turret.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
+    static MAX_WALKERS = 8;
     static NO_ENEMY_BUFFER = 300;
 
     constructor(game, number, world, title, collectableProbabilities, platformSprites) {
@@ -48,13 +49,13 @@ export class Level {
         }
 
         const initialEnemies = [];
-        const walkerSpawnCount = this.world.number + this.number - 1;
-        for (let i = 1; i < walkerSpawnCount; i++) {
+        const walkerSpawnCount = Math.min(Level.MAX_WALKERS, this.world.number + this.number - 1);
+        for (let i = 0; i < walkerSpawnCount; i++) {
             initialEnemies.push(Walker.spawn(this.game));
         }
 
         if (this.number > 1) {
-            const turrentCount = Math.min(3, Math.max(1, this.world.number - 2));
+            const turrentCount = Math.min(2, Math.max(1, this.world.number - 2));
             for (let t = 0; t < turrentCount; t++) {
                 initialEnemies.push(Turret.spawn(this.game));
             }

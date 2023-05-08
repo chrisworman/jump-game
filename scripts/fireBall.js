@@ -46,6 +46,7 @@ export class FireBall extends Enemy {
     }
 
     update() {
+        super.update();
         if (this.isOffScreen) {
             return;
         }

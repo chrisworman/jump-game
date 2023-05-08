@@ -12,7 +12,7 @@ export class FilterManager {
         this.animation = null;
     }
 
-    animate(onUpdate, lengthMs) {
+    animate(onUpdate, lengthMs = 1000) {
         this.animation = {
             startTime: Date.now(),
             onUpdate,

@@ -207,8 +207,40 @@ export class SpriteLibrary {
         );
     }
 
-    static boss() {
-        return new Sprite('images/boss-1.png');
+    static bossIdle() {
+        return new AnimatedSprite(
+            'images/boss-1.png',
+            SpriteLibrary.SIZES.BOSS.width,
+            SpriteLibrary.SIZES.BOSS.height,
+            0,
+            5,
+            10,
+            false
+        );
+    }
+
+    static bossJump() {
+        return new AnimatedSprite(
+            'images/boss-1.png',
+            SpriteLibrary.SIZES.BOSS.width,
+            SpriteLibrary.SIZES.BOSS.height,
+            0,
+            5,
+            10,
+            false
+        );
+    }
+
+    static bossBomb() {
+        return new AnimatedSprite(
+            'images/boss-1.png',
+            SpriteLibrary.SIZES.BOSS.width,
+            SpriteLibrary.SIZES.BOSS.height,
+            0,
+            5,
+            30,
+            false
+        );
     }
 
     static backgroundLayer0() {

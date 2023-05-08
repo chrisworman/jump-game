@@ -38,6 +38,7 @@ export class Bomb extends Enemy {
     }
 
     update() {
+        super.update();
         if (this.isOffScreen) {
             return;
         }
