@@ -187,11 +187,6 @@ export class Game {
         this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
-        // this.collectables = [];
-        // this.enemies = [];
-        // Bomb.SpawnReusePool = [];
-        // this.bullets = [];
-        // Bullet.SpawnReusePool = [];
         this.enemies.forEach((enemy) => {
             if (enemy.type === EnemyTypes.BOMB) {
                 enemy.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 1000);
