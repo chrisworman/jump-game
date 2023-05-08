@@ -56,7 +56,7 @@ export class Game {
         this.collectables = [];
         this.enemies = [];
         Bomb.SpawnReusePool = [];
-        this.platforms.currentSprite = this.level.platformSprite;
+        this.platforms.currentSprites = this.level.platformSprites;
         this.collectables = this.level.spawnCollectables();
         this.enemies = this.level.spawnInitialEnemies();
 
@@ -123,7 +123,7 @@ export class Game {
         if (this.player.y + this.player.height >= this.canvas.height) {
             // We are done transitioning
             this.hud.textOverlayFadeOut();
-            this.platforms.currentSprite = this.level.platformSprite;
+            this.platforms.currentSprites = this.level.platformSprites;
             this.player.handleLevelTransitionDone();
             this.enemies = this.level.spawnInitialEnemies();
             this.collectables = this.level.spawnCollectables();
@@ -167,7 +167,7 @@ export class Game {
 
         // Transition to next level
         this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
-        this.platforms.handleLevelComplete(this.level.platformSprite);
+        this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
         this.collectables = [];
         this.enemies = [];
@@ -204,7 +204,7 @@ export class Game {
         const ctx = this.renderContext.getCanvasContext();
         this.filterManager.applyFilters(ctx, () => {
             this.background.render(this.renderContext);
-            this.platforms.render(this.renderContext);
+            // this.platforms.render(this.renderContext);
             this.enemies
                 .filter(
                     (x) =>
@@ -216,6 +216,7 @@ export class Game {
             this.player.render(this.renderContext);
             this.bullets.forEach((x) => x.render(this.renderContext));
             this.collectables.forEach((x) => x.render(this.renderContext));
+            this.platforms.render(this.renderContext); // temp
             this.enemies
                 .filter((x) => x.type === EnemyTypes.BOMB)
                 .forEach((x) => x.render(this.renderContext));

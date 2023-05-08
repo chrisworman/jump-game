@@ -47,35 +47,19 @@ export class LevelManager {
             world,
             `Level ${this.levelNumber}`,
             'TODO: probabilities',
-            this.getPlatformSprite()
+            this.getPlatformSprites()
         );
     }
 
-    getPlatformSprite() {
-        switch (this.worldNumber) {
-            case 1:
-                return this.levelNumber % 2 === 0
-                    ? SpriteLibrary.groundGreen()
-                    : SpriteLibrary.groundPurple();
-            case 2:
-                return this.levelNumber % 2 === 0
-                    ? SpriteLibrary.groundGreen()
-                    : SpriteLibrary.groundPurple();
-            case 3:
-                return this.levelNumber % 2 === 0
-                    ? SpriteLibrary.groundGreen()
-                    : SpriteLibrary.groundPurple();
-            case 4:
-                return this.levelNumber % 2 === 0
-                    ? SpriteLibrary.groundGreen()
-                    : SpriteLibrary.groundPurple();
-            case 5:
-                return this.levelNumber % 2 === 0
-                    ? SpriteLibrary.groundGreen()
-                    : SpriteLibrary.groundPurple();
-            default:
-                throw new Error(`No platform sprite for world ${this.worldNumber}`);
-        }
+    getPlatformSprites() {
+        return [
+            SpriteLibrary.platform1(),
+            SpriteLibrary.platform2(),
+            SpriteLibrary.platform3(),
+            SpriteLibrary.platform4(),
+            SpriteLibrary.platform5(),
+            SpriteLibrary.platform6(),
+        ];
     }
 
     reset() {

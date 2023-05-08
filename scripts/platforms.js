@@ -9,8 +9,8 @@ export class Platforms {
     constructor(game) {
         this.game = game;
         this.lastGameState = this.game.state;
-        this.currentSprite = null;
-        this.nextSprite = null;
+        this.currentSprites = [];
+        this.nextSprites = [];
         this.levelTransitionScrollY = 0;
     }
 
@@ -22,32 +22,40 @@ export class Platforms {
 
     render(renderContext) {
         const totalHeight = Platforms.COUNT * Platforms.HEIGHT;
+        let spriteIndex = 0;
         switch (this.game.state) {
             case GameState.PLAYING:
             case GameState.GAME_OVER:
             case GameState.GAME_BEAT:
-                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT) {
-                    this.currentSprite.render(renderContext, 0, y);
+                spriteIndex = 0;
+                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT, spriteIndex++) {
+                    this.currentSprites[spriteIndex % this.currentSprites.length].render(renderContext, 0, y);
                 }
                 break;
             case GameState.LEVEL_TRANSITION:
-                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT) {
-                    this.nextSprite.render(
+                spriteIndex = 0;
+                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT, spriteIndex++) {
+                    this.nextSprites[spriteIndex % this.nextSprites.length].render(
                         renderContext,
                         0,
                         y + this.levelTransitionScrollY - totalHeight
                     );
                 }
-                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT) {
-                    this.currentSprite.render(renderContext, 0, y + this.levelTransitionScrollY);
+                spriteIndex = 0;
+                for (let y = 0; y < totalHeight; y += Platforms.HEIGHT, spriteIndex++) {
+                    this.currentSprites[spriteIndex % this.currentSprites.length].render(
+                        renderContext,
+                        0,
+                        y + this.levelTransitionScrollY
+                    );
                 }
                 break;
         }
     }
 
-    handleLevelComplete(nextSprite) {
+    handleLevelComplete(nextSprites) {
         this.levelTransitionScrollY = 0;
-        this.nextSprite = nextSprite;
+        this.nextSprites = nextSprites;
     }
 
     static getPlatformYs() {
@@ -57,7 +65,7 @@ export class Platforms {
                 Platforms._PlatformYs.push(i * Platforms.HEIGHT);
             }
         }
-        
+
         return Platforms._PlatformYs;
     }
 }

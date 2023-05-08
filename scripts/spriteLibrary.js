@@ -116,12 +116,28 @@ export class SpriteLibrary {
         );
     }
 
-    static groundGreen() {
-        return new Sprite('images/ground-dn.png');
+    static platform1() {
+        return new Sprite('images/platform-1.png');
     }
 
-    static groundPurple() {
-        return new Sprite('images/ground-dn.png');
+    static platform2() {
+        return new Sprite('images/platform-2.png');
+    }
+
+    static platform3() {
+        return new Sprite('images/platform-3.png');
+    }
+
+    static platform4() {
+        return new Sprite('images/platform-4.png');
+    }
+
+    static platform5() {
+        return new Sprite('images/platform-5.png');
+    }
+
+    static platform6() {
+        return new Sprite('images/platform-6.png');
     }
 
     static walkerWalking() {

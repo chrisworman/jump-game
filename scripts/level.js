@@ -8,13 +8,13 @@ export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
     static NO_ENEMY_BUFFER = 300;
 
-    constructor(game, number, world, title, collectableProbabilities, platformSprite) {
+    constructor(game, number, world, title, collectableProbabilities, platformSprites) {
         this.game = game;
         this.number = number;
         this.world = world;
         this.title = title;
         this.collectableProbabilities = collectableProbabilities;
-        this.platformSprite = platformSprite;
+        this.platformSprites = platformSprites;
         this.enemySpawnTime = null;
     }
 
