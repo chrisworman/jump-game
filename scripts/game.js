@@ -39,7 +39,7 @@ export class Game {
         this.collectables = [];
         this.enemies = [];
 
-        this.setScore(0);
+        this.setCollectableCount(0);
         this.hud.textOverlayFadeIn('Blobby the Jumper');
         this.hud.showStartButton();
         this.gameLoop();
@@ -50,7 +50,7 @@ export class Game {
         this.levelManager.reset();
         this.level = this.levelManager.getNextLevel();
         this.player.reset();
-        this.setScore(0);
+        this.setCollectableCount(0);
         this.bullets = [];
         Bullet.SpawnReusePool = [];
         this.collectables = [];
@@ -131,13 +131,20 @@ export class Game {
         }
     }
 
-    incrementScore(points) {
-        this.setScore(this.score + points);
+    incrementCollectableCount() {
+        this.setCollectableCount(this.collectableCount + 1);
     }
 
-    setScore(score) {
-        this.score = score;
-        this.hud.displayScore(score);
+    setCollectableCount(count) {
+        let finalCount = count;
+        if (count >= 100) {
+            if (this.player.health < Player.MAX_HEALTH) {
+                this.player.setHealth(this.player.health + 1);
+            }
+            finalCount = 0;
+        }
+        this.collectableCount = finalCount;
+        this.hud.displayCollectableCount(finalCount);
     }
 
     handlePlayerDead() {
@@ -209,7 +216,7 @@ export class Game {
                 .filter(
                     (x) =>
                         x.type === EnemyTypes.WALKER ||
-                        x.type === EnemyTypes.FIRE_FLOWER ||
+                        x.type === EnemyTypes.TURRET ||
                         x.type === EnemyTypes.BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));

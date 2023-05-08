@@ -11,6 +11,10 @@ export class SpriteLibrary {
             width: 48,
             height: 48,
         },
+        TURRET: {
+            width: 64,
+            height: 64,
+        },
         COLLECTABLE: {
             width: 48,
             height: 48,
@@ -116,6 +120,30 @@ export class SpriteLibrary {
         );
     }
 
+    static turretIdle() {
+        return new AnimatedSprite(
+            'images/turret.png',
+            SpriteLibrary.SIZES.TURRET.width,
+            SpriteLibrary.SIZES.TURRET.height,
+            0,
+            2,
+            3,
+            true
+        );
+    }
+
+    static turretFiring() {
+        return new AnimatedSprite(
+            'images/turret.png',
+            SpriteLibrary.SIZES.TURRET.width,
+            SpriteLibrary.SIZES.TURRET.height,
+            0,
+            6,
+            36,
+            false
+        );
+    }
+
     static platform1() {
         return new Sprite('images/platform-1.png');
     }
@@ -142,7 +170,7 @@ export class SpriteLibrary {
 
     static walkerWalking() {
         return new AnimatedSprite(
-            'images/cubes.png',
+            'images/walker.png',
             SpriteLibrary.SIZES.WALKER.width,
             SpriteLibrary.SIZES.WALKER.height,
             0,
@@ -153,7 +181,7 @@ export class SpriteLibrary {
 
     static walkerDying() {
         return new AnimatedSprite(
-            'images/cubes.png',
+            'images/walker.png',
             SpriteLibrary.SIZES.WALKER.width,
             SpriteLibrary.SIZES.WALKER.height,
             0,

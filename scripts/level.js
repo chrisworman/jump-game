@@ -2,7 +2,7 @@ import { Collectable } from './collectable.js';
 import { FireBall } from './fireBall.js';
 import { Walker } from './walker.js';
 import { EnemyTypes } from './enemyTypes.js';
-import { FireFlower } from './fireFlower.js';
+import { Turret } from './turret.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
@@ -53,8 +53,11 @@ export class Level {
             initialEnemies.push(Walker.spawn(this.game));
         }
 
-        if (this.number > 3) {
-            initialEnemies.push(FireFlower.spawn(this.game));
+        if (this.number > 1) {
+            const turrentCount = Math.min(3, Math.max(1, this.world.number - 2));
+            for (let t = 0; t < turrentCount; t++) {
+                initialEnemies.push(Turret.spawn(this.game));
+            }
         }
 
         return initialEnemies;

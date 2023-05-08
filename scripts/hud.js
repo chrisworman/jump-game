@@ -1,11 +1,13 @@
 import { Game } from './game.js';
+import { Player } from './player.js';
 
 export class Hud {
     constructor(game) {
         this.game = game;
         this.hearts = document.getElementById('hearts');
         this.textOverlay = document.getElementById('textOverlay');
-        this.score = document.getElementById('score');
+        this.collectable = document.getElementById('collectable');
+        this.collectableCount = document.getElementById('collectableCount');
         this.restartButton = document.getElementById('restartButton');
         this.restartButton.addEventListener('click', () => {
             game.startNewGame();
@@ -20,14 +22,18 @@ export class Hud {
             game.toggleAudioMute();
         });
 
-        this.displayScore(0);
+        this.displayCollectableCount(0);
         this.displayHealth(Game.MAX_PLAYER_HEALTH);
     }
 
     displayHealth(health) {
         const heartsHtmlBuffer = [];
         for (let i = 0; i < health; i++) {
-            heartsHtmlBuffer.push('<div class="heart"></div>');
+            if (i === health - 1) {
+                heartsHtmlBuffer.push('<div class="heart pulse-bg"></div>');
+            } else {
+                heartsHtmlBuffer.push('<div class="heart"></div>');
+            }
         }
         for (let i = 0; i < Game.MAX_PLAYER_HEALTH - health; i++) {
             heartsHtmlBuffer.push('<div class="heart-empty"></div>');
@@ -35,8 +41,13 @@ export class Hud {
         this.hearts.innerHTML = heartsHtmlBuffer.join('');
     }
 
-    displayScore(score) {
-        this.score.innerText = String(score).padStart(6, '0');
+    displayCollectableCount(count) {
+        if (count === 0) {
+            this.collectable.classList.remove('pulse-bg');
+            this.collectable.offsetHeight; // Force DOM reflow
+            this.collectable.classList.add('pulse-bg');
+        }
+        this.collectableCount.innerText = String(count).padStart(2, '0');
     }
 
     displayAudioMuted(isMuted) {

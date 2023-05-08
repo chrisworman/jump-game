@@ -8,10 +8,9 @@ import { FilterManager } from './filterManager.js';
 export class Collectable extends Entity {
     static SPAWN_BOTTOM_BUFFER = 100;
 
-    constructor(game, x, y, sprite, points) {
+    constructor(game, x, y, sprite) {
         super(game, x, y, sprite.width, sprite.height);
         this.sprite = sprite;
-        this.points = points;
         this.collected = false;
     }
 
@@ -41,14 +40,14 @@ export class Collectable extends Entity {
         } while (intersecting.length > 0 && loops < maxLoops);
 
         // TODO: apply probabilities
-        return new Collectable(game, xy.x, xy.y, SpriteLibrary.collectable(), 50);
+        return new Collectable(game, xy.x, xy.y, SpriteLibrary.collectable());
     }
 
     update() {
         if (!this.collected && this.intersects(this.game.player)) {
             this.collected = true;
             this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 150);
-            this.game.incrementScore(this.points);
+            this.game.incrementCollectableCount();
             this.game.audioManager.play(AudioManager.AUDIO_FILES.COLLECTABLE_COLLECTED);
         }
     }

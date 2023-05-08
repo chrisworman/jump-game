@@ -11,7 +11,7 @@ export class Player extends Entity {
     static VERTICAL_SPEED = -8;
     static HORIZONTAL_SPEED = 4.5;
     static SHOOT_DELAY_MS = 250;
-    static INITIAL_HEALTH = 3;
+    static MAX_HEALTH = 3;
     static RECOVERY_TIME_MS = 4000;
 
     constructor(game) {
@@ -180,7 +180,7 @@ export class Player extends Entity {
     }
 
     reset() {
-        this.setHealth(Player.INITIAL_HEALTH);
+        this.setHealth(Player.MAX_HEALTH);
         this.x = Math.floor(this.game.canvas.width / 2.0 - this.width / 2.0);
         this.y = Math.floor(this.game.canvas.height - this.height);
         this.mover = new Mover(this.game, this);

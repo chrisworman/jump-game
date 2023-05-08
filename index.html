@@ -71,6 +71,36 @@
                 height: 32px;
             }
 
+            .collectable {
+                display: inline-block;
+                width: 32px;
+                height: 32px;
+                background-repeat: no-repeat;
+                background-image: url('/images/hud-red-gem.png');
+                background-position: center;
+                vertical-align: middle;
+            }
+
+            .collectable-count {
+                vertical-align: middle;
+            }
+
+            .pulse-bg {
+                animation: pulseBgKeyframes 2s ease-in-out;
+            }
+
+            @keyframes pulseBgKeyframes {
+                0%,
+                50%,
+                100% {
+                    opacity: 1.0;
+                }
+                25%,
+                75% {
+                    opacity: 0.2;
+                }
+            }
+
             .audio-button {
                 float: right;
                 margin-right: 10px;
@@ -143,7 +173,8 @@
     <body>
         <div class="middle-content" id="middleContent">
             <div class="hud">
-                <span>SCORE: </span><span id="score">0</span>
+                <div id="collectable" class="collectable"></div>
+                <span id="collectableCount" class="collectable-count">0</span>
                 <div id="hearts" class="hearts">
                     <span class="heart"></span>
                     <span class="heart"></span>

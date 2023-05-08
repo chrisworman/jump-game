@@ -7,24 +7,28 @@ import { Enemy } from './enemy.js';
 import { FilterManager } from './filterManager.js';
 import { Platforms } from './platforms.js';
 
-export class FireFlower extends Enemy {
+export class Turret extends Enemy {
     constructor(game, x, y) {
         super(
             game,
             x,
             y,
-            SpriteLibrary.SIZES.FIRE_BALL.width,
-            SpriteLibrary.SIZES.FIRE_BALL.height,
-            EnemyTypes.FIRE_FLOWER,
+            SpriteLibrary.SIZES.TURRET.width,
+            SpriteLibrary.SIZES.TURRET.height,
+            EnemyTypes.TURRET,
             true
         );
-        this.sprite = SpriteLibrary.fireBall(); // TODO: proper sprite
+        this.spriteIdle = SpriteLibrary.turretIdle();
+        this.spriteFiring = SpriteLibrary.turretFiring();
+        this.currentSprite = this.spriteIdle;
         this.spawnPosition = {
-            x: x + this.sprite.width * 0.5,
+            x: x + this.currentSprite.width * 0.5,
             y: y,
         };
         this.bombSpawner = new Emitter({
             emit: () => {
+                this.currentSprite = this.spriteFiring;
+                this.currentSprite.reset();
                 Bomb.spawn(
                     game,
                     this.spawnPosition.x,
@@ -32,43 +36,47 @@ export class FireFlower extends Enemy {
                     RandomGenerator.randomSign()
                 );
             },
-            delays: [250, 250, 250, 2000, 250, 250, 250, 2000],
+            delays: [300, 300, 300, 2000, 300, 300, 300, 2000],
         });
     }
 
     render(renderContext) {
         if (this.isDead) {
-            if (this.sprite.filterManager.animation == null) {
+            if (this.currentSprite.filterManager.animation == null) {
                 return;
             }
         }
-        this.sprite.render(renderContext, this.x, this.y);
+        this.currentSprite.render(renderContext, this.x, this.y);
     }
 
     update() {
         if (this.isDead) {
             return;
         }
+        if (this.currentSprite.reachedEnd) {
+            this.currentSprite = this.spriteIdle;
+            this.currentSprite.reset();
+        }
         this.bombSpawner.update();
     }
 
     static spawn(game) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
-        return new FireFlower(
+        return new Turret(
             game,
             RandomGenerator.randomIntBetween(
                 1,
-                game.canvas.width - SpriteLibrary.SIZES.FIRE_BALL.width - 1
+                game.canvas.width - SpriteLibrary.SIZES.TURRET.width - 1
             ),
             RandomGenerator.randomFromArray(eligiblePlatformYs) -
-                SpriteLibrary.SIZES.FIRE_BALL.height
+                SpriteLibrary.SIZES.TURRET.height
         );
     }
 
     handleShot() {
         super.handleShot();
         if (this.isDead) {
-            this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
+            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
         }
     }
 }
