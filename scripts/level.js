@@ -9,12 +9,11 @@ export class Level {
     static MAX_WALKERS = 8;
     static NO_ENEMY_BUFFER = 300;
 
-    constructor(game, number, world, title, collectableProbabilities, platformSprites) {
+    constructor(game, number, world, title, platformSprites) {
         this.game = game;
         this.number = number;
         this.world = world;
         this.title = title;
-        this.collectableProbabilities = collectableProbabilities;
         this.platformSprites = platformSprites;
         this.enemySpawnTime = null;
     }
@@ -75,7 +74,6 @@ export class Level {
             const collectable = Collectable.spawn(
                 this.game,
                 [...collectables, this.game.player, ...this.game.enemies], // Prevent overlapping collectables
-                this.collectableProbabilities
             );
             collectables.push(collectable);
         }

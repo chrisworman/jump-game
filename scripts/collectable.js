@@ -14,7 +14,7 @@ export class Collectable extends Entity {
         this.collected = false;
     }
 
-    static spawn(game, entitiesToAvoid, probabilities) {
+    static spawn(game, entitiesToAvoid) {
         let xy = null;
         let intersecting = null;
         let maxLoops = 100;
