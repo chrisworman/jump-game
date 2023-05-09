@@ -39,7 +39,6 @@ export class Collectable extends Entity {
             loops++;
         } while (intersecting.length > 0 && loops < maxLoops);
 
-        // TODO: apply probabilities
         return new Collectable(game, xy.x, xy.y, SpriteLibrary.collectable());
     }
 
