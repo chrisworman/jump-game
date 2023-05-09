@@ -9,6 +9,7 @@ export class FilterManager {
         this.opacityPercent = 100; // 0-100
         this.brightnessPercent = 100; // 0-100-?
         this.blurPixels = 0; // 0-?
+        this.saturatePercent = 100; // 0-100
         this.animation = null;
     }
 
@@ -35,7 +36,8 @@ export class FilterManager {
             this.invertPercent > 0 ||
             this.opacityPercent < 100 ||
             this.blurPixels > 0 ||
-            this.brightnessPercent !== 100;
+            this.brightnessPercent !== 100 ||
+            this.saturatePercent !== 100;
         if (hasFilters) {
             ctx.save();
             // https://developer.mozilla.org/en-US/docs/Web/CSS/filter
@@ -45,7 +47,9 @@ export class FilterManager {
             const blur = this.blurPixels > 0 ? `blur(${this.blurPixels}px) ` : '';
             const brightness =
                 this.brightnessPercent !== 100 ? `brightness(${this.brightnessPercent}%) ` : '';
-            ctx.filter = `${hueRotate}${invert}${opacity}${blur}${brightness}`;
+            const saturation =
+                this.saturatePercent !== 100 ? `saturate(${this.saturatePercent}%) ` : '';
+            ctx.filter = `${hueRotate}${invert}${opacity}${blur}${brightness}${saturation}`;
         }
 
         render();
@@ -59,6 +63,14 @@ export class FilterManager {
         return (fm, amountDone) => {
             fm.blurPixels = 5 * amountDone;
             fm.opacityPercent = 100 - 100 * amountDone;
+        };
+    }
+
+    static recoveringAnimation() {
+        return (fm, amountDone) => {
+            // fm.hueDegrees = 110;
+            fm.invertPercent = 100;
+            fm.opacityPercent = ((Math.sin(amountDone * 15 * Math.PI) + 1) / 2.0) * 80 + 20;
         };
     }
 }

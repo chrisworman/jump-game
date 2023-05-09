@@ -17,6 +17,8 @@ export class Enemy extends Entity {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.ENEMY_HIT);
             this.health = Math.max(0, this.health - 1);
             this.isDead = this.health === 0;
+            return true;
         }
+        return false;
     }
 }

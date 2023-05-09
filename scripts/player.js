@@ -6,6 +6,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { Mover } from './mover.js';
 import { Entity } from './entity.js';
 import { Box } from './box.js';
+import { FilterManager } from './filterManager.js';
 
 export class Player extends Entity {
     static VERTICAL_SPEED = -8;
@@ -159,10 +160,7 @@ export class Player extends Entity {
             this.recovering = true;
             this.recoveringStartTime = Date.now();
 
-            const recoveringAnimation = (filterManager, amountDone) => {
-                filterManager.hueDegrees = 360 - 360 * amountDone;
-                filterManager.opacityPercent = 20 + 30 * amountDone;
-            };
+            const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>
                 x.filterManager.animate(recoveringAnimation, Player.RECOVERY_TIME_MS)
             );

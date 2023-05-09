@@ -7,10 +7,12 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { GameState } from './gameState.js';
+import { FilterManager } from './filterManager.js';
 
 export class Boss extends Enemy {
     static HEALTH = 3;
     static SPEED = 3;
+    static RECOVERY_TIME_MS = 4000;
 
     constructor(game, x, y) {
         super(
@@ -24,10 +26,14 @@ export class Boss extends Enemy {
             Boss.HEALTH
         );
 
+        this.recovering = false;
+        this.recoveringStartTime = null;
+
         this.spriteIdle = SpriteLibrary.bossIdle();
         this.spriteJump = SpriteLibrary.bossJump();
         this.spriteBomb = SpriteLibrary.bossBomb();
         this.spriteCurrent = this.spriteIdle;
+        this.sprites = [this.spriteIdle, this.spriteJump, this.spriteBomb];
 
         this.bombSpawner = new Emitter({
             emit: () => {
@@ -37,7 +43,7 @@ export class Boss extends Enemy {
                     game,
                     this.x + this.spriteCurrent.width * 0.5,
                     this.y,
-                    RandomGenerator.randomSign(),
+                    RandomGenerator.randomSign()
                 );
             },
             delays: [200, 200, 200, 3000, 200, 200, 200, 3000],
@@ -78,9 +84,31 @@ export class Boss extends Enemy {
         }
 
         if (this.game.state === GameState.PLAYING) {
+            // Done recovering?
+            if (this.recovering && Date.now() - this.recoveringStartTime > Boss.RECOVERY_TIME_MS) {
+                this.recovering = false;
+                this.recoveringStartTime = null;
+                this.sprites.forEach((x) => x.filterManager.reset());
+            }
+
             this.mover.update();
             this.platformChanger.update();
             this.bombSpawner.update();
+        }
+    }
+
+    handleShot() {
+        if (this.recovering) {
+            return;
+        }
+        const wasShot = super.handleShot();
+        if (wasShot && !this.isDead) {
+            this.recovering = true;
+            this.recoveringStartTime = Date.now();
+            const recoveringAnimation = FilterManager.recoveringAnimation();
+            this.sprites.forEach((x) =>
+                x.filterManager.animate(recoveringAnimation, Boss.RECOVERY_TIME_MS)
+            );
         }
     }
 
