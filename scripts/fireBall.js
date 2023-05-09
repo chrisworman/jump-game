@@ -42,6 +42,7 @@ export class FireBall extends Enemy {
         if (this.isOffScreen) {
             return;
         }
+        // TODO: consider adding and using filterManager.dropShadow
         this.sprite.render(renderContext, this.x, this.y);
     }
 

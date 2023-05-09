@@ -197,11 +197,11 @@ export class SpriteLibrary {
 
     static bomb() {
         return new AnimatedSprite(
-            'images/bomb.png',
+            'images/bomb-2.png',
             SpriteLibrary.SIZES.BOMB.width,
             SpriteLibrary.SIZES.BOMB.height,
             0,
-            8,
+            4,
             12,
             true
         );

@@ -1,5 +1,4 @@
 import { Game } from './game.js';
-import { Player } from './player.js';
 
 export class Hud {
     constructor(game) {
@@ -7,6 +6,8 @@ export class Hud {
         this.hearts = document.getElementById('hearts');
         this.textOverlay = document.getElementById('textOverlay');
         this.collectable = document.getElementById('collectable');
+        this.world = document.getElementById('world');
+        this.level = document.getElementById('level');
         this.collectableCount = document.getElementById('collectableCount');
         this.restartButton = document.getElementById('restartButton');
         this.restartButton.addEventListener('click', () => {
@@ -66,6 +67,11 @@ export class Hud {
         setTimeout(() => {
             $(this.textOverlay).fadeOut('slow');
         }, 2000);
+    }
+
+    displayLevel(level) {
+        this.world.innerText = level.world.number;
+        this.level.innerText = level.number;
     }
 
     showStartButton() {

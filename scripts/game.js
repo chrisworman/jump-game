@@ -184,7 +184,8 @@ export class Game {
         }
 
         // Transition to next level
-        this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
+        this.hud.displayLevel(this.level);
+        // this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
         this.enemies.forEach((enemy) => {

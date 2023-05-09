@@ -81,8 +81,9 @@
                 vertical-align: middle;
             }
 
-            .collectable-count {
+            .hud-text {
                 vertical-align: middle;
+                line-height: 32px;
             }
 
             .pulse-bg {
@@ -174,7 +175,10 @@
         <div class="middle-content" id="middleContent">
             <div class="hud">
                 <div id="collectable" class="collectable"></div>
-                <span id="collectableCount" class="collectable-count">0</span>
+                <span id="collectableCount" class="hud-text">0</span>
+                <span class="hud-text">&nbsp;</span>
+                <span class="hud-text">World </span><span id="world" class="hud-text">1</span>
+                <span class="hud-text">Level </span><span id="level" class="hud-text">1</span>
                 <div id="hearts" class="hearts">
                     <span class="heart"></span>
                     <span class="heart"></span>
