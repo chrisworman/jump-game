@@ -125,14 +125,11 @@ export class Game {
         // Has the player reached the bottom of the screen?
         if (this.player.y + this.player.height >= this.canvas.height) {
             // We are done transitioning
-
-            // TODO: confirm
             this.collectables = [];
             this.enemies = [];
             Bomb.SpawnReusePool = [];
             this.bullets = [];
             Bullet.SpawnReusePool = [];
-
             this.hud.textOverlayFadeOut();
             this.platforms.currentSprites = this.level.platformSprites;
             this.player.handleLevelTransitionDone();
