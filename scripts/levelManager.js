@@ -46,7 +46,6 @@ export class LevelManager {
             this.levelNumber,
             world,
             `Level ${this.levelNumber}`,
-            'TODO: probabilities',
             this.getPlatformSprites()
         );
     }
