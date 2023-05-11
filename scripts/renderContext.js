@@ -2,7 +2,7 @@ export class RenderContext {
     constructor(canvas) {
         this.canvas = canvas;
         this.canvasContext = canvas.getContext('2d');
-        this.startTime = Date.now();
+        this.startTime = performance.now();
     }
 
     getCanvasContext() {
@@ -10,6 +10,6 @@ export class RenderContext {
     }
 
     getElapsedTime() {
-        return Date.now() - this.startTime;
+        return performance.now() - this.startTime;
     }
 }
