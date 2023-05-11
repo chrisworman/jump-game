@@ -85,7 +85,7 @@ export class Boss extends Enemy {
 
         if (this.game.state === GameState.PLAYING) {
             // Done recovering?
-            if (this.recovering && Date.now() - this.recoveringStartTime > Boss.RECOVERY_TIME_MS) {
+            if (this.recovering && performance.now() - this.recoveringStartTime > Boss.RECOVERY_TIME_MS) {
                 this.recovering = false;
                 this.recoveringStartTime = null;
                 this.sprites.forEach((x) => x.filterManager.reset());
@@ -104,7 +104,7 @@ export class Boss extends Enemy {
         const wasShot = super.handleShot();
         if (wasShot && !this.isDead) {
             this.recovering = true;
-            this.recoveringStartTime = Date.now();
+            this.recoveringStartTime = performance.now();
             const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>
                 x.filterManager.animate(recoveringAnimation, Boss.RECOVERY_TIME_MS)

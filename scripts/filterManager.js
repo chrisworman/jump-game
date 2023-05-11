@@ -15,7 +15,7 @@ export class FilterManager {
 
     animate(onUpdate, lengthMs = 1000) {
         this.animation = {
-            startTime: Date.now(),
+            startTime: performance.now(),
             onUpdate,
             lengthMs,
         };
@@ -23,7 +23,7 @@ export class FilterManager {
 
     applyFilters(ctx, render) {
         if (this.animation) {
-            const elapsed = Date.now() - this.animation.startTime;
+            const elapsed = performance.now() - this.animation.startTime;
             const amountDone = Math.min(1.0, elapsed / this.animation.lengthMs);
             this.animation.onUpdate(this, amountDone);
             if (amountDone === 1.0) {

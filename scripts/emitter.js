@@ -2,7 +2,7 @@ import { RandomGenerator } from './randomGenerator.js';
 
 export class Emitter {
     constructor(options) {
-        this.lastEmitTime = Date.now();
+        this.lastEmitTime = performance.now();
         this.options = options;
         this.delayIndex = 0;
         this.currentRandomDelay = null;
@@ -17,9 +17,9 @@ export class Emitter {
     }
 
     updateWithDelays() {
-        const elapsed = Date.now() - this.lastEmitTime;
+        const elapsed = performance.now() - this.lastEmitTime;
         if (elapsed >= this.options.delays[this.delayIndex]) {
-            this.lastEmitTime = Date.now();
+            this.lastEmitTime = performance.now();
             this.options.emit();
             this.delayIndex = (this.delayIndex + 1) % this.options.delays.length;
         }
@@ -33,9 +33,9 @@ export class Emitter {
             );
         }
 
-        const elapsed = Date.now() - this.lastEmitTime;
+        const elapsed = performance.now() - this.lastEmitTime;
         if (elapsed >= this.currentRandomDelay) {
-            this.lastEmitTime = Date.now();
+            this.lastEmitTime = performance.now();
             this.options.emit();
             this.currentRandomDelay = null;
         }

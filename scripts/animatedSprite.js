@@ -37,7 +37,7 @@ export class AnimatedSprite {
     render(renderContext, x, y) {
         if (this.loaded) {
             // Capture start time
-            let now = Date.now();
+            let now = performance.now();
             if (this.startTime === -1) {
                 this.startTime = now;
             }

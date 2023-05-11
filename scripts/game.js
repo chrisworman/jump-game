@@ -17,6 +17,7 @@ export class Game {
     static GRAVITY = 0.3;
     static LEVEL_SCROLL_SPEED = 8;
     static MAX_PLAYER_HEALTH = 3;
+    static TIME_STEP = 1000 / 60; // 60 FPS
 
     constructor() {
         this.state = GameState.INITIALIZING;
@@ -70,12 +71,22 @@ export class Game {
         this.hud.hideRestartButton();
 
         this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
+        this.lastUpdateTime = performance.now();
         this.state = GameState.PLAYING;
     }
 
     gameLoop() {
-        this.update();
+        const currentTime = performance.now();
+        let elapsedTime = currentTime - this.lastUpdateTime;
+
+        while (elapsedTime > Game.TIME_STEP) {
+            this.update();
+            elapsedTime -= Game.TIME_STEP;
+            this.lastUpdateTime += Game.TIME_STEP;
+        }
+
         this.render();
+        
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 

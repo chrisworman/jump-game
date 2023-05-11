@@ -67,7 +67,7 @@ export class Player extends Entity {
         }
 
         // Done recovering?
-        if (this.recovering && Date.now() - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
+        if (this.recovering && performance.now() - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
             this.recovering = false;
             this.recoveringStartTime = null;
             this.sprites.forEach((x) => x.filterManager.reset());
@@ -75,7 +75,7 @@ export class Player extends Entity {
 
         // Shooting?
         if (this.game.userControls.shoot) {
-            const now = Date.now();
+            const now = performance.now();
             if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) {
                 // Time to shoot
                 this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_SHOOT);
@@ -158,7 +158,7 @@ export class Player extends Entity {
         // Reduction in health, but still alive?
         if (health > 0 && this.health > health) {
             this.recovering = true;
-            this.recoveringStartTime = Date.now();
+            this.recoveringStartTime = performance.now();
 
             const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>

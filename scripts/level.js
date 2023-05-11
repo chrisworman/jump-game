@@ -30,7 +30,7 @@ export class Level {
             this.game.enemies.filter((x) => x.type === EnemyTypes.FIRE_BALL && !x.isOffScreen)
                 .length === 0
         ) {
-            const now = Date.now();
+            const now = performance.now();
             if (
                 !this.enemySpawnTime ||
                 now - this.enemySpawnTime >=
