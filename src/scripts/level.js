@@ -3,6 +3,8 @@ import { FireBall } from './fireBall.js';
 import { Walker } from './walker.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { Turret } from './turret.js';
+import { Spawner } from './spawner.js';
+import { RandomGenerator } from './randomGenerator.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
@@ -16,6 +18,15 @@ export class Level {
         this.title = title;
         this.platformSprites = platformSprites;
         this.enemySpawnTime = null;
+        this.collectableSpawner = new Spawner(() => {
+            return Collectable.spawn(game);
+        });
+        this.walkerSpawner = new Spawner(() => {
+            return Walker.spawn(game);
+        });
+        this.turrentSpawner = new Spawner(() => {
+            return Turret.spawn(game);
+        });
     }
 
     spawnEnemies() {
@@ -50,13 +61,15 @@ export class Level {
         const initialEnemies = [];
         const walkerSpawnCount = Math.min(Level.MAX_WALKERS, this.world.number + this.number - 1);
         for (let i = 0; i < walkerSpawnCount; i++) {
-            initialEnemies.push(Walker.spawn(this.game));
+            const walker = this.walkerSpawner.spawnWithoutIntersecting(initialEnemies);
+            initialEnemies.push(walker);
         }
 
         if (this.number > 1) {
             const turrentCount = Math.min(2, Math.max(1, this.world.number - 2));
-            for (let t = 0; t < turrentCount; t++) {
-                initialEnemies.push(Turret.spawn(this.game));
+            for (let i = 0; i < turrentCount; i++) {
+                const turret = this.turrentSpawner.spawnWithoutIntersecting(initialEnemies);
+                initialEnemies.push(turret);
             }
         }
 
@@ -69,12 +82,11 @@ export class Level {
         }
 
         const collectables = [];
-        const collectableCount = Math.ceil(this.world.number + this.number * 0.5);
-        for (let i = 0; i < collectableCount; i++) {
-            const collectable = Collectable.spawn(
-                this.game,
-                [...collectables, this.game.player, ...this.game.enemies], // Prevent overlapping collectables
-            );
+        const spawnCount = Math.ceil(this.world.number + this.number * 0.5);
+        const entitiesToAvoid = [this.game.player, ...this.game.enemies];
+        for (let i = 0; i < spawnCount; i++) {
+            const collectable = this.collectableSpawner.spawnWithoutIntersecting(entitiesToAvoid);
+            entitiesToAvoid.push(collectable);
             collectables.push(collectable);
         }
         return collectables;

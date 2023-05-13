@@ -1,7 +1,6 @@
 import { AudioManager } from './audioManager.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
-import { Box } from './box.js';
 import { Entity } from './entity.js';
 import { FilterManager } from './filterManager.js';
 
@@ -14,31 +13,13 @@ export class Collectable extends Entity {
         this.collected = false;
     }
 
-    static spawn(game, entitiesToAvoid) {
-        let xy = null;
-        let intersecting = null;
-        let maxLoops = 100;
-        let loops = 0;
-        do {
-            xy = RandomGenerator.randomXYIn(
-                SpriteLibrary.SIZES.COLLECTABLE.width,
-                SpriteLibrary.SIZES.COLLECTABLE.height,
-                game.canvas.width,
-                game.canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
-            );
-            intersecting = entitiesToAvoid.filter((x) =>
-                x.intersects(
-                    new Box(
-                        xy.x,
-                        xy.y,
-                        SpriteLibrary.SIZES.COLLECTABLE.width,
-                        SpriteLibrary.SIZES.COLLECTABLE.height
-                    )
-                )
-            );
-            loops++;
-        } while (intersecting.length > 0 && loops < maxLoops);
-
+    static spawn(game) {
+        const xy = RandomGenerator.randomXYIn(
+            SpriteLibrary.SIZES.COLLECTABLE.width,
+            SpriteLibrary.SIZES.COLLECTABLE.height,
+            game.canvas.width,
+            game.canvas.height - Collectable.SPAWN_BOTTOM_BUFFER
+        );
         return new Collectable(game, xy.x, xy.y, SpriteLibrary.collectable());
     }
 
