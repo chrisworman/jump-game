@@ -37,4 +37,8 @@ export class Sprite {
             });
         }
     }
+
+    reset() {
+        this.filterManager.reset();
+    }
 }

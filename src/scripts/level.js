@@ -5,6 +5,7 @@ import { EnemyTypes } from './enemyTypes.js';
 import { Turret } from './turret.js';
 import { Spawner } from './spawner.js';
 import { RandomGenerator } from './randomGenerator.js';
+import { Tank } from './tank.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
@@ -26,6 +27,9 @@ export class Level {
         });
         this.turrentSpawner = new Spawner(() => {
             return Turret.spawn(game);
+        });
+        this.tankSpawner = new Spawner(() => {
+            return Tank.spawn(game);
         });
     }
 
@@ -59,17 +63,26 @@ export class Level {
         }
 
         const initialEnemies = [];
+
+        // Walkers
         const walkerSpawnCount = Math.min(Level.MAX_WALKERS, this.world.number + this.number - 1);
         for (let i = 0; i < walkerSpawnCount; i++) {
-            const walker = this.walkerSpawner.spawnWithoutIntersecting(initialEnemies);
-            initialEnemies.push(walker);
+            initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
-        if (this.number > 1) {
+        // Tanks
+        if (this.world.number === 1) {
+            const tankCount = Math.min(2, this.number - 2);
+            for (let i = 0; i < tankCount; i++) {
+                initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        // Turrets
+        if (this.world.number > 1) {
             const turrentCount = Math.min(2, Math.max(1, this.world.number - 2));
             for (let i = 0; i < turrentCount; i++) {
-                const turret = this.turrentSpawner.spawnWithoutIntersecting(initialEnemies);
-                initialEnemies.push(turret);
+                initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 

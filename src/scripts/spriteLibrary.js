@@ -23,6 +23,10 @@ export class SpriteLibrary {
             width: 24,
             height: 63,
         },
+        TANK: {
+            width: 64,
+            height: 32,
+        },
         BULLET: {
             width: 24,
             height: 12,
@@ -168,6 +172,10 @@ export class SpriteLibrary {
         return new Sprite('images/platform-6.png');
     }
 
+    static platform7() {
+        return new Sprite('images/platform-7.png');
+    }
+
     static walkerWalking() {
         return new AnimatedSprite(
             'images/walker.png',
@@ -187,6 +195,52 @@ export class SpriteLibrary {
             0,
             10,
             9,
+            false
+        );
+    }
+
+    static tankLeft() {
+        return new AnimatedSprite(
+            'images/tank-left.png',
+            SpriteLibrary.SIZES.TANK.width,
+            SpriteLibrary.SIZES.TANK.height,
+            0,
+            5,
+            12,
+            false
+        );
+    }
+
+    static tankRight() {
+        return new AnimatedSprite(
+            'images/tank-right.png',
+            SpriteLibrary.SIZES.TANK.width,
+            SpriteLibrary.SIZES.TANK.height,
+            0,
+            5,
+            12,
+            false
+        );
+    }
+
+    static tankIdle() {
+        return new Sprite(
+            'images/tank-bombing.png',
+            0,
+            0,
+            SpriteLibrary.SIZES.TANK.width,
+            SpriteLibrary.SIZES.TANK.height,
+        );
+    }
+
+    static tankBombing() {
+        return new AnimatedSprite(
+            'images/tank-bombing.png',
+            SpriteLibrary.SIZES.TANK.width,
+            SpriteLibrary.SIZES.TANK.height,
+            0,
+            4,
+            18,
             false
         );
     }

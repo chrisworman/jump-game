@@ -51,6 +51,7 @@ export class Game {
         // Update state before UI
         this.levelManager.reset();
         this.level = this.levelManager.getNextLevel();
+        this.hud.displayLevel(this.level);
         this.player.reset();
         this.setCollectableCount(0);
         this.bullets = [];
@@ -238,6 +239,7 @@ export class Game {
                     (x) =>
                         x.type === EnemyTypes.WALKER ||
                         x.type === EnemyTypes.TURRET ||
+                        x.type === EnemyTypes.TANK ||
                         x.type === EnemyTypes.BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));

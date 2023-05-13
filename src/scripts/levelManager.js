@@ -1,5 +1,6 @@
 import { Boss } from './boss.js';
 import { Level } from './level.js';
+import { RandomGenerator } from './randomGenerator.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 
 export class LevelManager {
@@ -12,7 +13,7 @@ export class LevelManager {
         this.worldNumber = 1;
 
         this.worldBossFactories = new Map();
-        for (let i=1; i<=LevelManager.WORLD_COUNT; i++) {
+        for (let i = 1; i <= LevelManager.WORLD_COUNT; i++) {
             this.worldBossFactories.set(i, () => Boss.spawn(game, i));
         }
     }
@@ -46,7 +47,7 @@ export class LevelManager {
             this.levelNumber,
             world,
             `Level ${this.levelNumber}`,
-            this.getPlatformSprites()
+            RandomGenerator.randomizeArray(this.getPlatformSprites())
         );
     }
 
@@ -58,6 +59,7 @@ export class LevelManager {
             SpriteLibrary.platform4(),
             SpriteLibrary.platform5(),
             SpriteLibrary.platform6(),
+            SpriteLibrary.platform7(),
         ];
     }
 

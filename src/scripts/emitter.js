@@ -20,7 +20,7 @@ export class Emitter {
         const elapsed = performance.now() - this.lastEmitTime;
         if (elapsed >= this.options.delays[this.delayIndex]) {
             this.lastEmitTime = performance.now();
-            this.options.emit();
+            this.options.emit(this.delayIndex);
             this.delayIndex = (this.delayIndex + 1) % this.options.delays.length;
         }
     }

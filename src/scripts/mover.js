@@ -68,6 +68,14 @@ export class Mover {
         this.setVelocityX(velocityX);
     }
 
+    isMovingLeft() {
+        return this.velocity.x < 0;
+    }
+
+    isMovingRight() {
+        return this.velocity.x > 0;
+    }
+
     pace(velocityX = 4.5) {
         this.setVelocityX(velocityX);
         this.pacing = true;
