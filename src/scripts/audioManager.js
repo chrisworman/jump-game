@@ -1,7 +1,7 @@
 export class AudioManager {
     static AUDIO_FILES = {
-        BACKGROUND_SONG: 'sounds/stranger-mix-2.mp3',
-        COLLECTABLE_COLLECTED: 'sounds/collected.mp3',
+        BACKGROUND_SONG: 'sounds/piano-arp.mp3',
+        COLLECTABLE_COLLECTED: 'sounds/collectable.mp3',
         PLAYER_JUMP: 'sounds/jump.mp3',
         PLAYER_SHOOT: 'sounds/shoot.mp3',
         PLAYER_HIT: 'sounds/player-hit.mp3',

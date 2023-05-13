@@ -17,7 +17,8 @@ export class Game {
     static GRAVITY = 0.3;
     static LEVEL_SCROLL_SPEED = 8;
     static MAX_PLAYER_HEALTH = 3;
-    static TIME_STEP = 1000 / 60; // 60 FPS
+    static FPS = 60;
+    static TIME_STEP = 1000 / Game.FPS;
 
     constructor() {
         this.state = GameState.INITIALIZING;
