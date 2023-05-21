@@ -1,14 +1,13 @@
 import { Collectable } from './collectable.js';
 import { FireBall } from './fireBall.js';
 import { Walker } from './walker.js';
-import { EnemyTypes } from './enemyTypes.js';
 import { Turret } from './turret.js';
 import { Spawner } from './spawner.js';
-import { RandomGenerator } from './randomGenerator.js';
 import { Tank } from './tank.js';
+import { Tower } from './tower.js';
 
 export class Level {
-    static MAX_FIRE_BALL_SPAWN_DELAY_MS = 4000;
+    static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
     static MAX_WALKERS = 8;
     static NO_ENEMY_BUFFER = 300;
 
@@ -31,6 +30,9 @@ export class Level {
         this.tankSpawner = new Spawner(() => {
             return Tank.spawn(game);
         });
+        this.towerSpawner = new Spawner(() => {
+            return Tower.spawn(game);
+        });
     }
 
     spawnEnemies() {
@@ -41,9 +43,7 @@ export class Level {
         if (
             this.number > 1 &&
             this.game.player.y < this.game.canvas.height - Level.NO_ENEMY_BUFFER &&
-            this.game.player.y > Level.NO_ENEMY_BUFFER &&
-            this.game.enemies.filter((x) => x.type === EnemyTypes.FIRE_BALL && !x.isOffScreen)
-                .length === 0
+            this.game.player.y > Level.NO_ENEMY_BUFFER
         ) {
             const now = performance.now();
             if (
@@ -54,7 +54,7 @@ export class Level {
                 this.enemySpawnTime = now;
                 this.game.enemies.push(FireBall.spawn(this.game));
             }
-        }
+        } 
     }
 
     spawnInitialEnemies() {
@@ -77,6 +77,9 @@ export class Level {
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
+
+        // Towers
+        initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
 
         // Turrets
         if (this.world.number > 1) {

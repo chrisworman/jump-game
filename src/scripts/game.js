@@ -12,6 +12,7 @@ import { Hud } from './hud.js';
 import { Bullet } from './bullet.js';
 import { Bomb } from './bomb.js';
 import { Background } from './background.js';
+import { Rocket } from './rocket.js';
 
 export class Game {
     static GRAVITY = 0.3;
@@ -59,9 +60,11 @@ export class Game {
         this.collectables = [];
         this.enemies = [];
         Bomb.SpawnReusePool = [];
+        Rocket.SpawnReusePool = [];
         this.platforms.currentSprites = this.level.platformSprites;
-        this.collectables = this.level.spawnCollectables();
         this.enemies = this.level.spawnInitialEnemies();
+        this.collectables = this.level.spawnCollectables();
+        
 
         // Update UI
         this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
@@ -88,7 +91,7 @@ export class Game {
         }
 
         this.render();
-        
+
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -195,7 +198,6 @@ export class Game {
 
         // Transition to next level
         this.hud.displayLevel(this.level);
-        // this.hud.textOverlayFadeIn(`${this.level.world.title} - ${this.level.title}`);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
         this.enemies.forEach((enemy) => {
@@ -248,7 +250,7 @@ export class Game {
             this.collectables.forEach((x) => x.render(this.renderContext));
             this.platforms.render(this.renderContext); // temp
             this.enemies
-                .filter((x) => x.type === EnemyTypes.BOMB)
+                .filter((x) => x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
                 .forEach((x) => x.render(this.renderContext));
             this.enemies
                 .filter((x) => x.type === EnemyTypes.FIRE_BALL)

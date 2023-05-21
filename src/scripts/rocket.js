@@ -4,9 +4,8 @@ import { EnemyTypes } from './enemyTypes.js';
 import { Mover } from './mover.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 
-export class Bomb extends Enemy {
-    static SPAWN_SPEED_X = 3;
-    static SPAWN_SPEED_Y = 8;
+export class Rocket extends Enemy {
+    static SPAWN_SPEED_X = 4;
     static SpawnReusePool = [];
 
     constructor(game, x, y, velocity) {
@@ -14,9 +13,9 @@ export class Bomb extends Enemy {
             game,
             x,
             y,
-            SpriteLibrary.SIZES.BOMB.width,
-            SpriteLibrary.SIZES.BOMB.height,
-            EnemyTypes.BOMB,
+            SpriteLibrary.SIZES.BOMB.width, // TODO: proper sprite
+            SpriteLibrary.SIZES.BOMB.height, // TODO: proper sprite
+            EnemyTypes.ROCKET,
             false
         );
         this.sprite = SpriteLibrary.bomb();
@@ -27,7 +26,6 @@ export class Bomb extends Enemy {
             platforms: false,
         });
         this.mover.setVelocity(velocity);
-        this.mover.dropping = true;
     }
 
     render(renderContext) {
@@ -50,7 +48,7 @@ export class Bomb extends Enemy {
             this.x > this.game.canvas.width ||
             this.x + this.width < 0;
         if (this.isOffScreen) {
-            Bomb.SpawnReusePool.push(this);
+            Rocket.SpawnReusePool.push(this);
         }
     }
 
@@ -67,11 +65,11 @@ export class Bomb extends Enemy {
         verticalDirection = -1 => right to left
     */
     static spawn(game, x, y, verticalDirection) {
-        const velocity = new Velocity(verticalDirection * Bomb.SPAWN_SPEED_X, -Bomb.SPAWN_SPEED_Y);
-        if (Bomb.SpawnReusePool.length > 0) {
-            Bomb.SpawnReusePool.pop().reuse(x, y, velocity);
+        const velocity = new Velocity(verticalDirection * Rocket.SPAWN_SPEED_X, 0);
+        if (Rocket.SpawnReusePool.length > 0) {
+            Rocket.SpawnReusePool.pop().reuse(x, y, velocity);
         } else {
-            game.enemies.push(new Bomb(game, x, y, velocity));
+            game.enemies.push(new Rocket(game, x, y, velocity));
         }
     }
 }

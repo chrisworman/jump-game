@@ -20,7 +20,7 @@ export class RandomGenerator {
         return RandomGenerator.randomIntBetween(0, 1) === 0 ? -1 : 1;
     }
 
-    static randomBool(probability) {
+    static randomBool(probability = 0.5) {
         return Math.random() < probability;
     }
 

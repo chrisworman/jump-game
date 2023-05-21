@@ -27,6 +27,10 @@ export class SpriteLibrary {
             width: 64,
             height: 32,
         },
+        TOWER: {
+            width: 32,
+            height: 64,
+        },
         BULLET: {
             width: 24,
             height: 12,
@@ -242,6 +246,54 @@ export class SpriteLibrary {
             4,
             18,
             false
+        );
+    }
+
+    static towerLeftIdle() {
+        return new AnimatedSprite(
+            'images/tower-left.png',
+            SpriteLibrary.SIZES.TOWER.width,
+            SpriteLibrary.SIZES.TOWER.height,
+            0,
+            2,
+            1,
+            true,
+        );
+    }
+
+    static towerLeftShoot() {
+        return new AnimatedSprite(
+            'images/tower-left.png',
+            SpriteLibrary.SIZES.TOWER.width,
+            SpriteLibrary.SIZES.TOWER.height,
+            0,
+            4,
+            12,
+            false,
+        );
+    }
+
+    static towerRightIdle() {
+        return new AnimatedSprite(
+            'images/tower-right.png',
+            SpriteLibrary.SIZES.TOWER.width,
+            SpriteLibrary.SIZES.TOWER.height,
+            0,
+            2,
+            1,
+            true,
+        );
+    }
+
+    static towerRightShoot() {
+        return new AnimatedSprite(
+            'images/tower-right.png',
+            SpriteLibrary.SIZES.TOWER.width,
+            SpriteLibrary.SIZES.TOWER.height,
+            0,
+            4,
+            12,
+            false,
         );
     }
 
