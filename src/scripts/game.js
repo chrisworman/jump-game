@@ -21,6 +21,11 @@ export class Game {
     static FPS = 60;
     static TIME_STEP = 1000 / Game.FPS;
 
+    static WORLD_WIDTH = 550;
+    static WORLD_HEIGHT = 800;
+    static HUD_HEIGHT = 50;
+    static ON_SCREEN_CONTROLS_HEIGHT = 100;
+
     constructor() {
         this.state = GameState.INITIALIZING;
 
@@ -28,8 +33,19 @@ export class Game {
         SpriteLibrary.preloadImages();
         this.audioManager = new AudioManager();
 
-        this.canvas = document.getElementById('canvas');
-        this.middleContent = document.getElementById('middleContent');
+        this.hudContainer = document.getElementById('hud');
+        this.responsiveCanvas = document.getElementById('responsiveCanvas');
+        this.onScreenControls = document.getElementById('onScreenControls');
+
+        this.handleWindowResize();
+        window.addEventListener('resize', () => {
+            this.handleWindowResize();
+        });
+        
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = Game.WORLD_WIDTH;
+        this.canvas.height = Game.WORLD_HEIGHT;
+
         this.hud = new Hud(this);
         this.userControls = new UserControls(this);
         this.player = new Player(this);
@@ -64,7 +80,6 @@ export class Game {
         this.platforms.currentSprites = this.level.platformSprites;
         this.enemies = this.level.spawnInitialEnemies();
         this.collectables = this.level.spawnCollectables();
-        
 
         // Update UI
         this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
@@ -76,11 +91,14 @@ export class Game {
         this.hud.hideRestartButton();
 
         this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
-        this.lastUpdateTime = performance.now();
+        this.lastUpdateTime = null;
         this.state = GameState.PLAYING;
     }
 
     gameLoop() {
+        if (this.lastUpdateTime === null) {
+            this.lastUpdateTime = performance.now();
+        }
         const currentTime = performance.now();
         let elapsedTime = currentTime - this.lastUpdateTime;
 
@@ -220,15 +238,41 @@ export class Game {
     }
 
     shake() {
-        if (this.middleContent.classList.contains('shake')) {
-            this.middleContent.classList.remove('shake');
-            this.middleContent.offsetWidth; // Force DOM reflow
+        if (this.responsiveCanvas.classList.contains('shake')) {
+            this.responsiveCanvas.classList.remove('shake');
+            this.responsiveCanvas.offsetWidth; // Force DOM reflow
         }
-        this.middleContent.classList.add('shake');
+        this.responsiveCanvas.classList.add('shake');
     }
 
     isBossLevel() {
         return this.level && !!this.level.world.boss;
+    }
+
+    handleWindowResize() {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log(`isMobile=${isMobile}`);
+        const onScreenControlsGap = isMobile ? Game.ON_SCREEN_CONTROLS_HEIGHT : 0;
+
+        const windowW = window.innerWidth;
+        const windowH = window.innerHeight - Game.HUD_HEIGHT - onScreenControlsGap;
+        const scale = Math.min(windowW / Game.WORLD_WIDTH, windowH / Game.WORLD_HEIGHT);
+
+        const newWidth = Math.ceil(Game.WORLD_WIDTH * scale);
+        const newHeight = Math.ceil(Game.WORLD_HEIGHT * scale);
+
+        this.responsiveCanvas.width = newWidth;
+        this.responsiveCanvas.height = newHeight;
+        this.responsiveCanvas.style.width = `${newWidth}px`;
+        this.responsiveCanvas.style.height = `${newHeight}px`;
+
+        this.responsiveCanvas.style.left = `${Math.ceil(windowW * 0.5 - newWidth * 0.5)}px`;
+        this.responsiveCanvas.style.top = `${Game.HUD_HEIGHT}px`;
+
+        this.hudContainer.style.width = `${newWidth}px`;
+        this.onScreenControls.style.top = `${newHeight}px`;
+        this.onScreenControls.style.width = `${newWidth}px`;
+        this.onScreenControls.style.display = isMobile ? 'flex' : 'none';
     }
 
     render() {
@@ -256,6 +300,9 @@ export class Game {
                 .filter((x) => x.type === EnemyTypes.FIRE_BALL)
                 .forEach((x) => x.render(this.renderContext));
         });
+
+        const ctxResponsive = this.responsiveCanvas.getContext('2d');
+        ctxResponsive.drawImage(this.canvas, 0, 0, this.responsiveCanvas.width, this.responsiveCanvas.height);
     }
 }
 
