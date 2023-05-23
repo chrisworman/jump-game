@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="height=900, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,47 +22,55 @@
                 padding: 0;
                 margin: 0;
                 background-color: black;
+                overflow: hidden;
+                height: 100%;
             }
 
-            .middle-content {
-                width: 550px;
-                margin: 0 auto;
+            .overlay {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-repeat: no-repeat;
+                background-position: center center;
+                font-size: 60px;
+                color: white;
+                text-shadow: 0 -1px 4px #fff, 0 -2px 10px #ff0, 0 -10px 20px #ff8000,
+                    0 -18px 40px #f00, 0 -18px 42px #000;
+                text-align: center;
+                font-family: 'VT323', monospace;
+                z-index: 1;
             }
 
-            .shake {
-                animation: shake-keyframes 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-            }
-
-            @keyframes shake-keyframes {
-                10%,
-                90% {
-                    transform: translate3d(-1px, -2px, 0);
-                }
-
-                20%,
-                80% {
-                    transform: translate3d(2px, 0, -3px);
-                }
-
-                30%,
-                50%,
-                70% {
-                    transform: translate3d(-4px, 0, 3px);
-                }
-
-                40%,
-                60% {
-                    transform: translate3d(4px, 2px, 0);
-                }
+            .overlay-button {
+                cursor: pointer;
+                font-family: 'VT323', monospace;
+                display: none;
+                font-size: 22px;
             }
 
             .hud {
+                border: 4px solid #ccc;
+                box-sizing: border-box;
+                margin: 0 auto;
+                height: 50px;
+                overflow: hidden;
+                padding: 3px;
+                background-color: #333;
+            }
+
+            .hud-text {
                 color: white;
-                padding: 5px;
-                font-size: 32px;
+                font-size: 25px;
                 font-family: 'VT323', monospace;
-                border: 10px solid transparent; /* padding for border-image */
-                border-image: url('images/hud.png') 6 round;
+                text-shadow: 2px 2px 0 #7a7a7a;
+                vertical-align: middle;
+            }
+
+            @media only screen and (max-width: 500px) {
+                .hud-text {
+                    font-size: 15px;
+                }
             }
 
             .hearts {
@@ -79,27 +87,8 @@
                 background-image: url('/images/hud-red-gem.png');
                 background-position: center;
                 vertical-align: middle;
-            }
-
-            .hud-text {
-                vertical-align: middle;
-                line-height: 32px;
-            }
-
-            .pulse-bg {
-                animation: pulseBgKeyframes 2s ease-in-out;
-            }
-
-            @keyframes pulseBgKeyframes {
-                0%,
-                50%,
-                100% {
-                    opacity: 1.0;
-                }
-                25%,
-                75% {
-                    opacity: 0.2;
-                }
+                font-size: 0;
+                line-height: 0;
             }
 
             .audio-button {
@@ -130,70 +119,152 @@
                 background-repeat: no-repeat;
             }
 
-            .game-play-panel {
-                position: relative;
-                width: 550px;
-                height: 800px;
-                outline: solid 6px #aaa;
-                box-shadow: 0px 15px 45px 5px #aaa;
-            }
-
-            .game-canvas {
-                width: 550px;
-                height: 800px;
-            }
-
-            .overlay {
+            .responsive-canvas {
                 position: absolute;
-                top: 0;
-                left: 0;
-                width: 550px;
-                height: 800px;
-                background-repeat: no-repeat;
-                background-position: center center;
-                font-size: 60px;
-                color: white;
-                text-shadow: 0 -1px 4px #fff, 0 -2px 10px #ff0, 0 -10px 20px #ff8000,
-                    0 -18px 40px #f00, 0 -18px 42px #000;
-                text-align: center;
-                font-family: 'VT323', monospace;
-                line-height: 800px;
             }
 
-            .overlay-button {
-                cursor: pointer;
-                font-family: 'VT323', monospace;
+            .on-screen-controls {
                 display: none;
-                position: absolute;
-                top: 450px;
-                left: 240px;
-                font-size: 22px;
+                height: 100px;
+                overflow: hidden;
+                position: relative;
+                border: 4px solid #ccc;
+                box-sizing: border-box;
+                margin: 0 auto;
+                padding: 3px;
+                background-color: #333;
+                color: white;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .left {
+                width: 50px;
+                height: 30px;
+                box-sizing: border-box;
+                background-color: blue;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .right {
+                width: 50px;
+                height: 30px;
+                box-sizing: border-box;
+                background-color: red;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .down {
+                width: 30px;
+                height: 50px;
+                box-sizing: border-box;
+                background-color: yellow;
+                margin-top: 25px;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .shoot {
+                width: 50px;
+                height: 50px;
+                box-sizing: border-box;
+                background-color: purple;
+                margin-left: 50px;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .jump {
+                width: 50px;
+                height: 50px;
+                box-sizing: border-box;
+                background-color: orange;
+                margin-left: 25px;
+                touch-action: manipulation;
+                user-select: none;
+            }
+
+            .on-screen-controls .left:active,
+            .on-screen-controls .right:active,
+            .on-screen-controls .down:active {
+                filter: brightness(4);
+            }
+
+            .pulse-bg {
+                animation: pulseBgKeyframes 2s ease-in-out;
+            }
+
+            .shake {
+                animation: shake-keyframes 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            }
+
+            @keyframes shake-keyframes {
+                10%,
+                90% {
+                    transform: translate3d(-1px, -2px, 0);
+                }
+
+                20%,
+                80% {
+                    transform: translate3d(2px, 0, -3px);
+                }
+
+                30%,
+                50%,
+                70% {
+                    transform: translate3d(-4px, 0, 3px);
+                }
+
+                40%,
+                60% {
+                    transform: translate3d(4px, 2px, 0);
+                }
+            }
+
+            @keyframes pulseBgKeyframes {
+                0%,
+                50%,
+                100% {
+                    opacity: 1;
+                }
+                25%,
+                75% {
+                    opacity: 0.2;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="middle-content" id="middleContent">
-            <div class="hud">
-                <div id="collectable" class="collectable"></div>
-                <span id="collectableCount" class="hud-text">0</span>
-                <span class="hud-text">&nbsp;</span>
-                <span class="hud-text">World </span><span id="world" class="hud-text">1</span>
-                <span class="hud-text">Level </span><span id="level" class="hud-text">1</span>
-                <div id="hearts" class="hearts">
-                    <span class="heart"></span>
-                    <span class="heart"></span>
-                    <span class="heart-empty"></span>
-                </div>
-                <div id="audioButton" class="audio-button"></div>
+        <div class="overlay">
+            <div id="textOverlay"></div>
+            <button id="startButton" class="overlay-button">Start</button>
+            <button id="restartButton" class="overlay-button">Restart</button>
+        </div>
+
+        <div class="hud" id="hud">
+            <div id="collectable" class="collectable"></div>
+            <span id="collectableCount" class="hud-text">0</span>
+            <span class="hud-text">&nbsp;</span>
+            <span class="hud-text">World </span><span id="world" class="hud-text">1</span>
+            <span class="hud-text">Level </span><span id="level" class="hud-text">1</span>
+            <div id="hearts" class="hearts">
+                <span class="heart"></span>
+                <span class="heart"></span>
+                <span class="heart-empty"></span>
             </div>
-            <div class="game-play-panel">
-                <canvas id="canvas" class="game-canvas" width="550" height="800"></canvas>
-                <!-- <div id="animationOverlay" class="overlay" style="background-image: url('images/starburst-animation.gif');"></div> -->
-                <!-- <div id="grainyOverlay" class="overlay" style="background-image: url('images/grainy-overlay.png');"></div> -->
-                <div id="textOverlay" class="overlay"></div>
-                <button id="startButton" class="overlay-button">Start</button>
-                <button id="restartButton" class="overlay-button">Restart</button>
-            </div>
+            <div id="audioButton" class="audio-button"></div>
+        </div>
+
+        <canvas class="responsive-canvas" id="responsiveCanvas"></canvas>
+
+        <div class="on-screen-controls" id="onScreenControls">
+            <div class="left" id="osLeft"></div>
+            <div class="down" id="osDown"></div>
+            <div class="right" id="osRight"></div>
+            <div class="shoot" id="osShoot"></div>
+            <div class="jump" id="osJump"></div>
         </div>
 
         <script src="scripts/game.js" type="module"></script>

@@ -30,7 +30,7 @@ export class Tower extends Enemy {
         this.currentSprite = this.spriteIdle;
         this.spawnPosition = {
             x: facingRight ? x + this.currentSprite.width : x - this.currentSprite.width,
-            y: y + 8,
+            y: y + 12,
         };
         this.bombSpawner = new Emitter({
             emit: (index) => {

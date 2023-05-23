@@ -28,7 +28,6 @@ export class AnimatedSprite {
     reset() {
         this.startTime = -1;
         this.reachedEnd = false;
-        this.filterManager.reset();
     }
 
     sync(other) {

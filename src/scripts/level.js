@@ -54,7 +54,7 @@ export class Level {
                 this.enemySpawnTime = now;
                 this.game.enemies.push(FireBall.spawn(this.game));
             }
-        } 
+        }
     }
 
     spawnInitialEnemies() {
@@ -65,25 +65,32 @@ export class Level {
         const initialEnemies = [];
 
         // Walkers
-        const walkerSpawnCount = Math.min(Level.MAX_WALKERS, this.world.number + this.number - 1);
+        const walkerSpawnCount = Math.min(Level.MAX_WALKERS, Math.max(1, this.world.number * 2 + this.number - 10));
         for (let i = 0; i < walkerSpawnCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Tanks
-        if (this.world.number === 1) {
-            const tankCount = Math.min(2, this.number - 2);
+        if (this.number > 5) {
+            const maxTanks = this.world.number <= 3 ? 1 : 2;
+            const tankCount = Math.min(maxTanks, Math.max(1, this.number - 10));
             for (let i = 0; i < tankCount; i++) {
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 
         // Towers
-        initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+        if (this.number > 1) {
+            const towerCount = Math.max(1, Math.min(2, this.world.number - 3));
+            for (let i = 0; i < towerCount; i++) {
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
 
         // Turrets
         if (this.world.number > 1) {
-            const turrentCount = Math.min(2, Math.max(1, this.world.number - 2));
+            const maxTurrets = this.world.number <= 4 ? 1 : 2;
+            const turrentCount = Math.min(maxTurrets, Math.max(1, this.number - 15));
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }

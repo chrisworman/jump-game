@@ -68,7 +68,6 @@ export class FilterManager {
 
     static recoveringAnimation() {
         return (fm, amountDone) => {
-            // fm.hueDegrees = 110;
             fm.invertPercent = 100;
             fm.opacityPercent = ((Math.sin(amountDone * 15 * Math.PI) + 1) / 2.0) * 80 + 20;
         };
