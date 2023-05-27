@@ -35,7 +35,7 @@ export class Boss extends Enemy {
         this.spriteCurrent = this.spriteIdle;
         this.sprites = [this.spriteIdle, this.spriteJump, this.spriteBomb];
 
-        this.bombSpawner = new Emitter({
+        this.bombSpawner = new Emitter(game, {
             emit: () => {
                 this.spriteCurrent = this.spriteBomb;
                 this.spriteCurrent.reset();
@@ -52,7 +52,7 @@ export class Boss extends Enemy {
         // Setup platform behaviour
         this.mover = new Mover(game, this);
         this.mover.pace(Boss.SPEED);
-        this.platformChanger = new Emitter({
+        this.platformChanger = new Emitter(game, {
             emit: () => {
                 // TODO: check if on top or bottom platform
                 if (RandomGenerator.randomBool(0.5)) {
@@ -85,7 +85,7 @@ export class Boss extends Enemy {
 
         if (this.game.state === GameState.PLAYING) {
             // Done recovering?
-            if (this.recovering && performance.now() - this.recoveringStartTime > Boss.RECOVERY_TIME_MS) {
+            if (this.recovering && this.game.gameTime - this.recoveringStartTime > Boss.RECOVERY_TIME_MS) {
                 this.recovering = false;
                 this.recoveringStartTime = null;
                 this.sprites.forEach((x) => x.filterManager.reset());
@@ -104,10 +104,10 @@ export class Boss extends Enemy {
         const wasShot = super.handleShot();
         if (wasShot && !this.isDead) {
             this.recovering = true;
-            this.recoveringStartTime = performance.now();
+            this.recoveringStartTime = this.game.gameTime;
             const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>
-                x.filterManager.animate(recoveringAnimation, Boss.RECOVERY_TIME_MS)
+                x.filterManager.animate(recoveringAnimation, this.game.gameTime, Boss.RECOVERY_TIME_MS)
             );
         }
     }

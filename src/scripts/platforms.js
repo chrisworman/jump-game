@@ -8,6 +8,7 @@ export class Platforms {
 
     constructor(game) {
         this.game = game;
+        this.movementFactor = 60 / Game.FPS; // TODO: extract to game
         this.lastGameState = this.game.state;
         this.currentSprites = [];
         this.nextSprites = [];
@@ -16,7 +17,7 @@ export class Platforms {
 
     update() {
         if (this.game.state === GameState.LEVEL_TRANSITION) {
-            this.levelTransitionScrollY += Game.LEVEL_SCROLL_SPEED;
+            this.levelTransitionScrollY += Game.LEVEL_SCROLL_SPEED * this.movementFactor;
         }
     }
 

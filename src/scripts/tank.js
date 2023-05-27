@@ -32,7 +32,7 @@ export class Tank extends Enemy {
         this.mover = new Mover(game, this);
         this.mover.pace(Tank.SPEED);
 
-        this.bombAndMovementEmitter = new Emitter({
+        this.bombAndMovementEmitter = new Emitter(game, {
             emit: (index) => {
                 if (index === 0) {
                     this.mover.stop();
@@ -87,7 +87,7 @@ export class Tank extends Enemy {
     handleShot() {
         super.handleShot();
         if (this.isDead) {
-            this.spriteCurrent.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
+            this.spriteCurrent.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
         }
     }
 

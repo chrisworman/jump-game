@@ -1,8 +1,9 @@
 import { RandomGenerator } from './randomGenerator.js';
 
 export class Emitter {
-    constructor(options) {
-        this.lastEmitTime = performance.now();
+    constructor(game, options) {
+        this.game = game;
+        this.lastEmitTime = this.game.gameTime;
         this.options = options;
         this.delayIndex = 0;
         this.currentRandomDelay = null;
@@ -17,9 +18,10 @@ export class Emitter {
     }
 
     updateWithDelays() {
-        const elapsed = performance.now() - this.lastEmitTime;
+        this.lastEmitTime = this.lastEmitTime || this.game.gameTime;
+        const elapsed = this.game.gameTime - this.lastEmitTime;
         if (elapsed >= this.options.delays[this.delayIndex]) {
-            this.lastEmitTime = performance.now();
+            this.lastEmitTime = this.game.gameTime;
             this.options.emit(this.delayIndex);
             this.delayIndex = (this.delayIndex + 1) % this.options.delays.length;
         }
@@ -33,13 +35,11 @@ export class Emitter {
             );
         }
 
-        const elapsed = performance.now() - this.lastEmitTime;
+        const elapsed = this.game.gameTime - this.lastEmitTime;
         if (elapsed >= this.currentRandomDelay) {
-            this.lastEmitTime = performance.now();
+            this.lastEmitTime = this.game.gameTime;
             this.options.emit();
             this.currentRandomDelay = null;
         }
     }
-
-    // TODO: updateWithRandomDelays
 }

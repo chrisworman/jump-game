@@ -43,6 +43,10 @@ export class SpriteLibrary {
             width: 64,
             height: 76,
         },
+        BOSS_2: {
+            width: 76,
+            height: 64,
+        },
         BACKGROUND: {
             width: 550,
             height: 1600,
@@ -233,7 +237,7 @@ export class SpriteLibrary {
             0,
             0,
             SpriteLibrary.SIZES.TANK.width,
-            SpriteLibrary.SIZES.TANK.height,
+            SpriteLibrary.SIZES.TANK.height
         );
     }
 
@@ -257,7 +261,7 @@ export class SpriteLibrary {
             0,
             2,
             1,
-            true,
+            true
         );
     }
 
@@ -269,7 +273,7 @@ export class SpriteLibrary {
             0,
             4,
             12,
-            false,
+            false
         );
     }
 
@@ -281,7 +285,7 @@ export class SpriteLibrary {
             0,
             2,
             1,
-            true,
+            true
         );
     }
 
@@ -293,12 +297,18 @@ export class SpriteLibrary {
             0,
             4,
             12,
-            false,
+            false
         );
     }
 
     static bullet() {
-        return new Sprite('images/bullet.png');
+        return new Sprite(
+            'images/game-sprites.png',
+            0,
+            0,
+            SpriteLibrary.SIZES.BULLET.width,
+            SpriteLibrary.SIZES.BULLET.height
+        );
     }
 
     static bomb() {
@@ -334,6 +344,31 @@ export class SpriteLibrary {
             5,
             10,
             false
+        );
+    }
+
+    static boss2Pace() {
+        return new AnimatedSprite(
+            'images/boss-2.png',
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
+            0,
+            8,
+            10,
+            true
+        );
+    }
+
+    static boss2Shoot() {
+        return new AnimatedSprite(
+            'images/boss-2.png',
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
+            0,
+            1,
+            0,
+            false,
+            SpriteLibrary.SIZES.BOSS_2.width * 3
         );
     }
 

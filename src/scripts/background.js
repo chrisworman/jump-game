@@ -1,9 +1,11 @@
 import { SpriteLibrary } from "./spriteLibrary.js";
 import { GameState } from "./gameState.js";
+import { Game } from "./game.js";
 
 export class Background {
     constructor(game) {
         this.game = game;
+        this.movementFactor = 60 / Game.FPS; // TODO: extract to game
         this.offset = 0;
         this.layers = [
             {
@@ -27,7 +29,7 @@ export class Background {
     update() {
         if (this.game.state === GameState.LEVEL_TRANSITION) {
             for (const layer of this.layers) {
-                layer.offset = (layer.offset + layer.speed) % this.game.canvas.height;
+                layer.offset = (layer.offset + layer.speed * this.movementFactor) % this.game.canvas.height;
             }
         }
     }

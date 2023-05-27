@@ -1,12 +1,12 @@
 import { FilterManager } from './filterManager.js';
 
 export class AnimatedSprite {
-    constructor(imagePath, width, height, yOffset, frameCount, fps = 12, loop = true) {
+    constructor(imagePath, width, height, yOffset, frameCount, fps = 12, loop = true, xoffset = 0) {
         // By convention, sprite sheets for animations are always left to right horizontal
         this.xOffsets = Array(frameCount);
         this.yOffset = yOffset;
         for (let i = 0; i < frameCount; i++) {
-            this.xOffsets[i] = i * width;
+            this.xOffsets[i] = i * width + xoffset;
         }
         this.frameCount = frameCount;
         this.startTime = -1;
@@ -37,9 +37,8 @@ export class AnimatedSprite {
     render(renderContext, x, y) {
         if (this.loaded) {
             // Capture start time
-            let now = performance.now();
             if (this.startTime === -1) {
-                this.startTime = now;
+                this.startTime = renderContext.game.gameTime;
             }
 
             // Get the next frame index, considering looping
@@ -47,7 +46,7 @@ export class AnimatedSprite {
             if (!this.loop && this.reachedEnd) {
                 frameIndex = this.xOffsets.length - 1;
             } else {
-                var elapsedMs = now - this.startTime;
+                var elapsedMs = renderContext.game.gameTime - this.startTime;
                 frameIndex = Math.floor((elapsedMs * this.frameFactor) % this.frameCount);
             }
             if (!this.loop && frameIndex === this.xOffsets.length - 1) {
@@ -55,7 +54,7 @@ export class AnimatedSprite {
             }
 
             const ctx = renderContext.getCanvasContext();
-            this.filterManager.applyFilters(ctx, () => {
+            this.filterManager.applyFilters(renderContext.game, ctx, () => {
                 renderContext
                     .getCanvasContext()
                     .drawImage(

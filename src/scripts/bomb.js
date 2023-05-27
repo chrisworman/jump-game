@@ -68,10 +68,14 @@ export class Bomb extends Enemy {
     */
     static spawn(game, x, y, verticalDirection) {
         const velocity = new Velocity(verticalDirection * Bomb.SPAWN_SPEED_X, -Bomb.SPAWN_SPEED_Y);
+        let spawned = null;
         if (Bomb.SpawnReusePool.length > 0) {
-            Bomb.SpawnReusePool.pop().reuse(x, y, velocity);
+            spawned = Bomb.SpawnReusePool.pop();
+            spawned.reuse(x, y, velocity);
         } else {
-            game.enemies.push(new Bomb(game, x, y, velocity));
+            spawned = new Bomb(game, x, y, velocity);
+            game.enemies.push(spawned);
         }
+        return spawned;
     }
 }

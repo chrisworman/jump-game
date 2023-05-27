@@ -22,7 +22,7 @@ export class Sprite {
     render(renderContext, x, y) {
         if (this.loaded) {
             const ctx = renderContext.getCanvasContext();
-            this.filterManager.applyFilters(ctx, () => {
+            this.filterManager.applyFilters(renderContext.game, ctx, () => {
                 ctx.drawImage(
                     this.image,
                     this.x,
@@ -39,6 +39,5 @@ export class Sprite {
     }
 
     reset() {
-        this.filterManager.reset();
     }
 }
