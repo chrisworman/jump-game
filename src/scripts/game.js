@@ -50,7 +50,7 @@ export class Game {
         this.userControls = new UserControls(this);
         this.player = new Player(this);
         this.levelManager = new LevelManager(this);
-        this.renderContext = new RenderContext(this.canvas);
+        this.renderContext = new RenderContext(this);
         this.filterManager = new FilterManager();
         this.background = new Background(this);
         this.platforms = new Platforms(this);
@@ -86,26 +86,27 @@ export class Game {
         this.filterManager.animate((fm, amountDone) => {
             fm.blurPixels = 10 - 10 * amountDone;
             fm.brightnessPercent = 100 * amountDone;
-        }, 1000);
+        }, this.gameTime, 1000);
         this.hud.hideStartButton();
         this.hud.hideRestartButton();
 
         this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
-        this.lastUpdateTime = null;
+        this.gameTime = null;
         this.state = GameState.PLAYING;
+        // document.body.requestFullscreen();
     }
 
     gameLoop() {
-        if (this.lastUpdateTime === null) {
-            this.lastUpdateTime = performance.now();
+        if (this.gameTime === null) {
+            this.gameTime = performance.now();
         }
         const currentTime = performance.now();
-        let elapsedTime = currentTime - this.lastUpdateTime;
+        let elapsedTime = currentTime - this.gameTime;
 
         while (elapsedTime > Game.TIME_STEP) {
             this.update();
             elapsedTime -= Game.TIME_STEP;
-            this.lastUpdateTime += Game.TIME_STEP;
+            this.gameTime += Game.TIME_STEP;
         }
 
         this.render();
@@ -195,7 +196,7 @@ export class Game {
         this.filterManager.animate((fm, amountDone) => {
             fm.blurPixels = amountDone * 8;
             fm.brightnessPercent = 100 - 50 * amountDone;
-        }, 1000);
+        }, this.gameTime, 1000);
         this.state = GameState.GAME_OVER;
     }
 
@@ -209,7 +210,7 @@ export class Game {
             this.filterManager.animate((fm, amountDone) => {
                 fm.blurPixels = amountDone * 8;
                 fm.brightnessPercent = 100 - 50 * amountDone;
-            }, 1000);
+            }, this.gameTime, 1000);
             this.state = GameState.GAME_BEAT;
             return;
         }
@@ -251,7 +252,6 @@ export class Game {
 
     handleWindowResize() {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        console.log(`isMobile=${isMobile}`);
         const onScreenControlsGap = isMobile ? Game.ON_SCREEN_CONTROLS_HEIGHT : 0;
 
         const windowW = window.innerWidth;
@@ -277,7 +277,7 @@ export class Game {
 
     render() {
         const ctx = this.renderContext.getCanvasContext();
-        this.filterManager.applyFilters(ctx, () => {
+        this.filterManager.applyFilters(this, ctx, () => {
             this.background.render(this.renderContext);
             // this.platforms.render(this.renderContext);
             this.enemies

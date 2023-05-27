@@ -5,6 +5,7 @@ import { Turret } from './turret.js';
 import { Spawner } from './spawner.js';
 import { Tank } from './tank.js';
 import { Tower } from './tower.js';
+import { Boss2 } from './boss2.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
@@ -45,7 +46,7 @@ export class Level {
             this.game.player.y < this.game.canvas.height - Level.NO_ENEMY_BUFFER &&
             this.game.player.y > Level.NO_ENEMY_BUFFER
         ) {
-            const now = performance.now();
+            const now = this.game.gameTime;
             if (
                 !this.enemySpawnTime ||
                 now - this.enemySpawnTime >=
@@ -62,7 +63,7 @@ export class Level {
             return [this.world.boss];
         }
 
-        const initialEnemies = [];
+        const initialEnemies = [Boss2.spawn(this.game)];
 
         // Walkers
         const walkerSpawnCount = Math.min(Level.MAX_WALKERS, Math.max(1, this.world.number * 2 + this.number - 10));

@@ -32,7 +32,7 @@ export class Tower extends Enemy {
             x: facingRight ? x + this.currentSprite.width : x - this.currentSprite.width,
             y: y + 12,
         };
-        this.bombSpawner = new Emitter({
+        this.bombSpawner = new Emitter(game, {
             emit: (index) => {
                 if (index === 3 || index === 8) {
                     this.currentSprite = this.spriteIdle;
@@ -95,7 +95,7 @@ export class Tower extends Enemy {
     handleShot() {
         super.handleShot();
         if (this.isDead) {
-            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
+            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
         }
     }
 }

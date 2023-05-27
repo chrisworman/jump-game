@@ -23,6 +23,7 @@ export class Player extends Entity {
             SpriteLibrary.SIZES.PLAYER.width,
             SpriteLibrary.SIZES.PLAYER.height
         );
+        this.movementFactor = 60 / Game.FPS; // TODO: extract to game
         this.standingLeftSprite = SpriteLibrary.playerStandingLeft();
         this.standingRightSprite = SpriteLibrary.playerStandingRight();
         this.jumpingLeftSprite = SpriteLibrary.playerJumpingLeft();
@@ -67,7 +68,7 @@ export class Player extends Entity {
         }
 
         // Done recovering?
-        if (this.recovering && performance.now() - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
+        if (this.recovering && this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
             this.recovering = false;
             this.recoveringStartTime = null;
             this.sprites.forEach((x) => x.filterManager.reset());
@@ -75,7 +76,7 @@ export class Player extends Entity {
 
         // Shooting?
         if (this.game.userControls.shoot) {
-            const now = performance.now();
+            const now = this.game.gameTime;
             if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) {
                 // Time to shoot
                 this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_SHOOT);
@@ -100,8 +101,7 @@ export class Player extends Entity {
         if (!this.mover.dropping && !this.mover.jumping && this.game.userControls.jump) {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
             this.mover.jump(Player.VERTICAL_SPEED);
-            this.jumpingRightSprite.reset();
-            this.jumpingLeftSprite.reset();
+            this.sprites.forEach((x) => x.reset());
         }
 
         // React to user drop
@@ -114,7 +114,7 @@ export class Player extends Entity {
     }
 
     updateLevelTransition() {
-        this.y += Game.LEVEL_SCROLL_SPEED;
+        this.y += Game.LEVEL_SCROLL_SPEED * this.movementFactor; // TODO: use mover to remove dep. on this.movementFactor
     }
 
     render(renderContext) {
@@ -158,11 +158,11 @@ export class Player extends Entity {
         // Reduction in health, but still alive?
         if (health > 0 && this.health > health) {
             this.recovering = true;
-            this.recoveringStartTime = performance.now();
+            this.recoveringStartTime = this.game.gameTime;
 
             const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>
-                x.filterManager.animate(recoveringAnimation, Player.RECOVERY_TIME_MS)
+                x.filterManager.animate(recoveringAnimation, this.game.gameTime, Player.RECOVERY_TIME_MS)
             );
         }
 
@@ -187,10 +187,11 @@ export class Player extends Entity {
             walls: true,
             platforms: true,
         });
-        this.facingRight = false;
+        this.facingRight = true;
         this.lastShootTime = null;
         this.recovering = false;
         this.recoveringStartTime = null;
+        this.sprites.forEach((x) => x.reset());
         this.sprites.forEach((x) => x.filterManager.reset());
     }
 }

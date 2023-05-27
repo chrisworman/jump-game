@@ -7,6 +7,7 @@ import { Platforms } from './platforms.js';
 export class Mover {
     constructor(game, target) {
         this.game = game;
+        this.movementFactor = 60 / Game.FPS;
         this.target = target;
         this.lastY = this.target.y;
         this.collideWith = {
@@ -44,6 +45,7 @@ export class Mover {
     stop() {
         this.velocity.x = 0;
         this.velocity.y = 0;
+        this.pacing = false;
     }
 
     jump(velocityY = -8) {
@@ -89,12 +91,12 @@ export class Mover {
     update() {
         // Apply gravity if we are not on a platform
         if (this.jumping || this.dropping) {
-            this.velocity.y += Game.GRAVITY;
+            this.velocity.y += Game.GRAVITY * this.movementFactor;
         }
 
         // Apply velocity
-        this.target.y += this.velocity.y;
-        this.target.x += this.velocity.x;
+        this.target.y += this.velocity.y * this.movementFactor;
+        this.target.x += this.velocity.x * this.movementFactor;
 
         // Platform collision
         if (this.collideWith.platforms) {

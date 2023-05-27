@@ -20,7 +20,7 @@ export class Bullet extends Entity {
     }
 
     static spawn(game) {
-        const x = game.player.x + (game.player.facingRight ? game.player.width - 15 : 15);
+        const x = game.player.x + (game.player.facingRight ? game.player.width - 15: 0);
         const y = game.player.y + game.player.width / 2 - SpriteLibrary.SIZES.BULLET.width / 2;
         const speed = game.player.facingRight ? Bullet.SPEED : -Bullet.SPEED;
         if (Bullet.SpawnReusePool.length > 0) {

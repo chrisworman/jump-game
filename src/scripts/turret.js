@@ -26,7 +26,7 @@ export class Turret extends Enemy {
             x: x + this.currentSprite.width * 0.5,
             y: y,
         };
-        this.bombSpawner = new Emitter({
+        this.bombSpawner = new Emitter(game, {
             emit: () => {
                 this.currentSprite = this.spriteFiring;
                 this.currentSprite.reset();
@@ -80,7 +80,7 @@ export class Turret extends Enemy {
     handleShot() {
         super.handleShot();
         if (this.isDead) {
-            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 250);
+            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
         }
     }
 }

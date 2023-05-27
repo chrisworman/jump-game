@@ -13,17 +13,17 @@ export class FilterManager {
         this.animation = null;
     }
 
-    animate(onUpdate, lengthMs = 1000) {
+    animate(onUpdate, now, lengthMs = 1000) {
         this.animation = {
-            startTime: performance.now(),
+            startTime: now,
             onUpdate,
             lengthMs,
         };
     }
 
-    applyFilters(ctx, render) {
+    applyFilters(game, ctx, render) {
         if (this.animation) {
-            const elapsed = performance.now() - this.animation.startTime;
+            const elapsed = game.gameTime - this.animation.startTime;
             const amountDone = Math.min(1.0, elapsed / this.animation.lengthMs);
             this.animation.onUpdate(this, amountDone);
             if (amountDone === 1.0) {
