@@ -1,7 +1,8 @@
-import { Boss } from './boss.js';
+import { AudioManager } from './audioManager.js';
 import { Level } from './level.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { SpriteLibrary } from './spriteLibrary.js';
+import { World } from './world.js';
 
 export class LevelManager {
     static LEVELS_PER_WORLD = 20;
@@ -11,11 +12,12 @@ export class LevelManager {
         this.game = game;
         this.levelNumber = 0;
         this.worldNumber = 1;
-
-        this.worldBossFactories = new Map();
-        for (let i = 1; i <= LevelManager.WORLD_COUNT; i++) {
-            this.worldBossFactories.set(i, () => Boss.spawn(game, i));
-        }
+        this.world = new World(
+            game,
+            this.worldNumber,
+            AudioManager.AUDIO_FILES.BACKGROUND_SONG,
+            AudioManager.AUDIO_FILES.BOSS_SONG
+        );
     }
 
     getNextLevel() {
@@ -31,21 +33,18 @@ export class LevelManager {
             if (this.worldNumber > LevelManager.WORLD_COUNT) {
                 return null; // Finished last level
             }
+            this.world = new World(
+                this.game,
+                this.worldNumber,
+                AudioManager.AUDIO_FILES.BACKGROUND_SONG,
+                AudioManager.AUDIO_FILES.BOSS_SONG
+            );
         }
-
-        const world = {
-            number: this.worldNumber,
-            title: `World ${this.worldNumber}`,
-            boss:
-                this.levelNumber === LevelManager.LEVELS_PER_WORLD // Last level in world? ...
-                    ? this.worldBossFactories.get(this.worldNumber)() // Boss level!
-                    : null,
-        };
 
         return new Level(
             this.game,
             this.levelNumber,
-            world,
+            this.world,
             `Level ${this.levelNumber}`,
             RandomGenerator.randomizeArray(this.getPlatformSprites())
         );
@@ -66,5 +65,11 @@ export class LevelManager {
     reset() {
         this.levelNumber = 0;
         this.worldNumber = 1;
+        this.world = new World(
+            this.game,
+            this.worldNumber,
+            AudioManager.AUDIO_FILES.BACKGROUND_SONG,
+            AudioManager.AUDIO_FILES.BOSS_SONG
+        );
     }
 }

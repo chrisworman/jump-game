@@ -5,7 +5,7 @@ import { Turret } from './turret.js';
 import { Spawner } from './spawner.js';
 import { Tank } from './tank.js';
 import { Tower } from './tower.js';
-import { Boss2 } from './boss2.js';
+import { LevelManager } from './levelManager.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
@@ -18,6 +18,8 @@ export class Level {
         this.world = world;
         this.title = title;
         this.platformSprites = platformSprites;
+
+        this.boss = number === LevelManager.LEVELS_PER_WORLD ? this.world.getBoss() : null;
         this.enemySpawnTime = null;
         this.collectableSpawner = new Spawner(() => {
             return Collectable.spawn(game);
@@ -37,7 +39,7 @@ export class Level {
     }
 
     spawnEnemies() {
-        if (this.world.boss) {
+        if (this.boss) {
             return;
         }
 
@@ -59,14 +61,17 @@ export class Level {
     }
 
     spawnInitialEnemies() {
-        if (this.world.boss) {
-            return [this.world.boss];
+        if (this.boss) {
+            return [this.boss];
         }
 
-        const initialEnemies = [Boss2.spawn(this.game)];
+        const initialEnemies = [];
 
         // Walkers
-        const walkerSpawnCount = Math.min(Level.MAX_WALKERS, Math.max(1, this.world.number * 2 + this.number - 10));
+        const walkerSpawnCount = Math.min(
+            Level.MAX_WALKERS,
+            Math.max(1, this.world.number * 2 + this.number - 10)
+        );
         for (let i = 0; i < walkerSpawnCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
@@ -101,7 +106,7 @@ export class Level {
     }
 
     spawnCollectables() {
-        if (this.world.boss) {
+        if (this.boss) {
             return [];
         }
 
@@ -118,8 +123,8 @@ export class Level {
 
     isComplete() {
         // Fighting a boss?
-        if (this.world.boss) {
-            return this.world.boss.isDead;
+        if (this.boss) {
+            return this.boss.isDead;
         }
 
         // Normal level is complete when player reaches the top

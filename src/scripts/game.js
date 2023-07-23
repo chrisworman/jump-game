@@ -41,7 +41,7 @@ export class Game {
         window.addEventListener('resize', () => {
             this.handleWindowResize();
         });
-        
+
         this.canvas = document.createElement('canvas');
         this.canvas.width = Game.WORLD_WIDTH;
         this.canvas.height = Game.WORLD_HEIGHT;
@@ -68,6 +68,7 @@ export class Game {
         // Update state before UI
         this.levelManager.reset();
         this.level = this.levelManager.getNextLevel();
+        this.level.world.playSong();
         this.hud.displayLevel(this.level);
         this.player.reset();
         this.setCollectableCount(0);
@@ -83,17 +84,19 @@ export class Game {
 
         // Update UI
         this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
-        this.filterManager.animate((fm, amountDone) => {
-            fm.blurPixels = 10 - 10 * amountDone;
-            fm.brightnessPercent = 100 * amountDone;
-        }, this.gameTime, 1000);
+        this.filterManager.animate(
+            (fm, amountDone) => {
+                fm.blurPixels = 10 - 10 * amountDone;
+                fm.brightnessPercent = 100 * amountDone;
+            },
+            this.gameTime,
+            1000
+        );
         this.hud.hideStartButton();
         this.hud.hideRestartButton();
 
-        this.audioManager.play(AudioManager.AUDIO_FILES.BACKGROUND_SONG, true);
         this.gameTime = null;
         this.state = GameState.PLAYING;
-        // document.body.requestFullscreen();
     }
 
     gameLoop() {
@@ -193,29 +196,53 @@ export class Game {
     handlePlayerDead() {
         this.hud.textOverlayFadeIn('Game Over');
         this.hud.showRestartButton();
-        this.filterManager.animate((fm, amountDone) => {
-            fm.blurPixels = amountDone * 8;
-            fm.brightnessPercent = 100 - 50 * amountDone;
-        }, this.gameTime, 1000);
+        this.filterManager.animate(
+            (fm, amountDone) => {
+                fm.blurPixels = amountDone * 8;
+                fm.brightnessPercent = 100 - 50 * amountDone;
+            },
+            this.gameTime,
+            1000
+        );
+        this.level.world.stopSong();
+        this.level.world.stopBossSong();
         this.state = GameState.GAME_OVER;
     }
 
     handleLevelComplete() {
+        const justBeatBoss = this.isBossLevel();
+        if (justBeatBoss) {
+            this.level.world.stopBossSong();
+        }
+
         this.level = this.levelManager.getNextLevel();
 
         if (!this.level) {
             // Beat the game!
+            // TODO: play finale music
             this.hud.textOverlayFadeIn('You Beat the Game!');
             this.hud.showRestartButton();
-            this.filterManager.animate((fm, amountDone) => {
-                fm.blurPixels = amountDone * 8;
-                fm.brightnessPercent = 100 - 50 * amountDone;
-            }, this.gameTime, 1000);
+            this.filterManager.animate(
+                (fm, amountDone) => {
+                    fm.blurPixels = amountDone * 8;
+                    fm.brightnessPercent = 100 - 50 * amountDone;
+                },
+                this.gameTime,
+                1000
+            );
             this.state = GameState.GAME_BEAT;
             return;
         }
 
         // Transition to next level
+
+        if (this.level.boss) {
+            this.level.world.stopSong();
+            this.level.world.playBossSong();
+        } else if (justBeatBoss) {
+            this.level.world.playSong();
+        }
+
         this.hud.displayLevel(this.level);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
@@ -247,11 +274,13 @@ export class Game {
     }
 
     isBossLevel() {
-        return this.level && !!this.level.world.boss;
+        return this.level && !!this.level.boss;
     }
 
     handleWindowResize() {
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+        );
         const onScreenControlsGap = isMobile ? Game.ON_SCREEN_CONTROLS_HEIGHT : 0;
 
         const windowW = window.innerWidth;
@@ -302,7 +331,13 @@ export class Game {
         });
 
         const ctxResponsive = this.responsiveCanvas.getContext('2d');
-        ctxResponsive.drawImage(this.canvas, 0, 0, this.responsiveCanvas.width, this.responsiveCanvas.height);
+        ctxResponsive.drawImage(
+            this.canvas,
+            0,
+            0,
+            this.responsiveCanvas.width,
+            this.responsiveCanvas.height
+        );
     }
 }
 

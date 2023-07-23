@@ -1,11 +1,33 @@
 export class AudioManager {
     static AUDIO_FILES = {
-        BACKGROUND_SONG: 'sounds/piano-arp.mp3',
-        COLLECTABLE_COLLECTED: 'sounds/collectable.mp3',
-        PLAYER_JUMP: 'sounds/jump.mp3',
-        PLAYER_SHOOT: 'sounds/shoot.mp3',
-        PLAYER_HIT: 'sounds/player-hit.mp3',
-        ENEMY_HIT: 'sounds/enemy-hit.mp3'
+        BACKGROUND_SONG: {
+            url: 'sounds/piano-arp.mp3',
+            volume: 0.05,
+        },
+        BOSS_SONG: {
+            url: 'sounds/desert-trail.mp3',
+            volume: 0.1,
+        },
+        COLLECTABLE_COLLECTED: {
+            url: 'sounds/collectable.mp3',
+            volume: 1.0,
+        },
+        PLAYER_JUMP: {
+            url: 'sounds/jump.mp3',
+            volume: 0.1,
+        },
+        PLAYER_SHOOT: {
+            url: 'sounds/shoot.mp3',
+            volume: 0.2,
+        },
+        PLAYER_HIT: {
+            url: 'sounds/player-hit.mp3',
+            volume: 0.5,
+        },
+        ENEMY_HIT: {
+            url: 'sounds/enemy-hit.mp3',
+            volume: 0.5,
+        },
     };
 
     constructor() {
@@ -18,13 +40,13 @@ export class AudioManager {
 
     load(audioFile) {
         const audioElement = new Audio();
-        audioElement.volume = audioFile === AudioManager.AUDIO_FILES.BACKGROUND_SONG ? 0.05 : 0.4; // The sounds seem really loud!
+        audioElement.volume = audioFile.volume;
         const sound = {
             audioElement: audioElement,
             isLoaded: false,
             savedVolume: audioElement.volume,
         };
-        this.loadedAudioFiles.set(audioFile, sound);
+        this.loadedAudioFiles.set(audioFile.url, sound);
         audioElement.addEventListener('loadeddata', () => {
             if (audioElement.readyState >= 2) {
                 console.log(`AudioManager :: Loaded ${audioFile}`);
@@ -37,14 +59,14 @@ export class AudioManager {
         });
         const sourceElement = document.createElement('source');
         sourceElement.type = 'audio/mpeg';
-        sourceElement.src = audioFile;
+        sourceElement.src = audioFile.url;
         audioElement.appendChild(sourceElement);
     }
 
     play(audioFile, loop = false) {
-        const sound = this.loadedAudioFiles.get(audioFile);
+        const sound = this.loadedAudioFiles.get(audioFile.url);
         if (!sound) {
-            console.error(`AudioManager :: Not found ${audioFile}`);
+            console.error(`AudioManager :: Not found ${audioFile.url}`);
             return;
         }
 
@@ -58,6 +80,21 @@ export class AudioManager {
         }
     }
 
+    stop(audioFile) {
+        const sound = this.loadedAudioFiles.get(audioFile.url);
+        if (!sound) {
+            console.error(`AudioManager :: Not found ${audioFile.url}`);
+            return;
+        }
+
+        if (sound.isLoaded) {
+            sound.audioElement.pause();
+            sound.audioElement.currentTime = 0;
+        } else {
+            sound.playOnLoaded = false;
+        }
+    }
+
     mute() {
         Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
             sound.savedVolume = sound.audioElement.volume;
@@ -68,7 +105,7 @@ export class AudioManager {
 
     unmute() {
         Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
-            sound.audioElement.volume = sound.savedVolume || 0.1;
+            sound.audioElement.volume = sound.savedVolume;
         });
         this.isMuted = false;
     }
