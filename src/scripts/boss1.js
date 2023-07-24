@@ -7,6 +7,7 @@ import { EnemyTypes } from './enemyTypes.js';
 import { GameState } from './gameState.js';
 import { Emitter } from './emitter.js';
 import { Bomb } from './bomb.js';
+import { AudioManager } from './audioManager.js';
 
 export class Boss1 extends Enemy {
     static HEALTH = 3;
@@ -96,6 +97,14 @@ export class Boss1 extends Enemy {
 
             this.mover.update();
             this.emitter.update();
+        }
+    }
+
+    // TODO: introduce Boss and inherit
+    handleShot() {
+        const wasShot = super.handleShot();
+        if (wasShot && !this.isDead) {
+            this.game.audioManager.play(AudioManager.AUDIO_FILES[`BOSS_SHOT_${this.health}`]);
         }
     }
 

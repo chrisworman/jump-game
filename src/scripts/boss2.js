@@ -7,7 +7,7 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { GameState } from './gameState.js';
-import { FilterManager } from './filterManager.js';
+import { AudioManager } from './audioManager.js';
 
 export class Boss2 extends Enemy {
     static HEALTH = 3;
@@ -89,6 +89,13 @@ export class Boss2 extends Enemy {
             this.mover.update();
             this.platformChanger.update();
             this.bombSpawner.update();
+        }
+    }
+
+    handleShot() {
+        const wasShot = super.handleShot();
+        if (wasShot && !this.isDead) {
+            this.game.audioManager.play(AudioManager.AUDIO_FILES[`BOSS_SHOT_${this.health}`]);
         }
     }
 

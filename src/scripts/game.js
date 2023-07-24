@@ -265,7 +265,7 @@ export class Game {
 
         // Beat the game??
         if (!this.level) {
-            // TODO: play finale music
+            this.audioManager.play(AudioManager.AUDIO_FILES.FINALE_SONG, true);
             this.hud.textOverlayFadeIn('You Beat the Game!');
             this.hud.showRestartButton();
             this.filterManager.animate(

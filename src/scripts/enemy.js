@@ -40,7 +40,7 @@ export class Enemy extends Entity {
 
     handleShot() {
         if (this.recovering || this.isDead) {
-            return;
+            return false;
         }
         if (this.isShootable) {
             this.game.audioManager.play(AudioManager.AUDIO_FILES.ENEMY_HIT);

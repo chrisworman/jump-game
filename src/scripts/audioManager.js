@@ -2,23 +2,27 @@ export class AudioManager {
     static AUDIO_FILES = {
         BACKGROUND_SONG: {
             url: 'sounds/piano-arp.mp3',
-            volume: 0.05,
+            volume: 0.045,
         },
         BOSS_SONG: {
             url: 'sounds/desert-trail.mp3',
             volume: 0.2,
         },
+        FINALE_SONG: {
+            url: 'sounds/stranger-mix-2.mp3',
+            volume: 0.2,
+        },
         BOSS_CELEBRATION_SONG: {
             url: 'sounds/boss-celebration.mp3',
-            volume: 0.2,
+            volume: 0.3,
         },
         COLLECTABLE_COLLECTED: {
             url: 'sounds/collectable.mp3',
-            volume: 0.95,
+            volume: 0.7,
         },
         FIRE_BALL: {
             url: 'sounds/fire-ball.mp3',
-            volume: 0.02,
+            volume: 0.025,
         },
         HEALTH_UP: {
             url: 'sounds/health-up.mp3',
@@ -34,7 +38,7 @@ export class AudioManager {
         },
         BOMB: {
             url: 'sounds/bomb.mp3',
-            volume: 0.035,
+            volume: 0.04,
         },
         PLAYER_HIT: {
             url: 'sounds/player-hit.mp3',
@@ -46,7 +50,23 @@ export class AudioManager {
         },
         START_BOSS_LEVEL: {
             url: 'sounds/start-boss-level.mp3',
-            volume: 0.25,
+            volume: 0.2,
+        },
+        ROBOTIC_DEATH: { // Unused, but neat
+            url: 'sounds/robotic-death.mp3',
+            volume: 0.05,
+        },
+        BOSS_SHOT_1: {
+            url: 'sounds/boss-hit.mp3',
+            volume: 0.3,
+        },
+        BOSS_SHOT_2: {
+            url: 'sounds/boss-hit-2.mp3',
+            volume: 0.3,
+        },
+        BOSS_SHOT_3: {
+            url: 'sounds/boss-hit-3.mp3',
+            volume: 0.3,
         },
         BOSS_DEAD: {
             url: 'sounds/boss-dead.mp3',
@@ -107,7 +127,6 @@ export class AudioManager {
             sound.audioElement.currentTime = 0;
             sound.audioElement.loop = loop;
             sound.audioElement.play();
-            console.log(`AudioManager :: play ${audioFile.url}`);
         } else {
             sound.playOnLoaded = true;
         }
