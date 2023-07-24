@@ -7,7 +7,6 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { Emitter } from './emitter.js';
 import { GameState } from './gameState.js';
-import { FilterManager } from './filterManager.js';
 
 export class Tank extends Enemy {
     static SPEED = 2.5;
@@ -20,6 +19,7 @@ export class Tank extends Enemy {
             SpriteLibrary.SIZES.TANK.width,
             SpriteLibrary.SIZES.TANK.height,
             EnemyTypes.TANK,
+            SpriteLibrary.tankIdle(),
             true
         );
 
@@ -27,7 +27,6 @@ export class Tank extends Enemy {
         this.spriteLeft = SpriteLibrary.tankLeft();
         this.spriteRight = SpriteLibrary.tankRight();
         this.spriteBombing = SpriteLibrary.tankBombing();
-        this.spriteCurrent = this.spriteIdle;
         this.sprites = [this.spriteIdle, this.spriteLeft, this.spriteRight, this.spriteBombing];
         this.mover = new Mover(game, this);
         this.mover.pace(Tank.SPEED);
@@ -36,14 +35,14 @@ export class Tank extends Enemy {
             emit: (index) => {
                 if (index === 0) {
                     this.mover.stop();
-                    this.spriteCurrent = this.spriteIdle;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spriteIdle;
+                    this.currentSprite.reset();
                 } else if (index === 1) {
-                    this.spriteCurrent = this.spriteBombing;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spriteBombing;
+                    this.currentSprite.reset();
                     Bomb.spawn(
                         game,
-                        this.x + this.spriteCurrent.width * 0.5,
+                        this.x + this.currentSprite.width * 0.5,
                         this.y,
                         RandomGenerator.randomSign()
                     );
@@ -55,15 +54,15 @@ export class Tank extends Enemy {
         });
     }
 
-    render(renderContext) {
-        if (this.isDead) {
-            if (this.spriteCurrent.filterManager.animation == null) {
-                return;
-            }
-        }
+    // render(renderContext) {
+    //     if (this.isDead) {
+    //         if (this.currentSprite.filterManager.animation == null) {
+    //             return;
+    //         }
+    //     }
 
-        this.spriteCurrent.render(renderContext, this.x, this.y);
-    }
+    //     this.currentSprite.render(renderContext, this.x, this.y);
+    // }
 
     update() {
         super.update();
@@ -74,22 +73,22 @@ export class Tank extends Enemy {
         if (this.game.state === GameState.PLAYING) {
             this.bombAndMovementEmitter.update();
             this.mover.update();
-            if (this.mover.isMovingLeft() && this.spriteCurrent !== this.spriteLeft) {
-                this.spriteCurrent = this.spriteLeft;
-                this.spriteCurrent.reset();
-            } else if (this.mover.isMovingRight() && this.spriteCurrent !== this.spriteRight) {
-                this.spriteCurrent = this.spriteRight;
-                this.spriteCurrent.reset();
+            if (this.mover.isMovingLeft() && this.currentSprite !== this.spriteLeft) {
+                this.currentSprite = this.spriteLeft;
+                this.currentSprite.reset();
+            } else if (this.mover.isMovingRight() && this.currentSprite !== this.spriteRight) {
+                this.currentSprite = this.spriteRight;
+                this.currentSprite.reset();
             }
         }
     }
 
-    handleShot() {
-        super.handleShot();
-        if (this.isDead) {
-            this.spriteCurrent.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
-        }
-    }
+    // handleShot() {
+    //     super.handleShot();
+    //     if (this.isDead) {
+    //         this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
+    //     }
+    // }
 
     static spawn(game) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);

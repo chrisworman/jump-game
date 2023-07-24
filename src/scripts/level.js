@@ -127,7 +127,7 @@ export class Level {
             return this.boss.isDead;
         }
 
-        // Normal level is complete when player reaches the top
-        return this.game.player.y + this.game.player.height <= 0;
+        // Normal level is complete when the player reaches the top
+        return this.game.player.isOnTopPlatform();
     }
 }

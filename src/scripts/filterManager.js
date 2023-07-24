@@ -59,6 +59,12 @@ export class FilterManager {
         }
     }
 
+    static fadeOutAnimation() {
+        return (fm, amountDone) => {
+            fm.opacityPercent = 100 - 100 * amountDone;
+        };
+    }
+
     static blurFadeOutAnimation() {
         return (fm, amountDone) => {
             fm.blurPixels = 5 * amountDone;

@@ -16,7 +16,8 @@ export class LevelManager {
             game,
             this.worldNumber,
             AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-            AudioManager.AUDIO_FILES.BOSS_SONG
+            AudioManager.AUDIO_FILES.BOSS_SONG,
+            AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
         );
     }
 
@@ -37,7 +38,8 @@ export class LevelManager {
                 this.game,
                 this.worldNumber,
                 AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-                AudioManager.AUDIO_FILES.BOSS_SONG
+                AudioManager.AUDIO_FILES.BOSS_SONG,
+                AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
             );
         }
 
@@ -69,7 +71,8 @@ export class LevelManager {
             this.game,
             this.worldNumber,
             AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-            AudioManager.AUDIO_FILES.BOSS_SONG
+            AudioManager.AUDIO_FILES.BOSS_SONG,
+            AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
         );
     }
 }

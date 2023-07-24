@@ -6,11 +6,23 @@ export class AudioManager {
         },
         BOSS_SONG: {
             url: 'sounds/desert-trail.mp3',
-            volume: 0.1,
+            volume: 0.2,
+        },
+        BOSS_CELEBRATION_SONG: {
+            url: 'sounds/boss-celebration.mp3',
+            volume: 0.2,
         },
         COLLECTABLE_COLLECTED: {
             url: 'sounds/collectable.mp3',
-            volume: 1.0,
+            volume: 0.95,
+        },
+        FIRE_BALL: {
+            url: 'sounds/fire-ball.mp3',
+            volume: 0.02,
+        },
+        HEALTH_UP: {
+            url: 'sounds/health-up.mp3',
+            volume: 0.2,
         },
         PLAYER_JUMP: {
             url: 'sounds/jump.mp3',
@@ -20,19 +32,32 @@ export class AudioManager {
             url: 'sounds/shoot.mp3',
             volume: 0.2,
         },
+        BOMB: {
+            url: 'sounds/bomb.mp3',
+            volume: 0.035,
+        },
         PLAYER_HIT: {
             url: 'sounds/player-hit.mp3',
             volume: 0.5,
         },
         ENEMY_HIT: {
             url: 'sounds/enemy-hit.mp3',
-            volume: 0.5,
+            volume: 0.4,
+        },
+        START_BOSS_LEVEL: {
+            url: 'sounds/start-boss-level.mp3',
+            volume: 0.25,
+        },
+        BOSS_DEAD: {
+            url: 'sounds/boss-dead.mp3',
+            volume: 0.25,
         },
     };
 
     constructor() {
         this.isMuted = false;
         this.loadedAudioFiles = new Map();
+        this.oneShotOnEnded = null;
         Object.keys(AudioManager.AUDIO_FILES).forEach((audioFile) => {
             this.load(AudioManager.AUDIO_FILES[audioFile]);
         });
@@ -49,7 +74,7 @@ export class AudioManager {
         this.loadedAudioFiles.set(audioFile.url, sound);
         audioElement.addEventListener('loadeddata', () => {
             if (audioElement.readyState >= 2) {
-                console.log(`AudioManager :: Loaded ${audioFile}`);
+                console.log(`AudioManager :: Loaded ${audioFile.url}`);
                 sound.isLoaded = true;
                 if (sound.playOnLoaded) {
                     audioElement.play();
@@ -71,10 +96,18 @@ export class AudioManager {
         }
 
         if (sound.isLoaded) {
+            if (this.oneShotOnEnded) {
+                const onEnded = this.oneShotOnEnded;
+                this.oneShotOnEnded = null;
+                sound.audioElement.addEventListener('ended', onEnded, {
+                    once: true,
+                });
+            }
             sound.audioElement.pause();
             sound.audioElement.currentTime = 0;
             sound.audioElement.loop = loop;
             sound.audioElement.play();
+            console.log(`AudioManager :: play ${audioFile.url}`);
         } else {
             sound.playOnLoaded = true;
         }
@@ -108,5 +141,9 @@ export class AudioManager {
             sound.audioElement.volume = sound.savedVolume;
         });
         this.isMuted = false;
+    }
+
+    setOneShotOnEnded(onEnded) {
+        this.oneShotOnEnded = onEnded;
     }
 }

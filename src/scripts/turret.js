@@ -4,7 +4,6 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
-import { FilterManager } from './filterManager.js';
 import { Platforms } from './platforms.js';
 import { GameState } from './gameState.js';
 
@@ -17,11 +16,12 @@ export class Turret extends Enemy {
             SpriteLibrary.SIZES.TURRET.width,
             SpriteLibrary.SIZES.TURRET.height,
             EnemyTypes.TURRET,
+            SpriteLibrary.turretIdle(),
             true
         );
         this.spriteIdle = SpriteLibrary.turretIdle();
         this.spriteFiring = SpriteLibrary.turretFiring();
-        this.currentSprite = this.spriteIdle;
+        this.sprites = [this.spriteIdle, this.spriteFiring];
         this.spawnPosition = {
             x: x + this.currentSprite.width * 0.5,
             y: y,
@@ -39,15 +39,6 @@ export class Turret extends Enemy {
             },
             delays: [300, 300, 300, 2000, 300, 300, 300, 2000],
         });
-    }
-
-    render(renderContext) {
-        if (this.isDead) {
-            if (this.currentSprite.filterManager.animation == null) {
-                return;
-            }
-        }
-        this.currentSprite.render(renderContext, this.x, this.y);
     }
 
     update() {
@@ -77,10 +68,10 @@ export class Turret extends Enemy {
         );
     }
 
-    handleShot() {
-        super.handleShot();
-        if (this.isDead) {
-            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
-        }
-    }
+    // handleShot() {
+    //     super.handleShot();
+    //     if (this.isDead) {
+    //         this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
+    //     }
+    // }
 }

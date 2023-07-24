@@ -50,6 +50,12 @@ export class Player extends Entity {
             case GameState.LEVEL_TRANSITION:
                 this.updateLevelTransition();
                 break;
+            case GameState.BOSS_CELEBRATION:
+                this.updateBossCelebration();
+                break;
+            case GameState.WORLD_OUTRO:
+                this.updateWorldOutro();
+                break;
         }
     }
 
@@ -117,6 +123,33 @@ export class Player extends Entity {
         this.y += Game.LEVEL_SCROLL_SPEED * this.movementFactor; // TODO: use mover to remove dep. on this.movementFactor
     }
 
+    updateBossCelebration() {
+        // Done recovering?
+        if (this.recovering && this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
+            this.recovering = false;
+            this.recoveringStartTime = null;
+            this.sprites.forEach((x) => x.filterManager.reset());
+        }
+
+        this.mover.update();
+    }
+
+    updateWorldOutro() {
+        // Jump to the top!
+        if (!this.mover.dropping && !this.mover.jumping) {
+            if (this.isOnTopPlatform()) {
+                this.mover.stop();
+                this.game.transitionToNextLevel();
+            } else {
+                this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
+                this.mover.jump(Player.VERTICAL_SPEED);
+                this.sprites.forEach((x) => x.reset());
+            }
+        }
+
+        this.mover.update();
+    }
+
     render(renderContext) {
         // Render the current sprite
         if (this.mover.jumping) {
@@ -175,6 +208,10 @@ export class Player extends Entity {
 
         this.health = health;
         this.game.hud.displayHealth(this.health);
+    }
+
+    isOnTopPlatform() {
+        return this.y + this.height <= 0;
     }
 
     reset() {

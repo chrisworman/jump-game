@@ -5,7 +5,6 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { GameState } from './gameState.js';
-import { FilterManager } from './filterManager.js';
 import { Emitter } from './emitter.js';
 import { Bomb } from './bomb.js';
 
@@ -13,7 +12,6 @@ export class Boss1 extends Enemy {
     static HEALTH = 3;
     static SPEED = 5;
     static CHASINGS_SPEED = 7;
-    static RECOVERY_TIME_MS = 4000;
     static BOMB_VEL_XS = [-1, 1, 0.5, -0.5, 0.3, -0.3];
 
     constructor(game, x, y) {
@@ -24,6 +22,7 @@ export class Boss1 extends Enemy {
             SpriteLibrary.SIZES.BOSS_2.width,
             SpriteLibrary.SIZES.BOSS_2.height,
             EnemyTypes.BOSS,
+            SpriteLibrary.boss2Pace(),
             true,
             Boss1.HEALTH
         );
@@ -33,7 +32,6 @@ export class Boss1 extends Enemy {
 
         this.spritePace = SpriteLibrary.boss2Pace();
         this.spriteShoot = SpriteLibrary.boss2Shoot();
-        this.spriteCurrent = this.spritePace;
         this.sprites = [this.spritePace, this.spriteShoot];
         this.mover = new Mover(game, this);
         this.mover.pace(Boss1.SPEED);
@@ -45,8 +43,8 @@ export class Boss1 extends Enemy {
                     return;
                 }
                 if (index === 0) {
-                    this.spriteCurrent = this.spriteShoot;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spriteShoot;
+                    this.currentSprite.reset();
                     this.mover.stop();
                 }
                 if (index >= 1 && index <= 3) {
@@ -60,21 +58,13 @@ export class Boss1 extends Enemy {
                     bomb.mover.setVelocityY(0);
                 }
                 if (index === 4) {
-                    this.spriteCurrent = this.spritePace;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spritePace;
+                    this.currentSprite.reset();
                     this.mover.pace(Boss1.SPEED);
                 }
             },
             delays: [2000, 400, 300, 300, 400],
         });
-    }
-
-    render(renderContext) {
-        if (this.isDead) {
-            return;
-        }
-
-        this.spriteCurrent.render(renderContext, this.x, this.y);
     }
 
     update() {
@@ -106,25 +96,6 @@ export class Boss1 extends Enemy {
 
             this.mover.update();
             this.emitter.update();
-        }
-    }
-
-    handleShot() {
-        if (this.recovering) {
-            return;
-        }
-        const wasShot = super.handleShot();
-        if (wasShot && !this.isDead) {
-            this.recovering = true;
-            this.recoveringStartTime = this.game.gameTime;
-            const recoveringAnimation = FilterManager.recoveringAnimation();
-            this.sprites.forEach((x) =>
-                x.filterManager.animate(
-                    recoveringAnimation,
-                    this.game.gameTime,
-                    Boss1.RECOVERY_TIME_MS
-                )
-            );
         }
     }
 

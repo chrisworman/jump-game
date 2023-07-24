@@ -13,6 +13,7 @@ import { Bullet } from './bullet.js';
 import { Bomb } from './bomb.js';
 import { Background } from './background.js';
 import { Rocket } from './rocket.js';
+import { HealthUpHeart } from './healthUpHeart.js';
 
 export class Game {
     static GRAVITY = 0.3;
@@ -20,6 +21,7 @@ export class Game {
     static MAX_PLAYER_HEALTH = 3;
     static FPS = 60;
     static TIME_STEP = 1000 / Game.FPS;
+    static COLLECTABLE_THRESHOLD = 50;
 
     static WORLD_WIDTH = 550;
     static WORLD_HEIGHT = 800;
@@ -56,6 +58,7 @@ export class Game {
         this.platforms = new Platforms(this);
         this.bullets = [];
         this.collectables = [];
+        this.healthUpHearts = [];
         this.enemies = [];
 
         this.setCollectableCount(0);
@@ -125,6 +128,12 @@ export class Game {
             case GameState.LEVEL_TRANSITION:
                 this.updateLevelTransition();
                 break;
+            case GameState.BOSS_CELEBRATION:
+                this.updateBossCelebration();
+                break;
+            case GameState.WORLD_OUTRO:
+                this.updateWorldOutro();
+                break;
         }
     }
 
@@ -149,6 +158,7 @@ export class Game {
         this.enemies.forEach((enemy) => enemy.update());
         this.bullets.forEach((bullet) => bullet.update());
         this.collectables.forEach((x) => x.update());
+        this.healthUpHearts.forEach((x) => x.update());
         this.level.spawnEnemies();
     }
 
@@ -159,6 +169,7 @@ export class Game {
         this.enemies.forEach((enemy) => enemy.update());
         this.bullets.forEach((bullet) => bullet.update());
         this.collectables.forEach((x) => x.update());
+        this.healthUpHearts.forEach((x) => x.update());
 
         // Has the player reached the bottom of the screen?
         if (this.player.y + this.player.height >= this.canvas.height) {
@@ -168,6 +179,7 @@ export class Game {
             Bomb.SpawnReusePool = [];
             this.bullets = [];
             Bullet.SpawnReusePool = [];
+            Rocket.SpawnReusePool = [];
             this.hud.textOverlayFadeOut();
             this.platforms.currentSprites = this.level.platformSprites;
             this.player.handleLevelTransitionDone();
@@ -177,14 +189,24 @@ export class Game {
         }
     }
 
+    updateBossCelebration() {
+        this.player.update();
+        this.healthUpHearts.forEach((x) => x.update());
+    }
+
+    updateWorldOutro() {
+        this.player.update();
+    }
+
     incrementCollectableCount() {
         this.setCollectableCount(this.collectableCount + 1);
     }
 
     setCollectableCount(count) {
         let finalCount = count;
-        if (count >= 100) {
+        if (count >= Game.COLLECTABLE_THRESHOLD) {
             if (this.player.health < Player.MAX_HEALTH) {
+                HealthUpHeart.spawn(this);
                 this.player.setHealth(this.player.health + 1);
             }
             finalCount = 0;
@@ -210,15 +232,39 @@ export class Game {
     }
 
     handleLevelComplete() {
+        this.enemies.forEach((enemy) => {
+            if (enemy.type === EnemyTypes.BOMB) {
+                enemy.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 1000);
+            }
+        });
+
         const justBeatBoss = this.isBossLevel();
         if (justBeatBoss) {
             this.level.world.stopBossSong();
+            this.audioManager.play(AudioManager.AUDIO_FILES.BOSS_DEAD);
+            this.level.world.playBossCelebrationSongThen(() => {
+                // TODO: consider this.player.prepareForWorldOutro() or something similar
+                this.player.mover.setCollideWith({
+                    ceiling: false, // allow the player to jump to the top
+                    walls: true,
+                    platforms: true,
+                });
+                this.state = GameState.WORLD_OUTRO;
+            });
+
+            this.state = GameState.BOSS_CELEBRATION;
+            return;
         }
 
+        this.transitionToNextLevel();
+    }
+
+    transitionToNextLevel() {
+        const justBeatBoss = this.isBossLevel();
         this.level = this.levelManager.getNextLevel();
 
+        // Beat the game??
         if (!this.level) {
-            // Beat the game!
             // TODO: play finale music
             this.hud.textOverlayFadeIn('You Beat the Game!');
             this.hud.showRestartButton();
@@ -234,11 +280,11 @@ export class Game {
             return;
         }
 
-        // Transition to next level
-
+        // Start the right song
         if (this.level.boss) {
             this.level.world.stopSong();
             this.level.world.playBossSong();
+            this.audioManager.play(AudioManager.AUDIO_FILES.START_BOSS_LEVEL);
         } else if (justBeatBoss) {
             this.level.world.playSong();
         }
@@ -246,11 +292,7 @@ export class Game {
         this.hud.displayLevel(this.level);
         this.platforms.handleLevelComplete(this.level.platformSprites);
         this.player.handelLevelComplete();
-        this.enemies.forEach((enemy) => {
-            if (enemy.type === EnemyTypes.BOMB) {
-                enemy.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 1000);
-            }
-        });
+
         this.state = GameState.LEVEL_TRANSITION;
     }
 
@@ -328,6 +370,7 @@ export class Game {
             this.enemies
                 .filter((x) => x.type === EnemyTypes.FIRE_BALL)
                 .forEach((x) => x.render(this.renderContext));
+            this.healthUpHearts.forEach((x) => x.render(this.renderContext));
         });
 
         const ctxResponsive = this.responsiveCanvas.getContext('2d');

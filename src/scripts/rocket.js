@@ -3,6 +3,7 @@ import { Enemy } from './enemy.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { Mover } from './mover.js';
 import { SpriteLibrary } from './spriteLibrary.js';
+import { AudioManager } from './audioManager.js';
 
 export class Rocket extends Enemy {
     static SPAWN_SPEED_X = 4;
@@ -16,9 +17,9 @@ export class Rocket extends Enemy {
             SpriteLibrary.SIZES.BOMB.width, // TODO: proper sprite
             SpriteLibrary.SIZES.BOMB.height, // TODO: proper sprite
             EnemyTypes.ROCKET,
+            SpriteLibrary.bomb(),
             false
         );
-        this.sprite = SpriteLibrary.bomb();
         this.mover = new Mover(game, this);
         this.mover.setCollideWith({
             walls: false,
@@ -26,13 +27,6 @@ export class Rocket extends Enemy {
             platforms: false,
         });
         this.mover.setVelocity(velocity);
-    }
-
-    render(renderContext) {
-        if (this.isOffScreen) {
-            return;
-        }
-        this.sprite.render(renderContext, this.x, this.y);
     }
 
     update() {
@@ -55,7 +49,7 @@ export class Rocket extends Enemy {
     reuse(x, y, velocity) {
         this.x = x;
         this.y = y;
-        this.sprite.reset();
+        this.currentSprite.reset();
         this.mover.setVelocity(velocity);
         this.isOffScreen = false;
     }
@@ -71,5 +65,6 @@ export class Rocket extends Enemy {
         } else {
             game.enemies.push(new Rocket(game, x, y, velocity));
         }
+        game.audioManager.play(AudioManager.AUDIO_FILES.BOMB); // TODO: rocket specific audio?
     }
 }

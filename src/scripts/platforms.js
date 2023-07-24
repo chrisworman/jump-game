@@ -28,6 +28,8 @@ export class Platforms {
             case GameState.PLAYING:
             case GameState.GAME_OVER:
             case GameState.GAME_BEAT:
+            case GameState.BOSS_CELEBRATION:
+            case GameState.WORLD_OUTRO:
                 spriteIndex = 0;
                 for (let y = 0; y < totalHeight; y += Platforms.HEIGHT, spriteIndex++) {
                     this.currentSprites[spriteIndex % this.currentSprites.length].render(renderContext, 0, y);

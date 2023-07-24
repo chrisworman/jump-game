@@ -47,6 +47,10 @@ export class SpriteLibrary {
             width: 76,
             height: 64,
         },
+        HEALTH_UP_HEART: {
+            width: 32,
+            height: 32,
+        },
         BACKGROUND: {
             width: 550,
             height: 1600,
@@ -394,5 +398,9 @@ export class SpriteLibrary {
 
     static backgroundLayer2() {
         return new Sprite('images/bg-layer-2.png');
+    }
+
+    static healthUpHeart() {
+        return new Sprite('images/heart.png');
     }
 }

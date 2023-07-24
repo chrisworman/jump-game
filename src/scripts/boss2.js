@@ -12,7 +12,7 @@ import { FilterManager } from './filterManager.js';
 export class Boss2 extends Enemy {
     static HEALTH = 3;
     static SPEED = 3;
-    static RECOVERY_TIME_MS = 4000;
+    // static RECOVERY_TIME_MS = 4000;
 
     constructor(game, x, y) {
         super(
@@ -22,6 +22,7 @@ export class Boss2 extends Enemy {
             SpriteLibrary.SIZES.BOSS.width,
             SpriteLibrary.SIZES.BOSS.height,
             EnemyTypes.BOSS,
+            SpriteLibrary.bossIdle(),
             true,
             Boss2.HEALTH
         );
@@ -32,16 +33,15 @@ export class Boss2 extends Enemy {
         this.spriteIdle = SpriteLibrary.bossIdle();
         this.spriteJump = SpriteLibrary.bossJump();
         this.spriteBomb = SpriteLibrary.bossBomb();
-        this.spriteCurrent = this.spriteIdle;
         this.sprites = [this.spriteIdle, this.spriteJump, this.spriteBomb];
 
         this.bombSpawner = new Emitter(game, {
             emit: () => {
-                this.spriteCurrent = this.spriteBomb;
-                this.spriteCurrent.reset();
+                this.currentSprite = this.spriteBomb;
+                this.currentSprite.reset();
                 Bomb.spawn(
                     game,
-                    this.x + this.spriteCurrent.width * 0.5,
+                    this.x + this.currentSprite.width * 0.5,
                     this.y,
                     RandomGenerator.randomSign()
                 );
@@ -56,25 +56,17 @@ export class Boss2 extends Enemy {
             emit: () => {
                 // TODO: check if on top or bottom platform
                 if (RandomGenerator.randomBool(0.5)) {
-                    this.spriteCurrent = this.spriteJump;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spriteJump;
+                    this.currentSprite.reset();
                     this.mover.jump();
                 } else {
-                    this.spriteCurrent = this.spriteIdle;
-                    this.spriteCurrent.reset();
+                    this.currentSprite = this.spriteIdle;
+                    this.currentSprite.reset();
                     this.mover.drop();
                 }
             },
             randomDelays: { min: 3000, max: 5000 },
         });
-    }
-
-    render(renderContext) {
-        if (this.isDead) {
-            return;
-        }
-
-        this.spriteCurrent.render(renderContext, this.x, this.y);
     }
 
     update() {
@@ -85,7 +77,10 @@ export class Boss2 extends Enemy {
 
         if (this.game.state === GameState.PLAYING) {
             // Done recovering?
-            if (this.recovering && this.game.gameTime - this.recoveringStartTime > Boss2.RECOVERY_TIME_MS) {
+            if (
+                this.recovering &&
+                this.game.gameTime - this.recoveringStartTime > Boss2.RECOVERY_TIME_MS
+            ) {
                 this.recovering = false;
                 this.recoveringStartTime = null;
                 this.sprites.forEach((x) => x.filterManager.reset());
@@ -97,29 +92,14 @@ export class Boss2 extends Enemy {
         }
     }
 
-    handleShot() {
-        if (this.recovering) {
-            return;
-        }
-        const wasShot = super.handleShot();
-        if (wasShot && !this.isDead) {
-            this.recovering = true;
-            this.recoveringStartTime = this.game.gameTime;
-            const recoveringAnimation = FilterManager.recoveringAnimation();
-            this.sprites.forEach((x) =>
-                x.filterManager.animate(recoveringAnimation, this.game.gameTime, Boss2.RECOVERY_TIME_MS)
-            );
-        }
-    }
-
     static spawn(game) {
         const x = RandomGenerator.randomIntBetween(
             1,
             game.canvas.width - SpriteLibrary.SIZES.BOSS.width - 1
         );
+        const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
         const y =
-            RandomGenerator.randomFromArray(Platforms.getPlatformYs()) -
-            SpriteLibrary.SIZES.BOSS.height;
+            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.BOSS.height;
         return new Boss2(game, x, y);
     }
 }

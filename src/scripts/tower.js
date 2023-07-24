@@ -18,6 +18,9 @@ export class Tower extends Enemy {
             SpriteLibrary.SIZES.TOWER.width,
             SpriteLibrary.SIZES.TOWER.height,
             EnemyTypes.TURRET,
+            x < game.canvas.width * 0.5
+                ? SpriteLibrary.towerRightIdle()
+                : SpriteLibrary.towerLeftIdle(),
             true
         );
         const facingRight = x < game.canvas.width * 0.5;
@@ -27,11 +30,11 @@ export class Tower extends Enemy {
         this.spriteShoot = facingRight
             ? SpriteLibrary.towerRightShoot()
             : SpriteLibrary.towerLeftShoot();
-        this.currentSprite = this.spriteIdle;
         this.spawnPosition = {
             x: facingRight ? x + this.currentSprite.width : x - this.currentSprite.width,
             y: y + 12,
         };
+        this.sprites = [this.spriteIdle, this.spriteShoot];
         this.bombSpawner = new Emitter(game, {
             emit: (index) => {
                 if (index === 3 || index === 8) {
@@ -51,15 +54,6 @@ export class Tower extends Enemy {
         });
     }
 
-    render(renderContext) {
-        if (this.isDead) {
-            if (this.currentSprite.filterManager.animation == null) {
-                return;
-            }
-        }
-        this.currentSprite.render(renderContext, this.x, this.y);
-    }
-
     update() {
         super.update();
         if (this.isDead) {
@@ -77,13 +71,10 @@ export class Tower extends Enemy {
     static spawn(game) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
         const x = RandomGenerator.randomBool()
-            ? RandomGenerator.randomIntBetween(
-                  1,
-                  Math.ceil(game.canvas.width * 0.10)
-              )
+            ? RandomGenerator.randomIntBetween(1, Math.ceil(game.canvas.width * 0.1))
             : RandomGenerator.randomIntBetween(
-                    Math.ceil(game.canvas.width * 0.90),
-                    game.canvas.width - SpriteLibrary.SIZES.TOWER.width - 1
+                  Math.ceil(game.canvas.width * 0.9),
+                  game.canvas.width - SpriteLibrary.SIZES.TOWER.width - 1
               );
         return new Tower(
             game,
@@ -92,10 +83,14 @@ export class Tower extends Enemy {
         );
     }
 
-    handleShot() {
-        super.handleShot();
-        if (this.isDead) {
-            this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
-        }
-    }
+    // handleShot() {
+    //     super.handleShot();
+    //     if (this.isDead) {
+    //         this.currentSprite.filterManager.animate(
+    //             FilterManager.blurFadeOutAnimation(),
+    //             this.game.gameTime,
+    //             250
+    //         );
+    //     }
+    // }
 }

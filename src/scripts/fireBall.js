@@ -4,6 +4,7 @@ import { RandomGenerator } from './randomGenerator.js';
 import { Mover } from './mover.js';
 import { Game } from './game.js';
 import { Enemy } from './enemy.js';
+import { AudioManager } from './audioManager.js';
 
 export class FireBall extends Enemy {
     constructor(game, x, y, sprite) {
@@ -14,9 +15,9 @@ export class FireBall extends Enemy {
             SpriteLibrary.SIZES.FIRE_BALL.width,
             SpriteLibrary.SIZES.FIRE_BALL.height,
             EnemyTypes.FIRE_BALL,
+            sprite,
             false
         );
-        this.sprite = sprite;
         this.mover = new Mover(game, this);
         this.mover.setCollideWith({
             walls: false,
@@ -27,6 +28,7 @@ export class FireBall extends Enemy {
     }
 
     static spawn(game) {
+        game.audioManager.play(AudioManager.AUDIO_FILES.FIRE_BALL);
         return new FireBall(
             game,
             RandomGenerator.randomIntBetween(
@@ -36,14 +38,6 @@ export class FireBall extends Enemy {
             1, // Important: spawn on screen
             SpriteLibrary.fireBall()
         );
-    }
-
-    render(renderContext) {
-        if (this.isOffScreen) {
-            return;
-        }
-        // TODO: consider adding and using filterManager.dropShadow
-        this.sprite.render(renderContext, this.x, this.y);
     }
 
     update() {

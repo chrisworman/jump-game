@@ -4,7 +4,6 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Mover } from './mover.js';
 import { Enemy } from './enemy.js';
-import { Emitter } from './emitter.js';
 
 export class Walker extends Enemy {
     static SPEED = 2;
@@ -17,10 +16,12 @@ export class Walker extends Enemy {
             SpriteLibrary.SIZES.WALKER.width,
             SpriteLibrary.SIZES.WALKER.height,
             EnemyTypes.WALKER,
+            walkingSprite,
             true
         );
         this.walkingSprite = walkingSprite;
         this.dyingSprite = dyingSprite;
+        this.sprites = [this.walkingSprite, this.dyingSprite];
         this.mover = new Mover(game, this);
         this.mover.pace(initialSpeed);
     }
@@ -37,19 +38,23 @@ export class Walker extends Enemy {
         );
     }
 
-    render(renderContext) {
-        if (this.isDead) {
-            if (!this.dyingSprite.reachedEnd) {
-                this.dyingSprite.render(renderContext, this.x, this.y);
-            }
-        } else {
-            this.walkingSprite.render(renderContext, this.x, this.y);
-        }
-    }
+    // render(renderContext) {
+    //     if (this.isDead) {
+    //         if (!this.dyingSprite.reachedEnd) {
+    //             this.dyingSprite.render(renderContext, this.x, this.y);
+    //         }
+    //     } else {
+    //         this.walkingSprite.render(renderContext, this.x, this.y);
+    //     }
+    // }
 
     update() {
         super.update();
         if (this.isDead) {
+            if (this.currentSprite === this.walkingSprite) {
+                this.currentSprite = this.dyingSprite;
+                this.currentSprite.filterManager = this.walkingSprite.filterManager;
+            }
             return;
         }
 

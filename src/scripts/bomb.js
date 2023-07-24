@@ -3,6 +3,7 @@ import { Enemy } from './enemy.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { Mover } from './mover.js';
 import { SpriteLibrary } from './spriteLibrary.js';
+import { AudioManager } from './audioManager.js';
 
 export class Bomb extends Enemy {
     static SPAWN_SPEED_X = 3;
@@ -17,9 +18,9 @@ export class Bomb extends Enemy {
             SpriteLibrary.SIZES.BOMB.width,
             SpriteLibrary.SIZES.BOMB.height,
             EnemyTypes.BOMB,
+            SpriteLibrary.bomb(),
             false
         );
-        this.sprite = SpriteLibrary.bomb();
         this.mover = new Mover(game, this);
         this.mover.setCollideWith({
             walls: false,
@@ -30,12 +31,12 @@ export class Bomb extends Enemy {
         this.mover.dropping = true;
     }
 
-    render(renderContext) {
-        if (this.isOffScreen) {
-            return;
-        }
-        this.sprite.render(renderContext, this.x, this.y);
-    }
+    // render(renderContext) {
+    //     if (this.isOffScreen) {
+    //         return;
+    //     }
+    //     this.sprite.render(renderContext, this.x, this.y);
+    // }
 
     update() {
         super.update();
@@ -57,7 +58,7 @@ export class Bomb extends Enemy {
     reuse(x, y, velocity) {
         this.x = x;
         this.y = y;
-        this.sprite.reset();
+        this.currentSprite.reset();
         this.mover.setVelocity(velocity);
         this.isOffScreen = false;
     }
@@ -76,6 +77,7 @@ export class Bomb extends Enemy {
             spawned = new Bomb(game, x, y, velocity);
             game.enemies.push(spawned);
         }
+        game.audioManager.play(AudioManager.AUDIO_FILES.BOMB);
         return spawned;
     }
 }
