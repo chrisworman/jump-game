@@ -4,6 +4,7 @@ export class Hud {
     constructor(game) {
         this.game = game;
         this.hearts = document.getElementById('hearts');
+        this.shield = document.getElementById('shield');
         this.textOverlay = document.getElementById('textOverlay');
         this.collectable = document.getElementById('collectable');
         this.world = document.getElementById('world');
@@ -23,7 +24,7 @@ export class Hud {
             game.toggleAudioMute();
         });
 
-        this.displayCollectableCount(0);
+        this.displayGemCount(0);
         this.displayHealth(Game.MAX_PLAYER_HEALTH);
     }
 
@@ -42,7 +43,7 @@ export class Hud {
         this.hearts.innerHTML = heartsHtmlBuffer.join('');
     }
 
-    displayCollectableCount(count) {
+    displayGemCount(count) {
         if (count === 0) {
             this.collectable.classList.remove('pulse-bg');
             this.collectable.offsetHeight; // Force DOM reflow
@@ -53,6 +54,11 @@ export class Hud {
 
     displayAudioMuted(isMuted) {
         this.audioButton.style.backgroundPosition = isMuted ? '0px -32px' : '0px 0px';
+    }
+
+    displayShield(timeLeft) {
+        this.shield.className = timeLeft ? 'shield' : 'shield-empty';
+        this.shield.innerText = timeLeft ? timeLeft : '';
     }
 
     textOverlayFadeIn(text) {

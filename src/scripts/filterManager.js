@@ -65,6 +65,12 @@ export class FilterManager {
         };
     }
 
+    static fadeInAndOutAnimation() {
+        return (fm, amountDone) => {
+            fm.brightnessPercent = ((Math.sin(amountDone * 10 * Math.PI) + 1) / 2.0) * 60 + 90;
+        };
+    }
+
     static blurFadeOutAnimation() {
         return (fm, amountDone) => {
             fm.blurPixels = 5 * amountDone;

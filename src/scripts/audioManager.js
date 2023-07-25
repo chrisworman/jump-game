@@ -2,11 +2,11 @@ export class AudioManager {
     static AUDIO_FILES = {
         BACKGROUND_SONG: {
             url: 'sounds/piano-arp.mp3',
-            volume: 0.045,
+            volume: 0.07,
         },
         BOSS_SONG: {
             url: 'sounds/desert-trail.mp3',
-            volume: 0.2,
+            volume: 0.35,
         },
         FINALE_SONG: {
             url: 'sounds/stranger-mix-2.mp3',
@@ -16,9 +16,9 @@ export class AudioManager {
             url: 'sounds/boss-celebration.mp3',
             volume: 0.3,
         },
-        COLLECTABLE_COLLECTED: {
+        GEM_COLLECTED: {
             url: 'sounds/collectable.mp3',
-            volume: 0.7,
+            volume: 0.6,
         },
         FIRE_BALL: {
             url: 'sounds/fire-ball.mp3',
@@ -42,7 +42,7 @@ export class AudioManager {
         },
         PLAYER_HIT: {
             url: 'sounds/player-hit.mp3',
-            volume: 0.5,
+            volume: 0.4,
         },
         ENEMY_HIT: {
             url: 'sounds/enemy-hit.mp3',

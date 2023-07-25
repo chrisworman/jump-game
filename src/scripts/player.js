@@ -61,10 +61,17 @@ export class Player extends Entity {
 
     updatePlaying() {
         // Check enemy collisions: TODO: should this be in enemy?
+        if (this.shield) {
+            this.shield.sprite.filterManager.hueDegrees = 0;
+        }
         if (!this.recovering) {
             const hitBox = this.getHitBox();
             for (let enemy of this.game.enemies) {
                 if (!enemy.isDead && !enemy.isOffScreen && hitBox.intersects(enemy)) {
+                    if (this.shield) {
+                        this.shield.sprite.filterManager.hueDegrees = 180;
+                        break;
+                    }
                     this.game.shake();
                     this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_HIT);
                     this.setHealth(this.health - 1);
@@ -117,10 +124,19 @@ export class Player extends Entity {
 
         // Update the mover
         this.mover.update();
+
+        // Update the shield, if any
+        if (this.shield) {
+            this.shield.update();
+        }
     }
 
     updateLevelTransition() {
         this.y += Game.LEVEL_SCROLL_SPEED * this.movementFactor; // TODO: use mover to remove dep. on this.movementFactor
+        // Update the shield, if any
+        if (this.shield) {
+            this.shield.update();
+        }
     }
 
     updateBossCelebration() {
@@ -165,6 +181,11 @@ export class Player extends Entity {
             } else {
                 this.standingLeftSprite.render(renderContext, this.x, this.y);
             }
+        }
+
+        // Shield?
+        if (this.shield) {
+            this.shield.render(renderContext);
         }
     }
 
@@ -228,6 +249,7 @@ export class Player extends Entity {
         this.lastShootTime = null;
         this.recovering = false;
         this.recoveringStartTime = null;
+        this.shield = null;
         this.sprites.forEach((x) => x.reset());
         this.sprites.forEach((x) => x.filterManager.reset());
     }

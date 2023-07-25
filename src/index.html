@@ -109,9 +109,34 @@
                 cursor: pointer;
             }
 
+            .shield {
+                float: right;
+                margin: 0 2px;
+                width: 32px;
+                height: 32px;
+                background-image: url('images/shield.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+                font-size: 24px;
+                line-height: 32px;
+                text-align: center;
+                color: #efefef;
+            }
+
+            .shield-empty {
+                float: right;
+                margin: 0 2px;
+                width: 32px;
+                height: 32px;
+                background-image: url('images/shield.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+                filter: grayscale(100%);
+            }
+
             .heart {
                 display: inline-block;
-                margin-left: 2px;
+                margin: 0 2px;
                 width: 32px;
                 height: 32px;
                 background-image: url('images/heart.png');
@@ -292,8 +317,9 @@
             <div id="hearts" class="hearts">
                 <span class="heart"></span>
                 <span class="heart"></span>
-                <span class="heart-empty"></span>
+                <span class="heart"></span>
             </div>
+            <div id="shield" class="shield-empty"></div>
             <div id="audioButton" class="audio-button"></div>
         </div>
 

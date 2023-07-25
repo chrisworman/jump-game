@@ -3,6 +3,7 @@ import { GameState } from './gameState.js';
 
 export class Platforms {
     static HEIGHT = 100;
+    static FLOOR_HEIGHT = 10; // Virtual
     static COUNT = 8;
     static _PlatformYs = null;
 

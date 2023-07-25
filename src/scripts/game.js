@@ -17,11 +17,11 @@ import { HealthUpHeart } from './healthUpHeart.js';
 
 export class Game {
     static GRAVITY = 0.3;
-    static LEVEL_SCROLL_SPEED = 8;
+    static LEVEL_SCROLL_SPEED = 7;
     static MAX_PLAYER_HEALTH = 3;
     static FPS = 60;
     static TIME_STEP = 1000 / Game.FPS;
-    static COLLECTABLE_THRESHOLD = 50;
+    static GEM_HEALTH_UP_THRESHOLD = 50;
 
     static WORLD_WIDTH = 550;
     static WORLD_HEIGHT = 800;
@@ -29,6 +29,7 @@ export class Game {
     static ON_SCREEN_CONTROLS_HEIGHT = 100;
 
     constructor() {
+        this.gameTime = performance.now();
         this.state = GameState.INITIALIZING;
 
         // Prioritize loading assets
@@ -61,8 +62,8 @@ export class Game {
         this.healthUpHearts = [];
         this.enemies = [];
 
-        this.setCollectableCount(0);
-        this.hud.textOverlayFadeIn('Blobby the Jumper');
+        this.setGemCount(0);
+        this.hud.textOverlayFadeIn('Pixel Jump');
         this.hud.showStartButton();
         this.gameLoop();
     }
@@ -74,7 +75,7 @@ export class Game {
         this.level.world.playSong();
         this.hud.displayLevel(this.level);
         this.player.reset();
-        this.setCollectableCount(0);
+        this.setGemCount(0);
         this.bullets = [];
         Bullet.SpawnReusePool = [];
         this.collectables = [];
@@ -98,7 +99,6 @@ export class Game {
         this.hud.hideStartButton();
         this.hud.hideRestartButton();
 
-        this.gameTime = null;
         this.state = GameState.PLAYING;
     }
 
@@ -198,21 +198,21 @@ export class Game {
         this.player.update();
     }
 
-    incrementCollectableCount() {
-        this.setCollectableCount(this.collectableCount + 1);
+    incrementGemCount() {
+        this.setGemCount(this.gemCount + 1);
     }
 
-    setCollectableCount(count) {
+    setGemCount(count) {
         let finalCount = count;
-        if (count >= Game.COLLECTABLE_THRESHOLD) {
+        if (count >= Game.GEM_HEALTH_UP_THRESHOLD) {
             if (this.player.health < Player.MAX_HEALTH) {
                 HealthUpHeart.spawn(this);
                 this.player.setHealth(this.player.health + 1);
             }
             finalCount = 0;
         }
-        this.collectableCount = finalCount;
-        this.hud.displayCollectableCount(finalCount);
+        this.gemCount = finalCount;
+        this.hud.displayGemCount(finalCount);
     }
 
     handlePlayerDead() {

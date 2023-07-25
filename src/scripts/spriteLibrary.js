@@ -7,6 +7,10 @@ export class SpriteLibrary {
             width: 64,
             height: 48,
         },
+        SHIELD: {
+            width: 76,
+            height: 76,
+        },
         FIRE_BALL: {
             width: 48,
             height: 48,
@@ -15,7 +19,7 @@ export class SpriteLibrary {
             width: 64,
             height: 64,
         },
-        COLLECTABLE: {
+        GEM: {
             width: 48,
             height: 48,
         },
@@ -114,6 +118,16 @@ export class SpriteLibrary {
         );
     }
 
+    static shield() {
+        return new Sprite(
+            'images/shield.png',
+            0,
+            0,
+            SpriteLibrary.SIZES.SHIELD.width,
+            SpriteLibrary.SIZES.SHIELD.height
+        );
+    }
+
     static fireBall() {
         return new AnimatedSprite(
             'images/fire-ball.png',
@@ -125,11 +139,11 @@ export class SpriteLibrary {
         );
     }
 
-    static collectable() {
+    static gem() {
         return new AnimatedSprite(
             'images/red-gem-48-48.png',
-            SpriteLibrary.SIZES.COLLECTABLE.width,
-            SpriteLibrary.SIZES.COLLECTABLE.height,
+            SpriteLibrary.SIZES.GEM.width,
+            SpriteLibrary.SIZES.GEM.height,
             0,
             22,
             12

@@ -1,4 +1,4 @@
-import { Collectable } from './collectable.js';
+import { Gem } from './gem.js';
 import { FireBall } from './fireBall.js';
 import { Walker } from './walker.js';
 import { Turret } from './turret.js';
@@ -6,6 +6,7 @@ import { Spawner } from './spawner.js';
 import { Tank } from './tank.js';
 import { Tower } from './tower.js';
 import { LevelManager } from './levelManager.js';
+import { Shield } from './shield.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
@@ -21,8 +22,8 @@ export class Level {
 
         this.boss = number === LevelManager.LEVELS_PER_WORLD ? this.world.getBoss() : null;
         this.enemySpawnTime = null;
-        this.collectableSpawner = new Spawner(() => {
-            return Collectable.spawn(game);
+        this.gemSpawner = new Spawner(() => {
+            return Gem.spawn(game);
         });
         this.walkerSpawner = new Spawner(() => {
             return Walker.spawn(game);
@@ -111,13 +112,21 @@ export class Level {
         }
 
         const collectables = [];
-        const spawnCount = Math.ceil(this.world.number + this.number * 0.5);
+
+        // Gems
+        const gemCount = Math.ceil(this.world.number + this.number * 0.5);
         const entitiesToAvoid = [this.game.player, ...this.game.enemies];
-        for (let i = 0; i < spawnCount; i++) {
-            const collectable = this.collectableSpawner.spawnWithoutIntersecting(entitiesToAvoid);
-            entitiesToAvoid.push(collectable);
-            collectables.push(collectable);
+        for (let i = 0; i < gemCount; i++) {
+            const gem = this.gemSpawner.spawnWithoutIntersecting(entitiesToAvoid);
+            entitiesToAvoid.push(gem);
+            collectables.push(gem);
         }
+
+        // Shield
+        if (this.number === 15) {
+            collectables.push(Shield.spawn(this.game));
+        }
+
         return collectables;
     }
 
