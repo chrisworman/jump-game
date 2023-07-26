@@ -60,16 +60,13 @@ export class Player extends Entity {
     }
 
     updatePlaying() {
-        // Check enemy collisions: TODO: should this be in enemy?
-        if (this.shield) {
-            this.shield.sprite.filterManager.hueDegrees = 0;
-        }
+        // Check enemy collisions
         if (!this.recovering) {
             const hitBox = this.getHitBox();
             for (let enemy of this.game.enemies) {
                 if (!enemy.isDead && !enemy.isOffScreen && hitBox.intersects(enemy)) {
                     if (this.shield) {
-                        this.shield.sprite.filterManager.hueDegrees = 180;
+                        this.shield.onHitEnemy(enemy);
                         break;
                     }
                     this.game.shake();
@@ -87,8 +84,9 @@ export class Player extends Entity {
             this.sprites.forEach((x) => x.filterManager.reset());
         }
 
-        // Shooting?
-        if (this.game.userControls.shoot) {
+        // Consider abstracting out default gun
+        // Default gun
+        if (!this.laserGun && this.game.userControls.shoot) {
             const now = this.game.gameTime;
             if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) {
                 // Time to shoot
@@ -128,6 +126,11 @@ export class Player extends Entity {
         // Update the shield, if any
         if (this.shield) {
             this.shield.update();
+        }
+
+        // Update laser gun, if any
+        if (this.laserGun) {
+            this.laserGun.update();
         }
     }
 
@@ -186,6 +189,11 @@ export class Player extends Entity {
         // Shield?
         if (this.shield) {
             this.shield.render(renderContext);
+        }
+
+        // Laser gun?
+        if (this.laserGun) {
+            this.laserGun.render(renderContext);
         }
     }
 
@@ -250,6 +258,7 @@ export class Player extends Entity {
         this.recovering = false;
         this.recoveringStartTime = null;
         this.shield = null;
+        this.laserGun = null;
         this.sprites.forEach((x) => x.reset());
         this.sprites.forEach((x) => x.filterManager.reset());
     }

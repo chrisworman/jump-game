@@ -7,6 +7,8 @@ import { Tank } from './tank.js';
 import { Tower } from './tower.js';
 import { LevelManager } from './levelManager.js';
 import { Shield } from './shield.js';
+import { LaserCollectable } from './laserCollectable.js';
+import { Heavy } from './heavy.js';
 
 export class Level {
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
@@ -36,6 +38,9 @@ export class Level {
         });
         this.towerSpawner = new Spawner(() => {
             return Tower.spawn(game);
+        });
+        this.heavySpawner = new Spawner(() => {
+            return Heavy.spawn(game);
         });
     }
 
@@ -69,24 +74,15 @@ export class Level {
         const initialEnemies = [];
 
         // Walkers
-        const walkerSpawnCount = Math.min(
+        const walkerCount = Math.min(
             Level.MAX_WALKERS,
             Math.max(1, this.world.number * 2 + this.number - 10)
         );
-        for (let i = 0; i < walkerSpawnCount; i++) {
+        for (let i = 0; i < walkerCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
-        // Tanks
-        if (this.number > 5) {
-            const maxTanks = this.world.number <= 3 ? 1 : 2;
-            const tankCount = Math.min(maxTanks, Math.max(1, this.number - 10));
-            for (let i = 0; i < tankCount; i++) {
-                initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
-            }
-        }
-
-        // Towers
+        // Towers: medium
         if (this.number > 1) {
             const towerCount = Math.max(1, Math.min(2, this.world.number - 3));
             for (let i = 0; i < towerCount; i++) {
@@ -94,10 +90,24 @@ export class Level {
             }
         }
 
-        // Turrets
-        if (this.world.number > 1) {
-            const maxTurrets = this.world.number <= 4 ? 1 : 2;
-            const turrentCount = Math.min(maxTurrets, Math.max(1, this.number - 15));
+        // Tanks: medium
+        if (this.world.number >= 3 && this.number >= 15) {
+            const maxTanks = this.world.number <= 4 ? 1 : 2;
+            const tankCount = Math.min(maxTanks, Math.max(1, this.number - 10));
+            for (let i = 0; i < tankCount; i++) {
+                initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        // Heavies: hard
+        if ((this.world.number === 3 || this.world.number === 5) && this.number >= 10) {
+            initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
+        }
+
+        // Turrets: very hard
+        if (this.world.number >= 4 && this.number >= 10) {
+            const maxTurrets = this.world.number === 5 ? 2 : 1;
+            const turrentCount = Math.min(maxTurrets, this.number - 15);
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -123,8 +133,13 @@ export class Level {
         }
 
         // Shield
-        if (this.number === 15) {
+        if (this.number === 9 || this.number === 18) {
             collectables.push(Shield.spawn(this.game));
+        }
+
+        // Laser: first level of last world
+        if (this.world.number === LevelManager.WORLD_COUNT && this.number === 1) {
+            collectables.push(LaserCollectable.spawn(this.game));
         }
 
         return collectables;

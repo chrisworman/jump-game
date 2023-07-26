@@ -5,6 +5,8 @@ import { Platforms } from './platforms.js';
 // An entity behaviour that provides movement like jumping, dropping, and moving left or right.
 // Optionally provides platform and ceiling collision detection.
 export class Mover {
+    static DEFAULT_GRAVITY = 0.3;
+
     constructor(game, target) {
         this.game = game;
         this.movementFactor = 60 / Game.FPS;
@@ -20,10 +22,6 @@ export class Mover {
         this.dropping = false;
         this.onPlatform = null;
         this.pacing = false;
-    }
-
-    setGravity(gravity) {
-        Game.GRAVITY = gravity;
     }
 
     setVelocity(velocity) {
@@ -89,9 +87,11 @@ export class Mover {
     }
 
     update() {
+        const gravity = this.target.gravity || Mover.DEFAULT_GRAVITY;
+
         // Apply gravity if we are not on a platform
         if (this.jumping || this.dropping) {
-            this.velocity.y += Game.GRAVITY * this.movementFactor;
+            this.velocity.y += gravity * this.movementFactor;
         }
 
         // Apply velocity
@@ -101,7 +101,7 @@ export class Mover {
         // Platform collision
         if (this.collideWith.platforms) {
             if (
-                (this.dropping && this.velocity.y > Game.GRAVITY) || // Dropping, but after already falling
+                (this.dropping && this.velocity.y > gravity) || // Dropping, but after already falling
                 (this.jumping && this.velocity.y > 0.1) // "Jumping", but just after apex (> 0.1)
             ) {
                 // See if we have crossed a platform while falling

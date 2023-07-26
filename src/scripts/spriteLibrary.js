@@ -23,6 +23,10 @@ export class SpriteLibrary {
             width: 48,
             height: 48,
         },
+        LASER_COLLECTABLE: {
+            width: 48,
+            height: 48,
+        },
         WALKER: {
             width: 24,
             height: 63,
@@ -58,6 +62,14 @@ export class SpriteLibrary {
         BACKGROUND: {
             width: 550,
             height: 1600,
+        },
+        LASER_BEAM: {
+            width: 550,
+            height: 8,
+        },
+        HEAVY: {
+            width: 76,
+            height: 48,
         },
     };
 
@@ -120,11 +132,33 @@ export class SpriteLibrary {
 
     static shield() {
         return new Sprite(
-            'images/shield.png',
+            'images/shield-2.png',
             0,
             0,
             SpriteLibrary.SIZES.SHIELD.width,
             SpriteLibrary.SIZES.SHIELD.height
+        );
+    }
+
+    static laserCollectable() {
+        return new AnimatedSprite(
+            'images/laser-collectable.png',
+            SpriteLibrary.SIZES.LASER_COLLECTABLE.width,
+            SpriteLibrary.SIZES.LASER_COLLECTABLE.height,
+            0,
+            8,
+            8,
+            true
+        );
+    }
+
+    static laserBeam() {
+        return new Sprite(
+            'images/laser-beam.png',
+            0,
+            0,
+            SpriteLibrary.SIZES.LASER_BEAM.width,
+            SpriteLibrary.SIZES.LASER_BEAM.height
         );
     }
 
@@ -246,6 +280,18 @@ export class SpriteLibrary {
             5,
             12,
             false
+        );
+    }
+
+    static heavyIdle() {
+        return new AnimatedSprite(
+            'images/heavy.png',
+            SpriteLibrary.SIZES.HEAVY.width,
+            SpriteLibrary.SIZES.HEAVY.height,
+            0,
+            3,
+            3,
+            true
         );
     }
 

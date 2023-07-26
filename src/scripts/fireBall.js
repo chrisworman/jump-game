@@ -2,7 +2,6 @@ import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Mover } from './mover.js';
-import { Game } from './game.js';
 import { Enemy } from './enemy.js';
 import { AudioManager } from './audioManager.js';
 
@@ -25,6 +24,7 @@ export class FireBall extends Enemy {
             platforms: false,
         });
         this.mover.dropping = true;
+        this.gravity = Mover.DEFAULT_GRAVITY * 0.8;
     }
 
     static spawn(game) {

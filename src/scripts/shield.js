@@ -4,7 +4,7 @@ import { Mover } from './mover.js';
 import { Platforms } from './platforms.js';
 
 export class Shield extends Collectable {
-    static TTL_SECONDS = 10;
+    static TTL_SECONDS = 15;
     static SPAWN_WALL_PADDING = 50;
     static CHASE_SPEED = 9;
 
@@ -32,9 +32,10 @@ export class Shield extends Collectable {
                 this.game.hud.displayShield(timeRemainingSecs);
                 this.lastTimeRemainingSecs = timeRemainingSecs;
             }
-            // Speed up flickering as the shield expires
-            if (timeRemainingSecs < 5) {
-                flickerRate = timeRemainingSecs < 3 ? 0.05 : 0.01;
+            // Increase flickering and opacity as the shield expires
+            if (timeRemainingSecs <= 5) {
+                flickerRate = timeRemainingSecs <= 3 ? 0.05 : 0.03;
+                this.sprite.filterManager.opacityPercent = timeRemainingSecs <= 3 ? 45 : 70;
             }
             if (timeRemainingSecs === 0) {
                 // Shield expired
@@ -46,17 +47,19 @@ export class Shield extends Collectable {
                 // Chase player!
                 const targetX = this.game.player.x - 5;
                 const diffX = this.x - targetX;
-                const deltaX = Math.abs(diffX) > Shield.CHASE_SPEED
-                    ? Math.sign(diffX) * Shield.CHASE_SPEED
-                    : diffX;
+                const deltaX =
+                    Math.abs(diffX) > Shield.CHASE_SPEED
+                        ? Math.sign(diffX) * Shield.CHASE_SPEED
+                        : diffX;
                 const newX = this.x - deltaX;
 
                 const yOffset = this.game.player.mover.jumping ? 10 : 5;
                 const targetY = this.game.player.y - yOffset;
                 const diffY = this.y - targetY;
-                const deltaY = Math.abs(diffY) > Shield.CHASE_SPEED
-                    ? Math.sign(diffY) * Shield.CHASE_SPEED
-                    : diffY;
+                const deltaY =
+                    Math.abs(diffY) > Shield.CHASE_SPEED
+                        ? Math.sign(diffY) * Shield.CHASE_SPEED
+                        : diffY;
                 const newY = this.y - deltaY;
 
                 if (Math.abs(this.x - newX) <= 1 && Math.abs(this.y - newY) <= 1) {
@@ -71,6 +74,12 @@ export class Shield extends Collectable {
         // Animate brightness
         this.sprite.filterManager.brightnessPercent =
             ((Math.sin(this.game.gameTime * flickerRate) + 1) / 2.0) * 50 + 80;
+
+        // Reset hue from enemy hit?
+        const hue = this.sprite.filterManager.hueDegrees;
+        if (hue > 0 && this.game.gameTime - this.hitEnemyTime > 800) {
+            this.sprite.filterManager.hueDegrees = Math.max(0, hue - 2);
+        }
     }
 
     render(renderContext) {
@@ -89,6 +98,12 @@ export class Shield extends Collectable {
         this.game.player.shield = this;
         this.game.hud.displayShield(this.lastTimeRemainingSecs);
         this.game.collectables = this.game.collectables.filter((x) => x !== this);
+    }
+
+    onHitEnemy(enemy) {
+        this.sprite.filterManager.hueDegrees = 180;
+        this.hitEnemyTime = this.game.gameTime;
+        enemy.handleShot();
     }
 
     static spawn(game) {

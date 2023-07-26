@@ -16,7 +16,6 @@ import { Rocket } from './rocket.js';
 import { HealthUpHeart } from './healthUpHeart.js';
 
 export class Game {
-    static GRAVITY = 0.3;
     static LEVEL_SCROLL_SPEED = 7;
     static MAX_PLAYER_HEALTH = 3;
     static FPS = 60;
@@ -357,6 +356,7 @@ export class Game {
                         x.type === EnemyTypes.WALKER ||
                         x.type === EnemyTypes.TURRET ||
                         x.type === EnemyTypes.TANK ||
+                        x.type === EnemyTypes.HEAVY ||
                         x.type === EnemyTypes.BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));

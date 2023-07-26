@@ -1,7 +1,7 @@
 export class AudioManager {
     static AUDIO_FILES = {
         BACKGROUND_SONG: {
-            url: 'sounds/piano-arp.mp3',
+            url: 'sounds/piano-arp-live-update.mp3',
             volume: 0.07,
         },
         BOSS_SONG: {
@@ -34,7 +34,15 @@ export class AudioManager {
         },
         PLAYER_SHOOT: {
             url: 'sounds/shoot.mp3',
-            volume: 0.2,
+            volume: 0.18,
+        },
+        LASER_COLLECTED: {
+            url: 'sounds/laser-collected.mp3',
+            volume: 0.08,
+        },
+        LASER_GUN: {
+            url: 'sounds/laser-gun.mp3',
+            volume: 0.18 ,
         },
         BOMB: {
             url: 'sounds/bomb.mp3',
@@ -42,11 +50,11 @@ export class AudioManager {
         },
         PLAYER_HIT: {
             url: 'sounds/player-hit.mp3',
-            volume: 0.4,
+            volume: 0.35,
         },
         ENEMY_HIT: {
             url: 'sounds/enemy-hit.mp3',
-            volume: 0.4,
+            volume: 0.3,
         },
         START_BOSS_LEVEL: {
             url: 'sounds/start-boss-level.mp3',
