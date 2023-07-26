@@ -30,11 +30,11 @@ export class AudioManager {
         },
         PLAYER_JUMP: {
             url: 'sounds/jump.mp3',
-            volume: 0.09,
+            volume: 0.08,
         },
         PLAYER_SHOOT: {
             url: 'sounds/shoot.mp3',
-            volume: 0.18,
+            volume: 0.16,
         },
         LASER_COLLECTED: {
             url: 'sounds/laser-collected.mp3',
@@ -58,7 +58,7 @@ export class AudioManager {
         },
         START_BOSS_LEVEL: {
             url: 'sounds/start-boss-level.mp3',
-            volume: 0.2,
+            volume: 0.18,
         },
         ROBOTIC_DEATH: { // Unused, but neat
             url: 'sounds/robotic-death.mp3',

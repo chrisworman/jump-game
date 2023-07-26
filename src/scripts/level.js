@@ -78,7 +78,7 @@ export class Level {
         const initialEnemies = [];
 
         // Walkers: easy
-        const walkerCount = Math.min(9, Math.max(1, this.world.number * 2 + this.number - 10));
+        const walkerCount = Math.min(8, Math.max(1, this.world.number * 2 + this.number - 10));
         for (let i = 0; i < walkerCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
@@ -86,7 +86,8 @@ export class Level {
         // Pounder: easy
         if (
             (this.world.number === 1 && this.number >= 3) ||
-            (this.world === 2 && this.number >= 5)
+            (this.world.number === 3 && this.number >= 2) ||
+            (this.world.number === 5 && this.number >= 1)
         ) {
             const pounderCount = this.number >= 15 ? 2 : 1;
             for (let i=0; i < pounderCount; i++) {
@@ -96,7 +97,7 @@ export class Level {
 
         // Towers: medium
         if (this.number >= 2) {
-            const towerCount = this.world.number >= 4 && this.number >= 15 ? 2 : 1;
+            const towerCount = this.world.number === 5 && this.number >= 16 ? 2 : 1;
             for (let i = 0; i < towerCount; i++) {
                 initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -105,7 +106,9 @@ export class Level {
         // Tanks: medium
         if (
             (this.world.number === 2 && this.number >= 1) ||
-            (this.world.number >= 3 && this.number >= 5)
+            (this.world.number === 3 && this.number >= 3) ||
+            (this.world.number === 4 && this.number >= 2) ||
+            (this.world.number === 5 && this.number >= 1)
         ) {
             const tankCount = this.world.number >= 4 && this.number >= 16 ? 2 : 1;
             for (let i = 0; i < tankCount; i++) {
@@ -114,13 +117,13 @@ export class Level {
         }
 
         // Heavies: hard
-        if ((this.world.number === 3 || this.world.number === 5) && this.number >= 8) {
+        if ((this.world.number === 3 || this.world.number === 5) && this.number >= 15) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Turrets: very hard
-        if (this.world.number >= 4 && this.number >= 10) {
-            const turrentCount = this.world.number === 5 && this.number >= 16 ? 2 : 1;
+        if (this.world.number >= 4 && this.number >= 15) {
+            const turrentCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }
