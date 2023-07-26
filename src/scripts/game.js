@@ -358,6 +358,7 @@ export class Game {
                         x.type === EnemyTypes.TURRET ||
                         x.type === EnemyTypes.TANK ||
                         x.type === EnemyTypes.HEAVY ||
+                        x.type === EnemyTypes.CHASER ||
                         x.type === EnemyTypes.BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));

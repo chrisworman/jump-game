@@ -85,10 +85,11 @@ export class Boss1 extends Enemy {
                 this.sprites.forEach((x) => x.filterManager.reset());
             }
 
+            const player = this.game.player;
             this.chasingPlayer =
-                this.game.player.y + this.game.player.height === this.y + this.height;
+                !player.recovering && player.y + player.height === this.y + this.height;
             if (this.chasingPlayer) {
-                if (this.game.player.x > this.x) {
+                if (player.x > this.x) {
                     this.mover.setVelocityX(Boss1.CHASINGS_SPEED);
                 } else {
                     this.mover.setVelocityX(-Boss1.CHASINGS_SPEED);

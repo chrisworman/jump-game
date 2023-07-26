@@ -8,4 +8,5 @@ export class EnemyTypes {
     static TANK = 'TANK';
     static BOSS = 'BOSS';
     static HEAVY = 'HEAVY';
+    static CHASER = 'CHASER';
 }

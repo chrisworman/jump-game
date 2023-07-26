@@ -10,6 +10,7 @@ import { Shield } from './shield.js';
 import { LaserCollectable } from './laserCollectable.js';
 import { Heavy } from './heavy.js';
 import { Pounder } from './pounder.js';
+import { Chaser } from './chaser.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -33,6 +34,9 @@ export class Level {
         });
         this.pounderSpawner = new Spawner(() => {
             return Pounder.spawn(game);
+        });
+        this.chaserSpawner = new Spawner(() => {
+            return Chaser.spawn(game);
         });
         this.turrentSpawner = new Spawner(() => {
             return Turret.spawn(game);
@@ -87,7 +91,7 @@ export class Level {
         if (
             (this.world.number === 1 && this.number >= 4) ||
             (this.world.number === 3 && this.number >= 2) ||
-            (this.world.number === 5 && this.number >= 1)
+            (this.world.number === 5 && this.number >= 10)
         ) {
             const pounderCount = this.world.number === 5 && this.number >= 18 ? 2 : 1;
             for (let i = 0; i < pounderCount; i++) {
@@ -101,6 +105,14 @@ export class Level {
             for (let i = 0; i < towerCount; i++) {
                 initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
             }
+        }
+
+        // Chaser: medium?
+        if (
+            (this.world.number === 4 && this.number >= 3) ||
+            (this.world.number === 5 && this.number >= 2)
+        ) {
+            initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Tanks: medium

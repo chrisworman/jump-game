@@ -75,6 +75,10 @@ export class SpriteLibrary {
             width: 76,
             height: 48,
         },
+        CHASER: {
+            width: 32,
+            height: 32,
+        },
     };
 
     static preloadImages() {
@@ -209,6 +213,30 @@ export class SpriteLibrary {
             6,
             36,
             false
+        );
+    }
+
+    static chaserLeft() {
+        return new AnimatedSprite(
+            'images/chaser-left.png',
+            SpriteLibrary.SIZES.CHASER.width,
+            SpriteLibrary.SIZES.CHASER.height,
+            0,
+            5,
+            12,
+            true
+        );
+    }
+
+    static chaserRight() {
+        return new AnimatedSprite(
+            'images/chaser-right.png',
+            SpriteLibrary.SIZES.CHASER.width,
+            SpriteLibrary.SIZES.CHASER.height,
+            0,
+            5,
+            12,
+            true
         );
     }
 
