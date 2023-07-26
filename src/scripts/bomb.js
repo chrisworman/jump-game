@@ -31,13 +31,6 @@ export class Bomb extends Enemy {
         this.mover.dropping = true;
     }
 
-    // render(renderContext) {
-    //     if (this.isOffScreen) {
-    //         return;
-    //     }
-    //     this.sprite.render(renderContext, this.x, this.y);
-    // }
-
     update() {
         super.update();
         if (this.isOffScreen) {

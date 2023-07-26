@@ -9,10 +9,11 @@ import { LevelManager } from './levelManager.js';
 import { Shield } from './shield.js';
 import { LaserCollectable } from './laserCollectable.js';
 import { Heavy } from './heavy.js';
+import { Pounder } from './pounder.js';
 
 export class Level {
+    static MAX_GEMS = 20;
     static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
-    static MAX_WALKERS = 8;
     static NO_ENEMY_BUFFER = 300;
 
     constructor(game, number, world, title, platformSprites) {
@@ -29,6 +30,9 @@ export class Level {
         });
         this.walkerSpawner = new Spawner(() => {
             return Walker.spawn(game);
+        });
+        this.pounderSpawner = new Spawner(() => {
+            return Pounder.spawn(game);
         });
         this.turrentSpawner = new Spawner(() => {
             return Turret.spawn(game);
@@ -73,27 +77,37 @@ export class Level {
 
         const initialEnemies = [];
 
-        // Walkers
-        const walkerCount = Math.min(
-            Level.MAX_WALKERS,
-            Math.max(1, this.world.number * 2 + this.number - 10)
-        );
+        // Walkers: easy
+        const walkerCount = Math.min(9, Math.max(1, this.world.number * 2 + this.number - 10));
         for (let i = 0; i < walkerCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
+        // Pounder: easy
+        if (
+            (this.world.number === 1 && this.number >= 3) ||
+            (this.world === 2 && this.number >= 5)
+        ) {
+            const pounderCount = this.number >= 15 ? 2 : 1;
+            for (let i=0; i < pounderCount; i++) {
+                initialEnemies.push(this.pounderSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
         // Towers: medium
-        if (this.number > 1) {
-            const towerCount = Math.max(1, Math.min(2, this.world.number - 3));
+        if (this.number >= 2) {
+            const towerCount = this.world.number >= 4 && this.number >= 15 ? 2 : 1;
             for (let i = 0; i < towerCount; i++) {
                 initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 
         // Tanks: medium
-        if (this.world.number >= 3 && this.number >= 15) {
-            const maxTanks = this.world.number <= 4 ? 1 : 2;
-            const tankCount = Math.min(maxTanks, Math.max(1, this.number - 10));
+        if (
+            (this.world.number === 2 && this.number >= 1) ||
+            (this.world.number >= 3 && this.number >= 5)
+        ) {
+            const tankCount = this.world.number >= 4 && this.number >= 16 ? 2 : 1;
             for (let i = 0; i < tankCount; i++) {
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -106,8 +120,7 @@ export class Level {
 
         // Turrets: very hard
         if (this.world.number >= 4 && this.number >= 10) {
-            const maxTurrets = this.world.number === 5 ? 2 : 1;
-            const turrentCount = Math.min(maxTurrets, this.number - 15);
+            const turrentCount = this.world.number === 5 && this.number >= 16 ? 2 : 1;
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -124,7 +137,7 @@ export class Level {
         const collectables = [];
 
         // Gems
-        const gemCount = Math.ceil(this.world.number + this.number * 0.5);
+        const gemCount = Math.min(Level.MAX_GEMS, Math.ceil(this.world.number + this.number * 0.5));
         const entitiesToAvoid = [this.game.player, ...this.game.enemies];
         for (let i = 0; i < gemCount; i++) {
             const gem = this.gemSpawner.spawnWithoutIntersecting(entitiesToAvoid);
@@ -133,12 +146,12 @@ export class Level {
         }
 
         // Shield
-        if (true || this.number === 9 || this.number === 18) {
+        if (this.number === 9 || this.number === 18) {
             collectables.push(Shield.spawn(this.game));
         }
 
         // Laser: first level of last world
-        if (this.world.number === LevelManager.WORLD_COUNT && this.number === 1) {
+        if (this.world.number === 5 && this.number === 1) {
             collectables.push(LaserCollectable.spawn(this.game));
         }
 

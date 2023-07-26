@@ -354,6 +354,7 @@ export class Game {
                 .filter(
                     (x) =>
                         x.type === EnemyTypes.WALKER ||
+                        x.type === EnemyTypes.POUNDER ||
                         x.type === EnemyTypes.TURRET ||
                         x.type === EnemyTypes.TANK ||
                         x.type === EnemyTypes.HEAVY ||

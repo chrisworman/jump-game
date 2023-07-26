@@ -15,6 +15,10 @@ export class SpriteLibrary {
             width: 48,
             height: 48,
         },
+        POUNDER: {
+            width: 32,
+            height: 48,
+        },
         TURRET: {
             width: 64,
             height: 64,
@@ -302,6 +306,31 @@ export class SpriteLibrary {
             0,
             SpriteLibrary.SIZES.TANK.width,
             SpriteLibrary.SIZES.TANK.height
+        );
+    }
+
+    static pounderIdle() {
+        return new AnimatedSprite(
+            'images/pounder.png',
+            SpriteLibrary.SIZES.POUNDER.width,
+            SpriteLibrary.SIZES.POUNDER.height,
+            0,
+            4,
+            4,
+            true
+        );
+    }
+
+    static pounderPound() {
+        return new AnimatedSprite(
+            'images/pounder.png',
+            SpriteLibrary.SIZES.POUNDER.width,
+            SpriteLibrary.SIZES.POUNDER.height,
+            0,
+            4,
+            4,
+            false,
+            SpriteLibrary.SIZES.POUNDER.width * 4
         );
     }
 

@@ -26,28 +26,6 @@ export class Walker extends Enemy {
         this.mover.pace(initialSpeed);
     }
 
-    static spawn(game) {
-        return new Walker(
-            game,
-            RandomGenerator.randomIntBetween(1, game.canvas.width - SpriteLibrary.SIZES.WALKER.width - 1),
-            RandomGenerator.randomFromArray(Platforms.getPlatformYs()) -
-                SpriteLibrary.SIZES.WALKER.height,
-            RandomGenerator.randomSign() * Walker.SPEED,
-            SpriteLibrary.walkerWalking(),
-            SpriteLibrary.walkerDying()
-        );
-    }
-
-    // render(renderContext) {
-    //     if (this.isDead) {
-    //         if (!this.dyingSprite.reachedEnd) {
-    //             this.dyingSprite.render(renderContext, this.x, this.y);
-    //         }
-    //     } else {
-    //         this.walkingSprite.render(renderContext, this.x, this.y);
-    //     }
-    // }
-
     update() {
         super.update();
         if (this.isDead) {
@@ -59,5 +37,17 @@ export class Walker extends Enemy {
         }
 
         this.mover.update();
+    }
+
+    static spawn(game) {
+        return new Walker(
+            game,
+            RandomGenerator.randomIntBetween(1, game.canvas.width - SpriteLibrary.SIZES.WALKER.width - 1),
+            RandomGenerator.randomFromArray(Platforms.getPlatformYs()) -
+                SpriteLibrary.SIZES.WALKER.height,
+            RandomGenerator.randomSign() * Walker.SPEED,
+            SpriteLibrary.walkerWalking(),
+            SpriteLibrary.walkerDying()
+        );
     }
 }

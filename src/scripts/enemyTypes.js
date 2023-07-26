@@ -1,6 +1,7 @@
 export class EnemyTypes {
     static FIRE_BALL = 'FIRE_BALL';
     static WALKER = 'WALKER';
+    static POUNDER = 'POUNDER';
     static BOMB = 'BOMB';
     static ROCKET = 'ROCKET';
     static TURRET = 'TURRET';

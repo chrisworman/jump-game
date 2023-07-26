@@ -30,7 +30,7 @@ export class AudioManager {
         },
         PLAYER_JUMP: {
             url: 'sounds/jump.mp3',
-            volume: 0.1,
+            volume: 0.09,
         },
         PLAYER_SHOOT: {
             url: 'sounds/shoot.mp3',
