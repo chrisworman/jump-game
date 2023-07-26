@@ -25,7 +25,7 @@ export class SpriteLibrary {
         },
         LASER_COLLECTABLE: {
             width: 48,
-            height: 48,
+            height: 24,
         },
         WALKER: {
             width: 24,
@@ -146,8 +146,8 @@ export class SpriteLibrary {
             SpriteLibrary.SIZES.LASER_COLLECTABLE.width,
             SpriteLibrary.SIZES.LASER_COLLECTABLE.height,
             0,
-            8,
-            8,
+            4,
+            6,
             true
         );
     }

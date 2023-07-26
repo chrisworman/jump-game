@@ -2,16 +2,24 @@ import { Collectable } from './collectable.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Mover } from './mover.js';
 import { Platforms } from './platforms.js';
+import { Velocity } from './velocity.js';
 
 export class Shield extends Collectable {
     static TTL_SECONDS = 15;
-    static SPAWN_WALL_PADDING = 50;
+    static SPAWN_WALL_PADDING = 100;
     static CHASE_SPEED = 9;
+    static UNCOLLECTED_FLOAT_DISTANCE_X = 1.5;
+    static UNCOLLECTED_FLOAT_DISTANCE_Y = 1.8;
+    static UNCOLLECTED_VELOCITY_X = 0.02;
+    static UNCOLLECTED_VELOCITY_Y = 0.03;
 
     constructor(game, x, y, sprite) {
         super(game, x, y, sprite);
         this.attached = false;
+        this.ogX = x;
+        this.ogY = y;
         this.mover = new Mover(game, this);
+        this.mover.setVelocity(new Velocity(Shield.UNCOLLECTED_VELOCITY_X, -Shield.UNCOLLECTED_VELOCITY_Y));
     }
 
     update() {
@@ -32,11 +40,19 @@ export class Shield extends Collectable {
                 this.game.hud.displayShield(timeRemainingSecs);
                 this.lastTimeRemainingSecs = timeRemainingSecs;
             }
+
             // Increase flickering and opacity as the shield expires
             if (timeRemainingSecs <= 5) {
                 flickerRate = timeRemainingSecs <= 3 ? 0.05 : 0.03;
                 this.sprite.filterManager.opacityPercent = timeRemainingSecs <= 3 ? 45 : 70;
             }
+
+            // Reset hue from enemy hit?
+            const hue = this.sprite.filterManager.hueDegrees;
+            if (hue > 0 && this.game.gameTime - this.hitEnemyTime > 800) {
+                this.sprite.filterManager.hueDegrees = Math.max(0, hue - 2);
+            }
+
             if (timeRemainingSecs === 0) {
                 // Shield expired
                 this.game.player.shield = null;
@@ -69,17 +85,20 @@ export class Shield extends Collectable {
                     this.y = newY;
                 }
             }
+        } else {
+            // Not collected
+            this.mover.update();
+            if (Math.abs(this.x - this.ogX) >= Shield.UNCOLLECTED_FLOAT_DISTANCE_X) {
+                this.mover.setVelocityX(-this.mover.velocity.x);
+            }
+            if (Math.abs(this.y - this.ogY) >= Shield.UNCOLLECTED_FLOAT_DISTANCE_Y) {
+                this.mover.setVelocityY(-this.mover.velocity.y);
+            }
         }
 
         // Animate brightness
         this.sprite.filterManager.brightnessPercent =
-            ((Math.sin(this.game.gameTime * flickerRate) + 1) / 2.0) * 50 + 80;
-
-        // Reset hue from enemy hit?
-        const hue = this.sprite.filterManager.hueDegrees;
-        if (hue > 0 && this.game.gameTime - this.hitEnemyTime > 800) {
-            this.sprite.filterManager.hueDegrees = Math.max(0, hue - 2);
-        }
+            ((Math.sin(this.game.gameTime * flickerRate) + 1) / 2.0) * 70 + 80;
     }
 
     render(renderContext) {

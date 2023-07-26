@@ -100,7 +100,7 @@ export class Level {
         }
 
         // Heavies: hard
-        if ((this.world.number === 3 || this.world.number === 5) && this.number >= 10) {
+        if ((this.world.number === 3 || this.world.number === 5) && this.number >= 8) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
@@ -133,7 +133,7 @@ export class Level {
         }
 
         // Shield
-        if (this.number === 9 || this.number === 18) {
+        if (true || this.number === 9 || this.number === 18) {
             collectables.push(Shield.spawn(this.game));
         }
 
