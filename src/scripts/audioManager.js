@@ -60,7 +60,7 @@ export class AudioManager {
             url: 'sounds/start-boss-level.mp3',
             volume: 0.18,
         },
-        ROBOTIC_DEATH: { // Unused, but neat
+        ROBOTIC_DEATH: { // Unused, but neat, use for final boss!!
             url: 'sounds/robotic-death.mp3',
             volume: 0.05,
         },
@@ -75,6 +75,14 @@ export class AudioManager {
         BOSS_SHOT_3: {
             url: 'sounds/boss-hit-3.mp3',
             volume: 0.3,
+        },
+        BOSS_3_SHOT_1: {
+            url: 'sounds/boss-3-vox-1.mp3',
+            volume: 0.2,
+        },
+        BOSS_3_SHOT_2: {
+            url: 'sounds/boss-3-vox-2.mp3',
+            volume: 0.2,
         },
         BOSS_DEAD: {
             url: 'sounds/boss-dead.mp3',

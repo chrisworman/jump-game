@@ -505,7 +505,7 @@ export class SpriteLibrary {
             SpriteLibrary.SIZES.BOSS_3.height,
             0,
             2,
-            4,
+            2,
             true,
         );
     }
@@ -516,10 +516,9 @@ export class SpriteLibrary {
             SpriteLibrary.SIZES.BOSS_3.width,
             SpriteLibrary.SIZES.BOSS_3.height,
             0,
-            3,
-            6,
+            4,
+            8,
             false,
-            SpriteLibrary.SIZES.BOSS_3.width,
         );
     }
 

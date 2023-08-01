@@ -7,14 +7,16 @@ import { Mover } from './mover.js';
 import { Emitter } from './emitter.js';
 import { Chaser } from './chaser.js';
 import { GameState } from './gameState.js';
+import { AudioManager } from './audioManager.js';
 
 export class Boss3 extends Enemy {
-    static SPEED = 3;
+    static SPEED = 3.25;
     static STATES = {
-        CHASING: 0,
+        PACING: 0,
         SPAWN_MINION_1: 1,
         SPAWN_MINION_2: 2,
         SPAWN_MINION_3: 3,
+        SPAWN_MINION_4: 4,
     };
 
     constructor(game, x, y, spriteIdle) {
@@ -30,7 +32,7 @@ export class Boss3 extends Enemy {
             3
         );
 
-        this.state = Boss3.STATES.CHASING;
+        this.state = Boss3.STATES.PACING;
 
         this.spriteIdle = spriteIdle;
         this.spriteShoot = SpriteLibrary.boss3Shoot();
@@ -48,7 +50,7 @@ export class Boss3 extends Enemy {
             emit: () => {
                 this.toggleState();
 
-                if (this.state === Boss3.STATES.CHASING) {
+                if (this.state === Boss3.STATES.PACING) {
                     this.currentSprite = this.spriteIdle;
                     if (this.y + this.height > game.player.y + game.player.height) {
                         this.mover.jump();
@@ -58,52 +60,49 @@ export class Boss3 extends Enemy {
                 } else if (
                     this.state === Boss3.STATES.SPAWN_MINION_1 ||
                     this.state === Boss3.STATES.SPAWN_MINION_2 ||
-                    this.state === Boss3.STATES.SPAWN_MINION_3
+                    this.state === Boss3.STATES.SPAWN_MINION_3 ||
+                    this.state === Boss3.STATES.SPAWN_MINION_4
                 ) {
-                    if (this.state === Boss3.SPAWN_MINION_1) {
+                    if (this.state === Boss3.STATES.SPAWN_MINION_1) {
                         this.currentSprite = this.spriteShoot;
-                        this.currentSprite.reset();
                     }
-                    
-                    // TODO: spawn chaser between this and the player
-                    const minion = Chaser.spawn(
-                        game,
-                        this.x,
-                        this.y + this.height - SpriteLibrary.SIZES.CHASER.height
-                    );
-                    game.enemies.push(minion);
+                    this.currentSprite.reset();
+                    this.spriteShoot.setOnReachedEnd(() => {
+                        if (this.game.state === GameState.PLAYING) {
+                            const minion = Chaser.spawn(
+                                game,
+                                this.x,
+                                this.y + this.height - SpriteLibrary.SIZES.CHASER.height
+                            );
+                            game.enemies.push(minion);
+                            this.spriteShoot.setOnReachedEnd(null);
+                        }
+                    });
                 }
             },
-            randomDelays: { min: 1000, max: 2000 },
+            randomDelays: { min: 600, max: 1000 },
         });
     }
 
     update() {
         super.update();
-        if (this.isDead) {
+        if (this.isDead || this.game.state !== GameState.PLAYING) {
             return;
         }
 
-        if (this.game.state === GameState.PLAYING) {
-            if (this.state === Boss3.STATES.CHASING) {
-                const player = this.game.player;
-                if (!player.mover.jumping && !player.mover.dropping) {
-                    if (player.x > this.x) {
-                        this.mover.setVelocityX(Boss3.SPEED);
-                    } else {
-                        this.mover.setVelocityX(-Boss3.SPEED);
-                    }
-                }
-            }
+        this.mover.update();
+        this.emitter.update();
+    }
 
-            this.mover.update();
-            this.emitter.update();
+    handleShot() {
+        const wasShot = super.handleShot();
+        if (wasShot && !this.isDead) {
+            this.game.audioManager.play(AudioManager.AUDIO_FILES[`BOSS_3_SHOT_${this.health}`]);
         }
     }
 
     toggleState() {
         this.state = (this.state + 1) % Object.keys(Boss3.STATES).length;
-        console.log(`state: ${this.state}`);
     }
 
     static spawn(game) {

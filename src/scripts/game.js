@@ -14,6 +14,7 @@ import { Bomb } from './bomb.js';
 import { Background } from './background.js';
 import { Rocket } from './rocket.js';
 import { HealthUpHeart } from './healthUpHeart.js';
+import { Enemy } from './enemy.js';
 
 export class Game {
     static LEVEL_SCROLL_SPEED = 7;
@@ -231,10 +232,25 @@ export class Game {
     }
 
     handleLevelComplete() {
-        this.enemies.forEach((enemy) => {
-            if (enemy.type === EnemyTypes.BOMB) {
-                enemy.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), 1000);
+        // Fade certain entities: all bombs and rockets, and all enemies if boss level
+        this.enemies.forEach((x) => {
+            if (
+                !x.isDead &&
+                (this.isBossLevel() || x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
+            ) {
+                const deathAnimation = FilterManager.blurFadeOutAnimation();
+                x.sprites.forEach((y) =>
+                    y.filterManager.animate(deathAnimation, this.gameTime, Enemy.DEAD_FADE_OUT_MS)
+                );
             }
+        });
+
+        // TODO: DRY Find a better way to do this!!
+        this.bullets.forEach((x) => {
+            const deathAnimation = FilterManager.blurFadeOutAnimation();
+            x.sprites.forEach((y) =>
+                y.filterManager.animate(deathAnimation, this.gameTime, Enemy.DEAD_FADE_OUT_MS)
+            );
         });
 
         const justBeatBoss = this.isBossLevel();

@@ -10,6 +10,7 @@ export class Bullet extends Entity {
         super(game, x, y, SpriteLibrary.SIZES.BULLET.width, SpriteLibrary.SIZES.BULLET.height);
         this.hitEnemy = false;
         this.sprite = sprite;
+        this.sprites = [sprite];
         this.mover = new Mover(game, this);
         this.mover.setCollideWith({
             walls: false,

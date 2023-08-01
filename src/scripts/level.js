@@ -76,6 +76,7 @@ export class Level {
     }
 
     spawnInitialEnemies() {
+        // return [Boss3.spawn(this.game)];
         if (this.boss) {
             return [this.boss];
         }

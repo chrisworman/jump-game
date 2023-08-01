@@ -12,6 +12,7 @@ export class AnimatedSprite {
         this.startTime = -1;
         this.loop = loop;
         this.reachedEnd = false;
+        this.onReachedEnd = null;
         this.width = width;
         this.height = height;
         this.fps = fps;
@@ -28,10 +29,15 @@ export class AnimatedSprite {
     reset() {
         this.startTime = -1;
         this.reachedEnd = false;
+        this.onReachedEnd = null;
     }
 
     sync(other) {
         this.startTime = other.startTime;
+    }
+
+    setOnReachedEnd(onReachedEnd) {
+        this.onReachedEnd = onReachedEnd;
     }
 
     render(renderContext, x, y) {
@@ -51,6 +57,9 @@ export class AnimatedSprite {
             }
             if (!this.loop && frameIndex === this.xOffsets.length - 1) {
                 this.reachedEnd = true;
+                if (this.onReachedEnd) {
+                    this.onReachedEnd();
+                }
             }
 
             const ctx = renderContext.getCanvasContext();
