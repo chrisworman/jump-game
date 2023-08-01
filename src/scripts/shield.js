@@ -20,7 +20,9 @@ export class Shield extends Collectable {
         this.ogX = x;
         this.ogY = y;
         this.mover = new Mover(game, this);
-        this.mover.setVelocity(new Velocity(Shield.UNCOLLECTED_VELOCITY_X, -Shield.UNCOLLECTED_VELOCITY_Y));
+        this.mover.setVelocity(
+            new Velocity(Shield.UNCOLLECTED_VELOCITY_X, -Shield.UNCOLLECTED_VELOCITY_Y)
+        );
     }
 
     update() {
@@ -58,7 +60,6 @@ export class Shield extends Collectable {
                 // Shield expired
                 this.game.player.shield = null;
                 if (!this.game.level.boss) {
-                    // TODO: consider stopping the shield song when entering a boss level
                     this.game.level.world.playSong();
                 }
             }
