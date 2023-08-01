@@ -19,8 +19,8 @@ export class Boss2 extends Enemy {
             game,
             x,
             y,
-            SpriteLibrary.SIZES.BOSS.width,
-            SpriteLibrary.SIZES.BOSS.height,
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
             EnemyTypes.BOSS,
             SpriteLibrary.bossIdle(),
             true,
@@ -76,16 +76,6 @@ export class Boss2 extends Enemy {
         }
 
         if (this.game.state === GameState.PLAYING) {
-            // Done recovering?
-            if (
-                this.recovering &&
-                this.game.gameTime - this.recoveringStartTime > Boss2.RECOVERY_TIME_MS
-            ) {
-                this.recovering = false;
-                this.recoveringStartTime = null;
-                this.sprites.forEach((x) => x.filterManager.reset());
-            }
-
             this.mover.update();
             this.platformChanger.update();
             this.bombSpawner.update();
@@ -102,11 +92,11 @@ export class Boss2 extends Enemy {
     static spawn(game) {
         const x = RandomGenerator.randomIntBetween(
             1,
-            game.canvas.width - SpriteLibrary.SIZES.BOSS.width - 1
+            game.canvas.width - SpriteLibrary.SIZES.BOSS_2.width - 1
         );
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
         const y =
-            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.BOSS.height;
+            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.BOSS_2.height;
         return new Boss2(game, x, y);
     }
 }

@@ -5,15 +5,15 @@ import { Mover } from './mover.js';
 import { Enemy } from './enemy.js';
 import { AudioManager } from './audioManager.js';
 
-export class FireBall extends Enemy {
+export class BigBomb extends Enemy {
     constructor(game, x, y, sprite) {
         super(
             game,
             x,
             y,
-            SpriteLibrary.SIZES.FIRE_BALL.width,
-            SpriteLibrary.SIZES.FIRE_BALL.height,
-            EnemyTypes.FIRE_BALL,
+            SpriteLibrary.SIZES.BIG_BOMB.width,
+            SpriteLibrary.SIZES.BIG_BOMB.height,
+            EnemyTypes.BIG_BOMB,
             sprite,
             false
         );
@@ -28,15 +28,15 @@ export class FireBall extends Enemy {
     }
 
     static spawn(game) {
-        game.audioManager.play(AudioManager.AUDIO_FILES.FIRE_BALL);
-        return new FireBall(
+        game.audioManager.play(AudioManager.AUDIO_FILES.BIG_BOMB);
+        return new BigBomb(
             game,
             RandomGenerator.randomIntBetween(
                 0,
-                game.canvas.width - SpriteLibrary.SIZES.FIRE_BALL.width
+                game.canvas.width - SpriteLibrary.SIZES.BIG_BOMB.width
             ),
             1, // Important: spawn on screen
-            SpriteLibrary.fireBall()
+            SpriteLibrary.bigBomb()
         );
     }
 

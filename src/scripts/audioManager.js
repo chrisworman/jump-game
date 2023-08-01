@@ -20,7 +20,7 @@ export class AudioManager {
             url: 'sounds/collectable.mp3',
             volume: 0.6,
         },
-        FIRE_BALL: {
+        BIG_BOMB: {
             url: 'sounds/fire-ball.mp3',
             volume: 0.025,
         },

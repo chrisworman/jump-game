@@ -1,5 +1,5 @@
 import { Gem } from './gem.js';
-import { FireBall } from './fireBall.js';
+import { BigBomb } from './bigBomb.js';
 import { Walker } from './walker.js';
 import { Turret } from './turret.js';
 import { Spawner } from './spawner.js';
@@ -11,10 +11,11 @@ import { LaserCollectable } from './laserCollectable.js';
 import { Heavy } from './heavy.js';
 import { Pounder } from './pounder.js';
 import { Chaser } from './chaser.js';
+import { Boss3 } from './boss3.js';
 
 export class Level {
     static MAX_GEMS = 20;
-    static MAX_FIRE_BALL_SPAWN_DELAY_MS = 5000;
+    static MAX_BIG_BOMB_SPAWN_DELAY_MS = 5000;
     static NO_ENEMY_BUFFER = 300;
 
     constructor(game, number, world, title, platformSprites) {
@@ -66,10 +67,10 @@ export class Level {
             if (
                 !this.enemySpawnTime ||
                 now - this.enemySpawnTime >=
-                    Level.MAX_FIRE_BALL_SPAWN_DELAY_MS - 15 * this.world.number * this.number
+                    Level.MAX_BIG_BOMB_SPAWN_DELAY_MS - 15 * this.world.number * this.number
             ) {
                 this.enemySpawnTime = now;
-                this.game.enemies.push(FireBall.spawn(this.game));
+                this.game.enemies.push(BigBomb.spawn(this.game));
             }
         }
     }
@@ -93,7 +94,7 @@ export class Level {
             (this.world.number === 3 && this.number >= 2) ||
             (this.world.number === 5 && this.number >= 10)
         ) {
-            const pounderCount = this.world.number === 5 && this.number >= 18 ? 2 : 1;
+            const pounderCount = this.world.number === 5 && this.number >= 15 ? 2 : 1;
             for (let i = 0; i < pounderCount; i++) {
                 initialEnemies.push(this.pounderSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -122,7 +123,7 @@ export class Level {
             (this.world.number === 4 && this.number >= 2) ||
             (this.world.number === 5 && this.number >= 1)
         ) {
-            const tankCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
+            const tankCount = this.world.number === 5 && this.number >= 18 ? 2 : 1;
             for (let i = 0; i < tankCount; i++) {
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -138,7 +139,7 @@ export class Level {
 
         // Turrets: very hard
         if (this.world.number >= 4 && this.number >= 15) {
-            const turrentCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
+            const turrentCount = this.world.number === 5 && this.number === 19 ? 2 : 1;
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }

@@ -6,6 +6,7 @@ import { Platforms } from './platforms.js';
 import { Emitter } from './emitter.js';
 import { Mover } from './mover.js';
 import { Bomb } from './bomb.js';
+import { GameState } from './gameState.js';
 
 export class Pounder extends Enemy {
     constructor(game, x, y, width, height, currentSprite) {
@@ -21,9 +22,6 @@ export class Pounder extends Enemy {
             emit: (i) => {
                 if (i === 0 || i === 7) {
                     this.currentSprite = this.spriteIdle;
-                    if (i === 7) {
-                        this.currentSprite.reset();
-                    }
                     if (this.y + this.height > Platforms.HEIGHT && RandomGenerator.randomBool(0.70)) {
                         this.mover.jump();
                     } else {
@@ -61,7 +59,9 @@ export class Pounder extends Enemy {
         super.update();
         if (!this.isDead) {
             this.mover.update();
-            this.emitter.update();
+            if (this.game.state === GameState.PLAYING) {
+                this.emitter.update();
+            }
         }
     }
 

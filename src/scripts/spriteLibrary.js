@@ -11,9 +11,9 @@ export class SpriteLibrary {
             width: 76,
             height: 76,
         },
-        FIRE_BALL: {
-            width: 48,
-            height: 48,
+        BIG_BOMB: {
+            width: 36,
+            height: 36,
         },
         POUNDER: {
             width: 32,
@@ -51,11 +51,15 @@ export class SpriteLibrary {
             width: 24,
             height: 24,
         },
-        BOSS: {
+        BOSS_1: {
+            width: 76,
+            height: 64,
+        },
+        BOSS_2: {
             width: 64,
             height: 76,
         },
-        BOSS_2: {
+        BOSS_3: {
             width: 76,
             height: 64,
         },
@@ -170,14 +174,15 @@ export class SpriteLibrary {
         );
     }
 
-    static fireBall() {
+    static bigBomb() {
         return new AnimatedSprite(
-            'images/fire-ball.png',
-            SpriteLibrary.SIZES.FIRE_BALL.width,
-            SpriteLibrary.SIZES.FIRE_BALL.height,
+            'images/big-bomb.png',
+            SpriteLibrary.SIZES.BIG_BOMB.width,
+            SpriteLibrary.SIZES.BIG_BOMB.height,
             0,
-            5,
-            8
+            4,
+            12,
+            true
         );
     }
 
@@ -447,8 +452,8 @@ export class SpriteLibrary {
     static bossIdle() {
         return new AnimatedSprite(
             'images/boss-1.png',
-            SpriteLibrary.SIZES.BOSS.width,
-            SpriteLibrary.SIZES.BOSS.height,
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
             0,
             5,
             10,
@@ -459,8 +464,8 @@ export class SpriteLibrary {
     static bossJump() {
         return new AnimatedSprite(
             'images/boss-1.png',
-            SpriteLibrary.SIZES.BOSS.width,
-            SpriteLibrary.SIZES.BOSS.height,
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
             0,
             5,
             10,
@@ -471,8 +476,8 @@ export class SpriteLibrary {
     static boss2Pace() {
         return new AnimatedSprite(
             'images/boss-2.png',
-            SpriteLibrary.SIZES.BOSS_2.width,
-            SpriteLibrary.SIZES.BOSS_2.height,
+            SpriteLibrary.SIZES.BOSS_1.width,
+            SpriteLibrary.SIZES.BOSS_1.height,
             0,
             8,
             10,
@@ -483,21 +488,46 @@ export class SpriteLibrary {
     static boss2Shoot() {
         return new AnimatedSprite(
             'images/boss-2.png',
-            SpriteLibrary.SIZES.BOSS_2.width,
-            SpriteLibrary.SIZES.BOSS_2.height,
+            SpriteLibrary.SIZES.BOSS_1.width,
+            SpriteLibrary.SIZES.BOSS_1.height,
             0,
             1,
             0,
             false,
-            SpriteLibrary.SIZES.BOSS_2.width * 3
+            SpriteLibrary.SIZES.BOSS_1.width * 3
+        );
+    }
+
+    static boss3Idle() {
+        return new AnimatedSprite(
+            'images/boss_3.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            2,
+            4,
+            true,
+        );
+    }
+
+    static boss3Shoot() {
+        return new AnimatedSprite(
+            'images/boss_3.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            3,
+            6,
+            false,
+            SpriteLibrary.SIZES.BOSS_3.width,
         );
     }
 
     static bossBomb() {
         return new AnimatedSprite(
             'images/boss-1.png',
-            SpriteLibrary.SIZES.BOSS.width,
-            SpriteLibrary.SIZES.BOSS.height,
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
             0,
             5,
             30,

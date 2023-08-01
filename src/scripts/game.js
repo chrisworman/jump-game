@@ -370,7 +370,7 @@ export class Game {
                 .filter((x) => x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
                 .forEach((x) => x.render(this.renderContext));
             this.enemies
-                .filter((x) => x.type === EnemyTypes.FIRE_BALL)
+                .filter((x) => x.type === EnemyTypes.BIG_BOMB)
                 .forEach((x) => x.render(this.renderContext));
             this.healthUpHearts.forEach((x) => x.render(this.renderContext));
         });

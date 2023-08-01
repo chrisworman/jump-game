@@ -28,6 +28,23 @@ export class Enemy extends Entity {
         this.sprites = [currentSprite];
     }
 
+    update() {
+        super.update();
+        if (this.isDead) {
+            return;
+        }
+
+        // // Done recovering?
+        if (
+            this.recovering &&
+            this.game.gameTime - this.recoveringStartTime > Enemy.RECOVERY_TIME_MS
+        ) {
+            this.recovering = false;
+            this.recoveringStartTime = null;
+            this.sprites.forEach((x) => x.filterManager.reset());
+        }
+    }
+
     render(renderContext) {
         if (this.isDead) {
             // Allow the enemy to fade out after dying
@@ -55,7 +72,8 @@ export class Enemy extends Entity {
                         Enemy.DEAD_FADE_OUT_MS
                     )
                 );
-            } else { // Shot, but not dead
+            } else {
+                // Shot, but not dead
                 this.recovering = true;
                 this.recoveringStartTime = this.game.gameTime;
                 const recoveringAnimation = FilterManager.recoveringAnimation();
