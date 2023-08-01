@@ -11,7 +11,6 @@ import { LaserCollectable } from './laserCollectable.js';
 import { Heavy } from './heavy.js';
 import { Pounder } from './pounder.js';
 import { Chaser } from './chaser.js';
-import { Boss3 } from './boss3.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -76,7 +75,6 @@ export class Level {
     }
 
     spawnInitialEnemies() {
-        // return [Boss3.spawn(this.game)];
         if (this.boss) {
             return [this.boss];
         }

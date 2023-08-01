@@ -35,9 +35,9 @@ export class World {
 
     getBoss() {
         switch (this.number) {
-            // case 1: return Boss1.spawn(this.game);
-            // case 2: return Boss2.spawn(this.game);
-            // case 3: return Boss3.spawn(this.game);
+            case 1: return Boss1.spawn(this.game);
+            case 2: return Boss2.spawn(this.game);
+            case 3: return Boss3.spawn(this.game);
             // TODO: design remaining bosses
             default: return Boss3.spawn(this.game);
         }

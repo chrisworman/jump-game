@@ -16,6 +16,10 @@ export class AudioManager {
             url: 'sounds/boss-celebration.mp3',
             volume: 0.3,
         },
+        SHIELD_SONG: {
+            url: 'sounds/shield-song.mp3',
+            volume: 0.4,
+        },
         GEM_COLLECTED: {
             url: 'sounds/collectable.mp3',
             volume: 0.6,
@@ -42,7 +46,7 @@ export class AudioManager {
         },
         LASER_GUN: {
             url: 'sounds/laser-gun.mp3',
-            volume: 0.18 ,
+            volume: 0.25,
         },
         BOMB: {
             url: 'sounds/bomb.mp3',
@@ -60,7 +64,8 @@ export class AudioManager {
             url: 'sounds/start-boss-level.mp3',
             volume: 0.18,
         },
-        ROBOTIC_DEATH: { // Unused, but neat, use for final boss!!
+        ROBOTIC_DEATH: {
+            // Unused, but neat, use for final boss!!
             url: 'sounds/robotic-death.mp3',
             volume: 0.05,
         },

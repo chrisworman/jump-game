@@ -3,6 +3,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { Mover } from './mover.js';
 import { Platforms } from './platforms.js';
 import { Velocity } from './velocity.js';
+import { AudioManager } from './audioManager.js';
 
 export class Shield extends Collectable {
     static TTL_SECONDS = 15;
@@ -56,6 +57,10 @@ export class Shield extends Collectable {
             if (timeRemainingSecs === 0) {
                 // Shield expired
                 this.game.player.shield = null;
+                if (!this.game.level.boss) {
+                    // TODO: consider stopping the shield song when entering a boss level
+                    this.game.level.world.playSong();
+                }
             }
 
             // Handle attachment to player
@@ -117,6 +122,8 @@ export class Shield extends Collectable {
         this.game.player.shield = this;
         this.game.hud.displayShield(this.lastTimeRemainingSecs);
         this.game.collectables = this.game.collectables.filter((x) => x !== this);
+        this.game.level.world.stopSong();
+        this.game.audioManager.play(AudioManager.AUDIO_FILES.SHIELD_SONG);
     }
 
     onHitEnemy(enemy) {
