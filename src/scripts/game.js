@@ -373,6 +373,8 @@ export class Game {
                         x.type === EnemyTypes.WALKER ||
                         x.type === EnemyTypes.POUNDER ||
                         x.type === EnemyTypes.TURRET ||
+                        x.type === EnemyTypes.TOWER ||
+                        x.type === EnemyTypes.SENTRY ||
                         x.type === EnemyTypes.TANK ||
                         x.type === EnemyTypes.HEAVY ||
                         x.type === EnemyTypes.CHASER ||

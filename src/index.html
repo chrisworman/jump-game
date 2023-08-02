@@ -44,6 +44,22 @@
                 z-index: 1;
                 box-shadow: 0px 8px 6px #222;
                 width: 450px;
+                animation-iteration-count: infinite;
+                animation-duration: 4s;
+                animation-name: modal-text-animation;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out;
+            }
+
+            @keyframes modal-text-animation {
+                from {
+                    text-shadow: -3px -1px 4px #fff, 1px -2px 10px #ff0, 3px -10px 20px #ff8000,
+                    -3px -18px 40px #f00, -4px -18px 42px #000;
+                }
+                to {
+                    text-shadow: 3px 1px 4px #fff, -2px 2px 10px #ff0, -3px 5px 20px #ff8000,
+                    2px 6px 40px #f00, 5px 22px 42px #000;
+                }
             }
 
             .modal-manual {
@@ -63,6 +79,7 @@
                 text-transform: uppercase;
                 border: solid 2px #f00;
                 transition: all 1s;
+                background-color: #ddd;
             }
 
             .modal-button:hover {
@@ -72,7 +89,7 @@
             }
 
             .hud {
-                border: 4px solid #ccc;
+                border: 4px solid #ddd;;
                 box-sizing: border-box;
                 margin: 0 auto;
                 height: 50px;
@@ -95,7 +112,7 @@
                     font-size: 11px;
                 }
                 .modal {
-                    font-size : 20px;
+                    font-size: 20px;
                     padding: 10px;
                     width: 95%;
                 }
@@ -217,7 +234,7 @@
                 touch-action: manipulation;
                 user-select: none;
                 -webkit-touch-callout: none;
-                margin : 0 0 0 5px;
+                margin: 0 0 0 5px;
                 box-shadow: inset 0px 0px 5px 3px rgba(20, 20, 20, 1);
             }
 
@@ -257,7 +274,7 @@
                 text-align: center;
                 font-size: 30px;
                 line-height: 60px;
-                color : #000;
+                color: #000;
             }
 
             .on-screen-controls .jump {
@@ -275,7 +292,7 @@
                 text-align: center;
                 font-size: 30px;
                 line-height: 60px;
-                color : #000;
+                color: #000;
             }
 
             .pulse-bg {
@@ -328,7 +345,9 @@
             <div class="modal-manual">
                 <img src="images/manual.png" />
             </div>
-            <button id="modalButton" class="modal-button">OK</button>
+            <button id="modalButton" class="modal-button" title="Click or hit return or enter key">
+                OK
+            </button>
         </div>
 
         <div class="hud" id="hud">

@@ -11,6 +11,7 @@ import { LaserCollectable } from './laserCollectable.js';
 import { Heavy } from './heavy.js';
 import { Pounder } from './pounder.js';
 import { Chaser } from './chaser.js';
+import { Sentry } from './sentry.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -46,6 +47,9 @@ export class Level {
         });
         this.towerSpawner = new Spawner(() => {
             return Tower.spawn(game);
+        });
+        this.sentrySpawner = new Spawner(() => {
+            return Sentry.spawn(game);
         });
         this.heavySpawner = new Spawner(() => {
             return Heavy.spawn(game);
@@ -90,7 +94,7 @@ export class Level {
         // Pounder: easy
         if (
             (this.world.number === 1 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 2) ||
+            (this.world.number === 3 && this.number >= 3) ||
             (this.world.number === 5 && this.number >= 10)
         ) {
             const pounderCount = this.world.number === 5 && this.number >= 15 ? 2 : 1;
@@ -99,18 +103,31 @@ export class Level {
             }
         }
 
-        // Towers: medium
-        if (this.number >= 2) {
+        // Towers: easy
+        // Similar to Sentries
+        if (
+            (this.world.number <= 2 && this.number >= 2) ||
+            (this.world.number === 5 && this.number >= 10)
+        ) {
             const towerCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
             for (let i = 0; i < towerCount; i++) {
                 initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 
-        // Chaser: medium?
+        // Sentries: medium
+        // Similar to Towers
+        if (this.world.number >= 3 && this.number >= 2) {
+            const sentryCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
+            for (let i = 0; i < sentryCount; i++) {
+                initialEnemies.push(this.sentrySpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        // Chaser: medium
         if (
             (this.world.number === 4 && this.number >= 2) ||
-            (this.world.number === 5 && this.number >= 2)
+            (this.world.number === 5 && this.number >= 1)
         ) {
             initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
         }
@@ -118,9 +135,9 @@ export class Level {
         // Tanks: medium
         if (
             (this.world.number === 2 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 2) ||
-            (this.world.number === 4 && this.number >= 2) ||
-            (this.world.number === 5 && this.number >= 1)
+            (this.world.number === 3 && this.number >= 3) ||
+            (this.world.number === 4 && this.number >= 3) ||
+            (this.world.number === 5 && this.number >= 2)
         ) {
             const tankCount = this.world.number === 5 && this.number >= 18 ? 2 : 1;
             for (let i = 0; i < tankCount; i++) {

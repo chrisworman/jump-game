@@ -51,6 +51,10 @@ export class SpriteLibrary {
             width: 24,
             height: 24,
         },
+        ROCKET: {
+            width: 24,
+            height: 24,
+        },
         BOSS_1: {
             width: 76,
             height: 64,
@@ -82,6 +86,10 @@ export class SpriteLibrary {
         CHASER: {
             width: 32,
             height: 32,
+        },
+        SENTRY: {
+            width: 32,
+            height: 64,
         },
     };
 
@@ -242,6 +250,44 @@ export class SpriteLibrary {
             5,
             12,
             true
+        );
+    }
+
+    static sentryIdle() {
+        return new AnimatedSprite(
+            'images/sentry.png',
+            SpriteLibrary.SIZES.SENTRY.width,
+            SpriteLibrary.SIZES.SENTRY.height,
+            0,
+            15,
+            6,
+            true
+        );
+    }
+
+    static sentryShootLeft() {
+        return new AnimatedSprite(
+            'images/sentry.png',
+            SpriteLibrary.SIZES.SENTRY.width,
+            SpriteLibrary.SIZES.SENTRY.height,
+            0,
+            2,
+            12,
+            false,
+            SpriteLibrary.SIZES.SENTRY.width * 15
+        );
+    }
+
+    static sentryShootRight() {
+        return new AnimatedSprite(
+            'images/sentry.png',
+            SpriteLibrary.SIZES.SENTRY.width,
+            SpriteLibrary.SIZES.SENTRY.height,
+            0,
+            2,
+            12,
+            false,
+            SpriteLibrary.SIZES.SENTRY.width * 17
         );
     }
 
@@ -442,6 +488,18 @@ export class SpriteLibrary {
             'images/bomb-2.png',
             SpriteLibrary.SIZES.BOMB.width,
             SpriteLibrary.SIZES.BOMB.height,
+            0,
+            4,
+            12,
+            true
+        );
+    }
+
+    static rocket() {
+        return new AnimatedSprite(
+            'images/bomb-2.png',
+            SpriteLibrary.SIZES.ROCKET.width,
+            SpriteLibrary.SIZES.ROCKET.height,
             0,
             4,
             12,

@@ -1,5 +1,6 @@
 import { AudioManager } from './audioManager.js';
 import { Entity } from './entity.js';
+import { GameState } from './gameState.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 
 export class LaserGun extends Entity {
@@ -57,7 +58,7 @@ export class LaserGun extends Entity {
     }
 
     render(renderContext) {
-        if (this.on) {
+        if (this.on && this.game.state === GameState.PLAYING) {
             this.sprite.render(renderContext, this.x, this.y);
         }
     }

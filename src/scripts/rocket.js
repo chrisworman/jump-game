@@ -14,10 +14,10 @@ export class Rocket extends Enemy {
             game,
             x,
             y,
-            SpriteLibrary.SIZES.BOMB.width, // TODO: proper sprite
-            SpriteLibrary.SIZES.BOMB.height, // TODO: proper sprite
+            SpriteLibrary.SIZES.ROCKET.width,
+            SpriteLibrary.SIZES.ROCKET.height,
             EnemyTypes.ROCKET,
-            SpriteLibrary.bomb(),
+            SpriteLibrary.rocket(),
             false
         );
         this.mover = new Mover(game, this);

@@ -1,10 +1,8 @@
-import { Bomb } from './bomb.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { Emitter } from './emitter.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
-import { FilterManager } from './filterManager.js';
 import { Platforms } from './platforms.js';
 import { GameState } from './gameState.js';
 import { Rocket } from './rocket.js';
@@ -17,7 +15,7 @@ export class Tower extends Enemy {
             y,
             SpriteLibrary.SIZES.TOWER.width,
             SpriteLibrary.SIZES.TOWER.height,
-            EnemyTypes.TURRET,
+            EnemyTypes.TOWER,
             x < game.canvas.width * 0.5
                 ? SpriteLibrary.towerRightIdle()
                 : SpriteLibrary.towerLeftIdle(),
@@ -82,15 +80,4 @@ export class Tower extends Enemy {
             RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.TOWER.height
         );
     }
-
-    // handleShot() {
-    //     super.handleShot();
-    //     if (this.isDead) {
-    //         this.currentSprite.filterManager.animate(
-    //             FilterManager.blurFadeOutAnimation(),
-    //             this.game.gameTime,
-    //             250
-    //         );
-    //     }
-    // }
 }

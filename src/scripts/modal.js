@@ -15,7 +15,7 @@ export class Modal {
 
     show(text, buttonText, onAction) {
         this.text.innerText = text;
-        this.button.innerText = buttonText;
+        this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
         $(this.element).fadeIn('slow');
     }
