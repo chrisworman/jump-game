@@ -89,7 +89,7 @@ export class Level {
 
         // Pounder: easy
         if (
-            (this.world.number === 1 && this.number >= 4) ||
+            (this.world.number === 1 && this.number >= 2) ||
             (this.world.number === 3 && this.number >= 2) ||
             (this.world.number === 5 && this.number >= 10)
         ) {
@@ -109,7 +109,7 @@ export class Level {
 
         // Chaser: medium?
         if (
-            (this.world.number === 4 && this.number >= 3) ||
+            (this.world.number === 4 && this.number >= 2) ||
             (this.world.number === 5 && this.number >= 2)
         ) {
             initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
@@ -117,8 +117,8 @@ export class Level {
 
         // Tanks: medium
         if (
-            (this.world.number === 2 && this.number >= 4) ||
-            (this.world.number === 3 && this.number >= 3) ||
+            (this.world.number === 2 && this.number >= 2) ||
+            (this.world.number === 3 && this.number >= 2) ||
             (this.world.number === 4 && this.number >= 2) ||
             (this.world.number === 5 && this.number >= 1)
         ) {
