@@ -15,6 +15,7 @@ import { Background } from './background.js';
 import { Rocket } from './rocket.js';
 import { HealthUpHeart } from './healthUpHeart.js';
 import { Enemy } from './enemy.js';
+import { Modal } from './modal.js';
 
 export class Game {
     static LEVEL_SCROLL_SPEED = 7;
@@ -39,6 +40,7 @@ export class Game {
         this.hudContainer = document.getElementById('hud');
         this.responsiveCanvas = document.getElementById('responsiveCanvas');
         this.onScreenControls = document.getElementById('onScreenControls');
+        this.modal = new Modal();
 
         this.handleWindowResize();
         window.addEventListener('resize', () => {
@@ -63,8 +65,9 @@ export class Game {
         this.enemies = [];
 
         this.setGemCount(0);
-        this.hud.textOverlayFadeIn('Pixel Jump');
-        this.hud.showStartButton();
+        this.modal.show('Pixel Jump', 'Start', () => {
+            this.startNewGame();
+        });
         this.gameLoop();
     }
 
@@ -87,7 +90,6 @@ export class Game {
         this.collectables = this.level.spawnCollectables();
 
         // Update UI
-        this.hud.textOverlayFadeOut(`${this.level.world.title} - ${this.level.title}`);
         this.filterManager.animate(
             (fm, amountDone) => {
                 fm.blurPixels = 10 - 10 * amountDone;
@@ -96,8 +98,6 @@ export class Game {
             this.gameTime,
             1000
         );
-        this.hud.hideStartButton();
-        this.hud.hideRestartButton();
 
         this.state = GameState.PLAYING;
     }
@@ -176,11 +176,10 @@ export class Game {
             // We are done transitioning
             this.collectables = [];
             this.enemies = [];
-            Bomb.SpawnReusePool = [];
             this.bullets = [];
+            Bomb.SpawnReusePool = [];
             Bullet.SpawnReusePool = [];
             Rocket.SpawnReusePool = [];
-            this.hud.textOverlayFadeOut();
             this.platforms.currentSprites = this.level.platformSprites;
             this.player.handleLevelTransitionDone();
             this.enemies = this.level.spawnInitialEnemies();
@@ -216,8 +215,9 @@ export class Game {
     }
 
     handlePlayerDead() {
-        this.hud.textOverlayFadeIn('Game Over');
-        this.hud.showRestartButton();
+        this.modal.show('Game Over', 'Restart', () => {
+            this.startNewGame();
+        });
         this.filterManager.animate(
             (fm, amountDone) => {
                 fm.blurPixels = amountDone * 8;
@@ -281,8 +281,9 @@ export class Game {
         // Beat the game??
         if (!this.level) {
             this.audioManager.play(AudioManager.AUDIO_FILES.FINALE_SONG, true);
-            this.hud.textOverlayFadeIn('You Beat the Game!');
-            this.hud.showRestartButton();
+            this.modal.show('You Beat the Game', 'Restart', () => {
+                this.startNewGame();
+            });
             this.filterManager.animate(
                 (fm, amountDone) => {
                     fm.blurPixels = amountDone * 8;
@@ -365,7 +366,7 @@ export class Game {
         const ctx = this.renderContext.getCanvasContext();
         this.filterManager.applyFilters(this, ctx, () => {
             this.background.render(this.renderContext);
-            // this.platforms.render(this.renderContext);
+            this.collectables.forEach((x) => x.render(this.renderContext));
             this.enemies
                 .filter(
                     (x) =>
@@ -380,8 +381,7 @@ export class Game {
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);
             this.bullets.forEach((x) => x.render(this.renderContext));
-            this.collectables.forEach((x) => x.render(this.renderContext));
-            this.platforms.render(this.renderContext); // temp
+            this.platforms.render(this.renderContext);
             this.enemies
                 .filter((x) => x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
                 .forEach((x) => x.render(this.renderContext));

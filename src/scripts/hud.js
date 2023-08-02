@@ -5,20 +5,10 @@ export class Hud {
         this.game = game;
         this.hearts = document.getElementById('hearts');
         this.shield = document.getElementById('shield');
-        this.textOverlay = document.getElementById('textOverlay');
         this.collectable = document.getElementById('collectable');
         this.world = document.getElementById('world');
         this.level = document.getElementById('level');
         this.collectableCount = document.getElementById('collectableCount');
-        this.restartButton = document.getElementById('restartButton');
-        this.restartButton.addEventListener('click', () => {
-            game.startNewGame();
-        });
-        this.startButton = document.getElementById('startButton');
-        this.startButton.addEventListener('click', () => {
-            $(this.startButton).fadeOut('slow');
-            game.startNewGame();
-        });
         this.audioButton = document.getElementById('audioButton');
         this.audioButton.addEventListener('click', () => {
             game.toggleAudioMute();
@@ -61,38 +51,8 @@ export class Hud {
         this.shield.innerText = timeLeft ? timeLeft : '';
     }
 
-    textOverlayFadeIn(text) {
-        this.textOverlay.innerText = text;
-        $(this.textOverlay).fadeIn('slow');
-    }
-
-    textOverlayFadeOut(text) {
-        if (text) {
-            this.textOverlay.innerText = text;
-        }
-        setTimeout(() => {
-            $(this.textOverlay).fadeOut('slow');
-        }, 2000);
-    }
-
     displayLevel(level) {
         this.world.innerText = level.world.number;
         this.level.innerText = level.number;
-    }
-
-    showStartButton() {
-        $(this.startButton).fadeIn('slow');
-    }
-
-    hideStartButton() {
-        $(this.startButton).fadeOut('slow');
-    }
-
-    showRestartButton() {
-        $(this.restartButton).fadeIn('slow');
-    }
-
-    hideRestartButton() {
-        $(this.restartButton).fadeOut('slow');
     }
 }
