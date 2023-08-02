@@ -38,8 +38,9 @@ export class Chaser extends Enemy {
         }
 
         const player = this.game.player;
+        const yDistanceFromPlayer = Math.abs((player.y + player.height) - (this.y + this.height));
         const shouldBeChasing =
-            !player.recovering && player.y + player.height === this.y + this.height;
+            !player.recovering && yDistanceFromPlayer <= 15;
         if (shouldBeChasing && !this.wasChasing) {
             this.wasChasing = true;
             if (player.x > this.x) {

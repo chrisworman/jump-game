@@ -6,6 +6,8 @@ import { Enemy } from './enemy.js';
 import { AudioManager } from './audioManager.js';
 
 export class BigBomb extends Enemy {
+    static VERTICAL_BUFFER = 50;
+
     constructor(game, x, y, sprite) {
         super(
             game,
@@ -32,8 +34,8 @@ export class BigBomb extends Enemy {
         return new BigBomb(
             game,
             RandomGenerator.randomIntBetween(
-                0,
-                game.canvas.width - SpriteLibrary.SIZES.BIG_BOMB.width
+                BigBomb.VERTICAL_BUFFER,
+                game.canvas.width - SpriteLibrary.SIZES.BIG_BOMB.width - BigBomb.VERTICAL_BUFFER
             ),
             1, // Important: spawn on screen
             SpriteLibrary.bigBomb()

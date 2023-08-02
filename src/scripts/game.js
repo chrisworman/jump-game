@@ -63,8 +63,10 @@ export class Game {
         this.collectables = [];
         this.healthUpHearts = [];
         this.enemies = [];
+        this.enemyDeathsByType = {};
 
         this.setGemCount(0);
+        this.totalGemCount = 0;
         this.modal.show('Pixel Jump', 'Start', () => {
             this.startNewGame();
         });
@@ -79,6 +81,8 @@ export class Game {
         this.hud.displayLevel(this.level);
         this.player.reset();
         this.setGemCount(0);
+        this.totalGemCount = 0;
+        this.enemyDeathsByType = {};
         this.bullets = [];
         Bullet.SpawnReusePool = [];
         this.collectables = [];
@@ -198,6 +202,7 @@ export class Game {
     }
 
     incrementGemCount() {
+        this.totalGemCount++;
         this.setGemCount(this.gemCount + 1);
     }
 
@@ -215,19 +220,26 @@ export class Game {
     }
 
     handlePlayerDead() {
-        this.modal.show('Game Over', 'Restart', () => {
-            this.startNewGame();
-        });
+        // Stop audio
+        this.level.world.stopSong();
+        this.level.world.stopBossSong();
+        if (this.player.laserGun) {
+            this.player.laserGun.off();
+        }
+        
         this.filterManager.animate(
             (fm, amountDone) => {
-                fm.blurPixels = amountDone * 8;
+                fm.blurPixels = amountDone * 2;
                 fm.brightnessPercent = 100 - 50 * amountDone;
             },
             this.gameTime,
-            1000
+            2000
         );
-        this.level.world.stopSong();
-        this.level.world.stopBossSong();
+        
+        this.modal.show('Game Over', 'Restart', () => {
+            this.startNewGame();
+        });
+        
         this.state = GameState.GAME_OVER;
     }
 
@@ -333,6 +345,11 @@ export class Game {
 
     isBossLevel() {
         return this.level && !!this.level.boss;
+    }
+
+    recordEnemyDeath(enemy) {
+        const currentCount = this.enemyDeathsByType[enemy.type] ?? 0;
+        this.enemyDeathsByType[enemy.type] = currentCount + 1;
     }
 
     handleWindowResize() {

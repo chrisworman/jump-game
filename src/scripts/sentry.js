@@ -3,9 +3,9 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Enemy } from './enemy.js';
 import { Platforms } from './platforms.js';
-import { Rocket } from './rocket.js';
 import { GameState } from './gameState.js';
 import { Bomb } from './bomb.js';
+import { Mover } from './mover.js';
 
 export class Sentry extends Enemy {
     static STATES = {
@@ -13,8 +13,8 @@ export class Sentry extends Enemy {
         SHOOTING_LEFT: 1,
         SHOOTING_RIGHT: 2,
     };
-    static SHOOT_INTERVAL_MS = 1000;
-    static SHOOT_DETECTION_Y_DISTANCE = 15;
+    static SHOOT_INTERVAL_MS = 800;
+    static SHOOT_DISTANCE = 290;
 
     constructor(game, x, y, spriteIdle) {
         super(
@@ -51,8 +51,8 @@ export class Sentry extends Enemy {
         }
 
         const player = this.game.player;
-        const yDistanceFromPlayer = Math.abs((player.y + player.height) - (this.y + this.height));
-        const shouldBeShooting = yDistanceFromPlayer <= Sentry.SHOOT_DETECTION_Y_DISTANCE;
+        const distanceToPlayer = Math.sqrt(Math.pow(player.x - this.x, 2) + Math.pow(player.y - this.y, 2));
+        const shouldBeShooting = distanceToPlayer <= Sentry.SHOOT_DISTANCE;
 
         if (this.state === Sentry.STATES.IDLE) {
             if (shouldBeShooting) {
@@ -86,8 +86,7 @@ export class Sentry extends Enemy {
                     this.state === Sentry.STATES.SHOOTING_RIGHT ? 1 : -1
                 );
                 const xDistanceFromPlayer = Math.abs(player.x - this.x);
-                bomb.mover.setVelocityX(bomb.mover.velocity.x * xDistanceFromPlayer / 140.0);
-                bomb.mover.setVelocityY(bomb.mover.velocity.y * 0.6);
+                bomb.mover.setVelocityX(bomb.mover.velocity.x * xDistanceFromPlayer / 250.0);
                 this.lastShootTime = this.game.gameTime;
                 this.currentSprite.reset();
             }

@@ -107,7 +107,8 @@ export class Level {
         // Similar to Sentries
         if (
             (this.world.number <= 2 && this.number >= 2) ||
-            (this.world.number === 5 && this.number >= 10)
+            (this.world.number === 4 && this.number >= 10) ||
+            (this.world.number === 5 && this.number >= 5)
         ) {
             const towerCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
             for (let i = 0; i < towerCount; i++) {
@@ -115,10 +116,10 @@ export class Level {
             }
         }
 
-        // Sentries: medium
+        // Sentries: medium (hard in pairs)
         // Similar to Towers
         if (this.world.number >= 3 && this.number >= 2) {
-            const sentryCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
+            const sentryCount = this.world.number >= 4 && this.number >= 10 ? 2 : 1;
             for (let i = 0; i < sentryCount; i++) {
                 initialEnemies.push(this.sentrySpawner.spawnWithoutIntersecting(initialEnemies));
             }

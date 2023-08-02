@@ -16,7 +16,7 @@ export class LaserGun extends Entity {
             SpriteLibrary.SIZES.LASER_BEAM.height
         );
         this.sprite = SpriteLibrary.laserBeam();
-        this.on = false;
+        this.isOn = false;
     }
 
     update() {
@@ -37,28 +37,27 @@ export class LaserGun extends Entity {
             }
 
             // Start the audio if necessary
-            if (!this.on) {
+            if (!this.isOn) {
                 this.game.audioManager.play(AudioManager.AUDIO_FILES.LASER_GUN);
             }
 
             this.sprite.filterManager.hueDegrees = (Math.sin(0.006 * this.game.gameTime) + 1.0) / 2.0 * 180;
             this.sprite.filterManager.blurPixels = (Math.sin(0.001 * this.game.gameTime) + 1.0) / 2.0;
             
-            this.on = true;
+            this.isOn = true;
 
-        } else {
-
-            // Stop the audio if necessary
-            if (this.on) {
-                this.game.audioManager.stop(AudioManager.AUDIO_FILES.LASER_GUN);
-            }
-
-            this.on = false;
+        } else if (this.isOn) {
+            this.off();
         }
     }
 
+    off() {
+        this.game.audioManager.stop(AudioManager.AUDIO_FILES.LASER_GUN);
+        this.isOn = false;
+    }
+
     render(renderContext) {
-        if (this.on && this.game.state === GameState.PLAYING) {
+        if (this.isOn && this.game.state === GameState.PLAYING) {
             this.sprite.render(renderContext, this.x, this.y);
         }
     }

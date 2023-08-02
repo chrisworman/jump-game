@@ -54,6 +54,7 @@ export class Bomb extends Enemy {
         this.currentSprite.reset();
         this.mover.setVelocity(velocity);
         this.isOffScreen = false;
+        this.gravity = null;
     }
 
     /*
