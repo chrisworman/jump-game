@@ -86,16 +86,17 @@ export class Level {
         const initialEnemies = [];
 
         // Walkers: easy
-        const walkerCount = Math.min(8, Math.max(1, this.world.number * 2 + this.number - 10));
+        const walkerCount = Math.min(7, Math.max(1, this.world.number * 2 + this.number - 10));
         for (let i = 0; i < walkerCount; i++) {
             initialEnemies.push(this.walkerSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Pounder: easy
+        // * Level 1
         if (
-            (this.world.number === 1 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 8) ||
-            (this.world.number === 5 && this.number >= 16)
+            (this.world.number === 1 && [2, 4, 5, 10, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 3 && [5, 7, 12, 17].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [3, 4, 5, 6, 9, 12, 13, 15, 17, 19].indexOf(this.number) >= 0)
         ) {
             const pounderCount = 1;
             for (let i = 0; i < pounderCount; i++) {
@@ -104,11 +105,11 @@ export class Level {
         }
 
         // Towers: easy
-        // Similar to Sentries
+        // * Level 2
         if (
-            (this.world.number <= 2 && this.number >= 2) ||
-            (this.world.number === 4 && this.number >= 17) ||
-            (this.world.number === 5 && this.number >= 5)
+            (this.world.number <= 2 && [2, 4, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [3, 4, 7, 12, 17, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [5, 7, 9, 14, 15, 18, 19].indexOf(this.number) >= 0)
         ) {
             const towerCount = 1;
             for (let i = 0; i < towerCount; i++) {
@@ -117,11 +118,11 @@ export class Level {
         }
 
         // Sentries: medium
-        // Similar to Towers
+        // * Level 3
         if (
-            (this.world.number === 3 && this.number >= 2) ||
-            (this.world.number === 4 && this.number >= 10) ||
-            (this.world.number === 5 && [3, 8, 11, 13, 15, 17, 19].indexOf(this.number) >= 0)
+            (this.world.number === 3 && [2, 4, 5, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [4, 5, 8, 11, 15].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [3, 7, 10, 15, 17, 19].indexOf(this.number) >= 0)
         ) {
             const sentryCount = 1;
             for (let i = 0; i < sentryCount; i++) {
@@ -130,19 +131,21 @@ export class Level {
         }
 
         // Chaser: medium
+        // * Level 4
         if (
-            (this.world.number === 4 && this.number >= 2) ||
-            (this.world.number === 5 && [4, 6, 10, 12, 16, 17, 19].indexOf(this.number) >= 0)
+            (this.world.number === 4 && [2, 4, 5, 8, 10, 11, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [4, 6, 10, 12, 15, 16, 17, 19].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Tanks: medium
+        // * Level 2
         if (
-            (this.world.number === 2 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 18) ||
-            (this.world.number === 4 && this.number >= 17) ||
-            (this.world.number === 5 && [5, 7, 9, 14, 18, 19].indexOf(this.number) >= 0)
+            (this.world.number <= 2 && [3, 4, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 3 && [2, 5, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [3, 7, 8, 18].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [2, 4, 6, 8, 10, 12, 13, 15, 16, 18, 19].indexOf(this.number) >= 0)
         ) {
             const tankCount = 1;
             for (let i = 0; i < tankCount; i++) {
@@ -151,16 +154,18 @@ export class Level {
         }
 
         // Heavies: very hard
+        // * Level 5
         if (
-            (this.world.number === 5 && [7, 16, 18].indexOf(this.number) >= 0)
+            (this.world.number === 5 && [5, 7, 9, 11, 12, 13, 14, 16, 18].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Turrets: very hard
+        // * Level 5
         if (
-            (this.world.number === 4 && this.number === 19) ||
-            (this.world.number === 5 && ([10, 17, 19].indexOf(this.number) >= 0))
+            (this.world.number === 4 && [5, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && ([6, 8, 10, 15, 17, 19].indexOf(this.number) >= 0))
         ) {
             const turrentCount = 1;
             for (let i = 0; i < turrentCount; i++) {

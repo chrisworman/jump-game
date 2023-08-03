@@ -265,6 +265,9 @@ export class Game {
     }
 
     handleLevelComplete() {
+        if (this.player.laserGun) {
+            this.player.laserGun.off();
+        }
         // Fade certain entities: all bombs and rockets, and all enemies if boss level
         this.enemies.forEach((x) => {
             if (
@@ -448,7 +451,6 @@ game.addGameObject(myGameObject)
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);
-            this.bullets.forEach((x) => x.render(this.renderContext));
             this.platforms.render(this.renderContext);
             this.enemies
                 .filter((x) => x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
@@ -456,6 +458,7 @@ game.addGameObject(myGameObject)
             this.enemies
                 .filter((x) => x.type === EnemyTypes.BIG_BOMB)
                 .forEach((x) => x.render(this.renderContext));
+            this.bullets.forEach((x) => x.render(this.renderContext));
             this.healthUpHearts.forEach((x) => x.render(this.renderContext));
         });
 
