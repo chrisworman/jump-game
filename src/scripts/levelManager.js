@@ -5,7 +5,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 import { World } from './world.js';
 
 export class LevelManager {
-    static LEVELS_PER_WORLD = 2;
+    static LEVELS_PER_WORLD = 20;
     static WORLD_COUNT = 5;
 
     constructor(game) {
@@ -65,8 +65,8 @@ export class LevelManager {
     }
 
     reset() {
-        this.levelNumber = 0;
-        this.worldNumber = 1;
+        this.levelNumber = 1;
+        this.worldNumber = 0;
         this.world = new World(
             this.game,
             this.worldNumber,

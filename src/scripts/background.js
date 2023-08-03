@@ -9,7 +9,8 @@ export class Background {
         this.movementFactor = 60 / Game.FPS; // TODO: extract to game
         this.offset = 0;
 
-        const worldNumber = game.level?.world?.number ?? 1;
+        const worldNumber = game.level?.world?.number || 1;
+        console.log(worldNumber);
         this.layers = [
             {
                 sprite: SpriteLibrary[`world${worldNumber}BackgroundLayer0`](),
@@ -33,7 +34,7 @@ export class Background {
                 x.sprite.filterManager.animate(
                     FilterManager.fadeInBrightnessAnimation(),
                     game.gameTime,
-                    1200
+                    1500
                 );
             });
         }
@@ -61,7 +62,7 @@ export class Background {
             x.sprite.filterManager.animate(
                 FilterManager.fadeOutBrightnessAnimation(),
                 this.game.gameTime,
-                1200
+                1500
             );
         });
     }
