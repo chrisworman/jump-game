@@ -23,12 +23,21 @@ export class Modal {
         $(this.element).fadeIn('slow');
     }
 
-    showEndGame(text, onAction) {
+    showEndGame(text, buttonText, onAction) {
         this.text.innerText = text;
-        this.button.innerText = `Restart ⏎`;
+        this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
         this.hideAllContent();
-        // TODO: show stats
+        // TODO: show end game stats
+        $(this.element).fadeIn('slow');
+    }
+
+    showWorldComplete(text, buttonText, onAction) {
+        this.text.innerText = text;
+        this.button.innerText = `${buttonText} ⏎`;
+        this.onAction = onAction;
+        this.hideAllContent();
+        // TODO: show end world stats
         $(this.element).fadeIn('slow');
     }
 

@@ -43,7 +43,7 @@ export class FilterManager {
             // https://developer.mozilla.org/en-US/docs/Web/CSS/filter
             const hueRotate = this.hueDegrees > 0 ? `hue-rotate(${this.hueDegrees}deg) ` : '';
             const invert = this.invertPercent > 0 ? `invert(${this.invertPercent}%) ` : '';
-            const opacity = this.opacityPercent < 100 ? `opacity(${this.opacityPercent}%) ` : '';
+            const opacity = this.opacityPercent <= 100 ? `opacity(${this.opacityPercent}%) ` : '';
             const blur = this.blurPixels > 0 ? `blur(${this.blurPixels}px) ` : '';
             const brightness =
                 this.brightnessPercent !== 100 ? `brightness(${this.brightnessPercent}%) ` : '';
@@ -64,6 +64,25 @@ export class FilterManager {
             fm.opacityPercent = 100 - 100 * amountDone;
         };
     }
+
+    static fadeInBrightnessAnimation() {
+        return (fm, amountDone) => {
+            fm.brightnessPercent = 100 * amountDone;
+        };
+    }
+
+    static fadeOutBrightnessAnimation() {
+        return (fm, amountDone) => {
+            fm.brightnessPercent = 100 - 100 * amountDone;
+        };
+    }
+
+    static fadeInAnimation() {
+        return (fm, amountDone) => {
+            fm.opacityPercent = 100 * amountDone;
+        };
+    }
+
 
     static fadeInAndOutAnimation() {
         return (fm, amountDone) => {

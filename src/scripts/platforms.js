@@ -1,5 +1,6 @@
 import { Game } from './game.js';
 import { GameState } from './gameState.js';
+import { FilterManager } from './filterManager.js';
 
 export class Platforms {
     static HEIGHT = 100;
@@ -31,6 +32,7 @@ export class Platforms {
             case GameState.GAME_BEAT:
             case GameState.BOSS_CELEBRATION:
             case GameState.WORLD_OUTRO:
+            case GameState.WORLD_WRAP_UP:
                 spriteIndex = 0;
                 for (let y = 0; y < totalHeight; y += Platforms.HEIGHT, spriteIndex++) {
                     this.currentSprites[spriteIndex % this.currentSprites.length].render(renderContext, 0, y);
@@ -55,6 +57,17 @@ export class Platforms {
                 }
                 break;
         }
+    }
+
+    fadeOut() {
+        console.log('platforms fade out');
+        this.currentSprites.forEach((x) => {
+            x.filterManager.animate(
+                FilterManager.fadeOutBrightnessAnimation(),
+                this.game.gameTime,
+                1200
+            );
+        });
     }
 
     handleLevelComplete(nextSprites) {

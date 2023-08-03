@@ -95,7 +95,9 @@ export class Level {
         // * Level 1
         if (
             (this.world.number === 1 && [2, 4, 5, 10, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 2 && [6, 8, 11, 12, 17].indexOf(this.number) >= 0) ||
             (this.world.number === 3 && [5, 7, 12, 17].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [3, 6, 13, 15, 18].indexOf(this.number) >= 0) ||
             (this.world.number === 5 && [3, 4, 5, 6, 9, 12, 13, 15, 17, 19].indexOf(this.number) >= 0)
         ) {
             const pounderCount = 1;
@@ -107,7 +109,7 @@ export class Level {
         // Towers: easy
         // * Level 2
         if (
-            (this.world.number <= 2 && [2, 4, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number <= 2 && [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
             (this.world.number === 4 && [3, 4, 7, 12, 17, 19].indexOf(this.number) >= 0) ||
             (this.world.number === 5 && [5, 7, 9, 14, 15, 18, 19].indexOf(this.number) >= 0)
         ) {
@@ -120,9 +122,9 @@ export class Level {
         // Sentries: medium
         // * Level 3
         if (
-            (this.world.number === 3 && [2, 4, 5, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
-            (this.world.number === 4 && [4, 5, 8, 11, 15].indexOf(this.number) >= 0) ||
-            (this.world.number === 5 && [3, 7, 10, 15, 17, 19].indexOf(this.number) >= 0)
+            (this.world.number === 3 && [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [4, 5, 7, 8, 10, 11, 15, 16, 18].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [3, 5, 7, 9, 10, 11, 15, 16, 17, 19].indexOf(this.number) >= 0)
         ) {
             const sentryCount = 1;
             for (let i = 0; i < sentryCount; i++) {
@@ -133,8 +135,9 @@ export class Level {
         // Chaser: medium
         // * Level 4
         if (
-            (this.world.number === 4 && [2, 4, 5, 8, 10, 11, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
-            (this.world.number === 5 && [4, 6, 10, 12, 15, 16, 17, 19].indexOf(this.number) >= 0)
+            (this.world.number === 3 && [6, 8, 12, 15, 16, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [4, 6, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
         }
@@ -142,10 +145,10 @@ export class Level {
         // Tanks: medium
         // * Level 2
         if (
-            (this.world.number <= 2 && [3, 4, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
-            (this.world.number === 3 && [2, 5, 18, 19].indexOf(this.number) >= 0) ||
-            (this.world.number === 4 && [3, 7, 8, 18].indexOf(this.number) >= 0) ||
-            (this.world.number === 5 && [2, 4, 6, 8, 10, 12, 13, 15, 16, 18, 19].indexOf(this.number) >= 0)
+            (this.world.number <= 2 && [3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 3 && [2, 5, 6, 7, 9, 11, 14, 15, 17, 18, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [3, 4, 6, 8, 9, 11, 12, 15, 17, 18].indexOf(this.number) >= 0) ||
+            (this.world.number === 5 && [2, 4, 5, 6, 8, 10, 12, 13, 15, 16, 18, 19].indexOf(this.number) >= 0)
         ) {
             const tankCount = 1;
             for (let i = 0; i < tankCount; i++) {
@@ -156,6 +159,7 @@ export class Level {
         // Heavies: very hard
         // * Level 5
         if (
+            (this.world.number === 4 && [17, 18].indexOf(this.number) >= 0) ||
             (this.world.number === 5 && [5, 7, 9, 11, 12, 13, 14, 16, 18].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
@@ -164,7 +168,7 @@ export class Level {
         // Turrets: very hard
         // * Level 5
         if (
-            (this.world.number === 4 && [5, 19].indexOf(this.number) >= 0) ||
+            (this.world.number === 4 && [17, 19].indexOf(this.number) >= 0) ||
             (this.world.number === 5 && ([6, 8, 10, 15, 17, 19].indexOf(this.number) >= 0))
         ) {
             const turrentCount = 1;

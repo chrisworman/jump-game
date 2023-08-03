@@ -158,7 +158,8 @@ export class Player extends Entity {
         if (!this.mover.dropping && !this.mover.jumping) {
             if (this.isOnTopPlatform()) {
                 this.mover.stop();
-                this.game.transitionToNextLevel();
+                // this.game.transitionToNextLevel();
+                this.game.handleWorldOutroComplete();
             } else {
                 this.game.audioManager.play(AudioManager.SOUNDS.PLAYER_JUMP);
                 this.mover.jump(Player.VERTICAL_SPEED);

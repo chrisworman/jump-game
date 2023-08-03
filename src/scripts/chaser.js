@@ -33,7 +33,7 @@ export class Chaser extends Enemy {
 
     update() {
         super.update();
-        if (this.isDead || this.game.state !== GameState.PLAYING) {
+        if (this.isDead) {
             return;
         }
 

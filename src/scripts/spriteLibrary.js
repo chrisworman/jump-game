@@ -592,16 +592,74 @@ export class SpriteLibrary {
         );
     }
 
-    static backgroundLayer0() {
-        return new Sprite('images/bg-layer-0.png');
+    // World 1
+
+    static world1BackgroundLayer0() {
+        return new Sprite('images/level-1-bg-layer-0-fuzzy.png');
     }
 
-    static backgroundLayer1() {
-        return new Sprite('images/bg-layer-1.png');
+    static world1BackgroundLayer1() {
+        return new Sprite('images/level-1-bg-layer-1.png');
     }
 
-    static backgroundLayer2() {
-        return new Sprite('images/bg-layer-2.png');
+    static world1BackgroundLayer2() {
+        return new Sprite('images/level-1-bg-layer-2.png');
+    }
+
+    // World 2
+
+    static world2BackgroundLayer0() {
+        return new Sprite('images/level-2-bg-layer-0-fuzzy.png');
+    }
+
+    static world2BackgroundLayer1() {
+        return new Sprite('images/level-2-bg-layer-1.png');
+    }
+
+    static world2BackgroundLayer2() {
+        return new Sprite('images/level-2-bg-layer-2.png');
+    }
+
+    // World 3
+
+    static world3BackgroundLayer0() {
+        return new Sprite('images/level-3-bg-layer-0-fuzzy.png');
+    }
+
+    static world3BackgroundLayer1() {
+        return new Sprite('images/level-3-bg-layer-1.png');
+    }
+
+    static world3BackgroundLayer2() {
+        return new Sprite('images/level-3-bg-layer-2.png');
+    }
+
+    // World 4
+
+    static world4BackgroundLayer0() {
+        return new Sprite('images/level-4-bg-layer-0-fuzzy.png');
+    }
+
+    static world4BackgroundLayer1() {
+        return new Sprite('images/level-4-bg-layer-1.png');
+    }
+
+    static world4BackgroundLayer2() {
+        return new Sprite('images/level-4-bg-layer-2.png');
+    }
+
+    // World 5
+
+    static world5BackgroundLayer0() {
+        return new Sprite('images/level-5-bg-layer-0-fuzzy.png');
+    }
+
+    static world5BackgroundLayer1() {
+        return new Sprite('images/level-5-bg-layer-1.png');
+    }
+
+    static world5BackgroundLayer2() {
+        return new Sprite('images/level-5-bg-layer-2.png');
     }
 
     static healthUpHeart() {

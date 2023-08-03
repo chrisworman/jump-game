@@ -18,7 +18,7 @@ import { Enemy } from './enemy.js';
 import { Modal } from './modal.js';
 
 export class Game {
-    static LEVEL_SCROLL_SPEED = 7;
+    static LEVEL_SCROLL_SPEED = 6.5;
     static MAX_PLAYER_HEALTH = 3;
     static FPS = 60;
     static TIME_STEP = 1000 / Game.FPS;
@@ -48,8 +48,8 @@ export class Game {
             this.handleWindowResize();
         });
 
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden){
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
                 this.pause();
             } else {
                 this.resume();
@@ -88,6 +88,7 @@ export class Game {
         this.lastUpdateTime = null;
         this.levelManager.reset();
         this.level = this.levelManager.getNextLevel();
+        this.background = new Background(this, true);
         // TODO: this is a hack to handle restarting from beating the game
         if (this.soundHandler) {
             this.soundHandler.stop();
@@ -247,7 +248,7 @@ export class Game {
 
         // TODO: play game over song
         // this.soundHandler = this.audioManager.play(AudioManager.SOUNDS.GAME_OVER);
-        
+
         this.filterManager.animate(
             (fm, amountDone) => {
                 fm.blurPixels = amountDone * 2;
@@ -256,11 +257,11 @@ export class Game {
             this.gameTime,
             2000
         );
-        
-        this.modal.showEndGame('Game Over', () => {
+
+        this.modal.showEndGame('Game Over', 'Play Again', () => {
             this.startNewGame();
         });
-        
+
         this.state = GameState.GAME_OVER;
     }
 
@@ -268,12 +269,15 @@ export class Game {
         if (this.player.laserGun) {
             this.player.laserGun.off();
         }
+
         // Fade certain entities: all bombs and rockets, and all enemies if boss level
         this.enemies.forEach((x) => {
             if (
                 !x.isDead &&
                 (this.isBossLevel() || x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
             ) {
+                x.isDead = true;
+                x.isShootable = false;
                 const deathAnimation = FilterManager.blurFadeOutAnimation();
                 x.sprites.forEach((y) =>
                     y.filterManager.animate(deathAnimation, this.gameTime, Enemy.DEAD_FADE_OUT_MS)
@@ -308,6 +312,15 @@ export class Game {
         this.transitionToNextLevel();
     }
 
+    handleWorldOutroComplete() {
+        this.background.fadeOut();
+        this.platforms.fadeOut();
+        this.modal.showWorldComplete(`World ${this.level.world.number} Complete`, 'Continue', () => {
+            this.transitionToNextLevel();
+        });
+        this.state = GameState.WORLD_WRAP_UP;
+    }
+
     transitionToNextLevel() {
         const justBeatBoss = this.isBossLevel();
         this.level = this.levelManager.getNextLevel();
@@ -315,7 +328,7 @@ export class Game {
         // Beat the game??
         if (!this.level) {
             this.songHandler = this.audioManager.play(AudioManager.SOUNDS.FINALE_SONG);
-            this.modal.showEndGame('You Beat the Game', () => {
+            this.modal.showEndGame('Game Complete!', 'Restart', () => {
                 this.startNewGame();
             });
             this.filterManager.animate(
@@ -337,6 +350,7 @@ export class Game {
             this.audioManager.play(AudioManager.SOUNDS.START_BOSS_LEVEL);
         } else if (justBeatBoss) {
             this.level.world.playSong();
+            this.background = new Background(this, true);
         }
 
         this.hud.displayLevel(this.level);
@@ -417,7 +431,7 @@ export class Game {
         this.isPaused = false;
     }
 
-/*
+    /*
 
 TODO: Consider indexed tagging system for "renderables" or perhaps "entities"
 
