@@ -4,4 +4,4 @@
 
 https://chrisworman.github.io/jump-game/
 
-<img width="629" alt="Screenshot 2023-08-01 at 8 47 52 PM" src="https://github.com/chrisworman/jump-game/assets/5204921/3eaffa97-16f0-4bba-ac77-7fc97adb61e7">
+![Screenshot 2023-08-03 at 2 52 46 PM](https://github.com/chrisworman/jump-game/assets/5204921/d20d2824-3ccb-4fa8-bca9-91c6baf05212)
