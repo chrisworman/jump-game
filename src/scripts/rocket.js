@@ -65,6 +65,6 @@ export class Rocket extends Enemy {
         } else {
             game.enemies.push(new Rocket(game, x, y, velocity));
         }
-        game.audioManager.play(AudioManager.AUDIO_FILES.BOMB); // TODO: rocket specific audio?
+        game.audioManager.play(AudioManager.SOUNDS.BOMB); // TODO: rocket specific audio?
     }
 }

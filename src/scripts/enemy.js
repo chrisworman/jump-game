@@ -60,7 +60,7 @@ export class Enemy extends Entity {
             return false;
         }
         if (this.isShootable) {
-            this.game.audioManager.play(AudioManager.AUDIO_FILES.ENEMY_HIT);
+            this.game.audioManager.play(AudioManager.SOUNDS.ENEMY_HIT);
             this.health = Math.max(0, this.health - 1);
             this.isDead = this.health === 0;
             if (this.isDead) {

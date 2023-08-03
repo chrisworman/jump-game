@@ -39,7 +39,7 @@ export class HealthUpHeart extends Entity {
     }
 
     static spawn(game) {
-        game.audioManager.play(AudioManager.AUDIO_FILES.HEALTH_UP);
+        game.audioManager.play(AudioManager.SOUNDS.HEALTH_UP);
         game.healthUpHearts.push(
             new HealthUpHeart(
                 game,

@@ -70,7 +70,7 @@ export class Player extends Entity {
                         break;
                     }
                     this.game.shake();
-                    this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_HIT);
+                    this.game.audioManager.play(AudioManager.SOUNDS.PLAYER_HIT);
                     this.setHealth(this.health - 1);
                     break;
                 }
@@ -90,7 +90,7 @@ export class Player extends Entity {
             const now = this.game.gameTime;
             if (!this.lastShootTime || now - this.lastShootTime >= Player.SHOOT_DELAY_MS) {
                 // Time to shoot
-                this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_SHOOT);
+                this.game.audioManager.play(AudioManager.SOUNDS.PLAYER_SHOOT);
                 Bullet.spawn(this.game);
                 this.lastShootTime = now;
             }
@@ -110,7 +110,7 @@ export class Player extends Entity {
 
         // React to user jump
         if (!this.mover.dropping && !this.mover.jumping && this.game.userControls.jump) {
-            this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
+            this.game.audioManager.play(AudioManager.SOUNDS.PLAYER_JUMP);
             this.mover.jump(Player.VERTICAL_SPEED);
             this.sprites.forEach((x) => x.reset());
         }
@@ -160,7 +160,7 @@ export class Player extends Entity {
                 this.mover.stop();
                 this.game.transitionToNextLevel();
             } else {
-                this.game.audioManager.play(AudioManager.AUDIO_FILES.PLAYER_JUMP);
+                this.game.audioManager.play(AudioManager.SOUNDS.PLAYER_JUMP);
                 this.mover.jump(Player.VERTICAL_SPEED);
                 this.sprites.forEach((x) => x.reset());
             }

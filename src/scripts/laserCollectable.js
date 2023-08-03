@@ -28,7 +28,7 @@ export class LaserCollectable extends Collectable {
     }
 
     onCollected() {
-        this.game.audioManager.play(AudioManager.AUDIO_FILES.LASER_COLLECTED);
+        this.game.audioManager.play(AudioManager.SOUNDS.LASER_COLLECTED);
         this.sprite.filterManager.animate(
             FilterManager.blurFadeOutAnimation(),
             this.game.gameTime,

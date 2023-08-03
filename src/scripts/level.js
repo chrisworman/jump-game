@@ -94,10 +94,10 @@ export class Level {
         // Pounder: easy
         if (
             (this.world.number === 1 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 3) ||
-            (this.world.number === 5 && this.number >= 10)
+            (this.world.number === 3 && this.number >= 8) ||
+            (this.world.number === 5 && this.number >= 16)
         ) {
-            const pounderCount = this.world.number === 5 && this.number >= 15 ? 2 : 1;
+            const pounderCount = 1;
             for (let i = 0; i < pounderCount; i++) {
                 initialEnemies.push(this.pounderSpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -107,19 +107,23 @@ export class Level {
         // Similar to Sentries
         if (
             (this.world.number <= 2 && this.number >= 2) ||
-            (this.world.number === 4 && this.number >= 10) ||
+            (this.world.number === 4 && this.number >= 17) ||
             (this.world.number === 5 && this.number >= 5)
         ) {
-            const towerCount = this.world.number === 5 && this.number >= 17 ? 2 : 1;
+            const towerCount = 1;
             for (let i = 0; i < towerCount; i++) {
                 initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 
-        // Sentries: medium (hard in pairs)
+        // Sentries: medium
         // Similar to Towers
-        if (this.world.number >= 3 && this.number >= 2) {
-            const sentryCount = this.world.number >= 4 && this.number >= 10 ? 2 : 1;
+        if (
+            (this.world.number === 3 && this.number >= 2) ||
+            (this.world.number === 4 && this.number >= 10) ||
+            (this.world.number === 5 && [3, 8, 11, 13, 15, 17, 19].indexOf(this.number) >= 0)
+        ) {
+            const sentryCount = 1;
             for (let i = 0; i < sentryCount; i++) {
                 initialEnemies.push(this.sentrySpawner.spawnWithoutIntersecting(initialEnemies));
             }
@@ -128,7 +132,7 @@ export class Level {
         // Chaser: medium
         if (
             (this.world.number === 4 && this.number >= 2) ||
-            (this.world.number === 5 && this.number >= 1)
+            (this.world.number === 5 && [4, 6, 10, 12, 16, 17, 19].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
         }
@@ -136,27 +140,29 @@ export class Level {
         // Tanks: medium
         if (
             (this.world.number === 2 && this.number >= 2) ||
-            (this.world.number === 3 && this.number >= 3) ||
-            (this.world.number === 4 && this.number >= 3) ||
-            (this.world.number === 5 && this.number >= 2)
+            (this.world.number === 3 && this.number >= 18) ||
+            (this.world.number === 4 && this.number >= 17) ||
+            (this.world.number === 5 && [5, 7, 9, 14, 18, 19].indexOf(this.number) >= 0)
         ) {
-            const tankCount = this.world.number === 5 && this.number >= 18 ? 2 : 1;
+            const tankCount = 1;
             for (let i = 0; i < tankCount; i++) {
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 
-        // Heavies: hard
+        // Heavies: very hard
         if (
-            (this.world.number === 3 && this.number >= 16) ||
-            (this.world.number === 5 && this.number >= 8)
+            (this.world.number === 5 && [7, 16, 18].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
         }
 
         // Turrets: very hard
-        if (this.world.number >= 4 && this.number >= 15) {
-            const turrentCount = this.world.number === 5 && this.number === 19 ? 2 : 1;
+        if (
+            (this.world.number === 4 && this.number === 19) ||
+            (this.world.number === 5 && ([10, 17, 19].indexOf(this.number) >= 0))
+        ) {
+            const turrentCount = 1;
             for (let i = 0; i < turrentCount; i++) {
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
             }

@@ -30,7 +30,7 @@ export class BigBomb extends Enemy {
     }
 
     static spawn(game) {
-        game.audioManager.play(AudioManager.AUDIO_FILES.BIG_BOMB);
+        game.audioManager.play(AudioManager.SOUNDS.BIG_BOMB);
         return new BigBomb(
             game,
             RandomGenerator.randomIntBetween(

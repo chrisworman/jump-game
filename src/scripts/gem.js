@@ -20,7 +20,7 @@ export class Gem extends Collectable {
     onCollected() {
         this.sprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 150);
         this.game.incrementGemCount();
-        this.game.audioManager.play(AudioManager.AUDIO_FILES.GEM_COLLECTED);
+        this.game.audioManager.play(AudioManager.SOUNDS.GEM_COLLECTED);
     }
 
     render(renderContext) {

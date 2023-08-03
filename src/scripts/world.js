@@ -10,27 +10,34 @@ export class World {
         this.bossSong = bossSong;
         this.bossCelebrationSong = bossCelebrationSong;
         this.title = `World ${number}`;
+        this.songHandler = null;
     }
 
     playSong() {
-        this.game.audioManager.play(this.song, true);
+        if (this.songHandler) {
+            this.songHandler.stop();
+        }
+        this.songHandler = this.game.audioManager.play(this.song);
     }
 
     playBossSong() {
-        this.game.audioManager.play(this.bossSong, true);
+        if (this.songHandler) {
+            this.songHandler.stop();
+        }
+        this.songHandler = this.game.audioManager.play(this.bossSong);
     }
 
     playBossCelebrationSongThen(then) {
-        this.game.audioManager.setOneShotOnEnded(then);
-        this.game.audioManager.play(this.bossCelebrationSong);
+        if (this.songHandler) {
+            this.songHandler.stop();
+        }
+        this.songHandler = this.game.audioManager.play(this.bossCelebrationSong, then);
     }
 
     stopSong() {
-        this.game.audioManager.stop(this.song);
-    }
-
-    stopBossSong() {
-        this.game.audioManager.stop(this.bossSong);
+        if (this.songHandler) {
+            this.songHandler.stop();
+        }
     }
 
     getBoss() {

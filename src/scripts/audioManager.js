@@ -1,16 +1,21 @@
+import { SoundHandler } from './soundHandler.js';
+
 export class AudioManager {
-    static AUDIO_FILES = {
+    static SOUNDS = {
         BACKGROUND_SONG: {
             url: 'sounds/piano-arp-live-update.aac',
             volume: 0.07,
+            loop: true,
         },
         BOSS_SONG: {
             url: 'sounds/desert-trail.aac',
             volume: 0.35,
+            loop: true,
         },
         FINALE_SONG: {
             url: 'sounds/stranger-mix-2.aac',
             volume: 0.2,
+            loop: true,
         },
         BOSS_CELEBRATION_SONG: {
             url: 'sounds/boss-celebration.aac',
@@ -23,6 +28,7 @@ export class AudioManager {
         GEM_COLLECTED: {
             url: 'sounds/collectable.aac',
             volume: 0.6,
+            preloadCount: 10,
         },
         BIG_BOMB: {
             url: 'sounds/fire-ball.aac',
@@ -35,10 +41,12 @@ export class AudioManager {
         PLAYER_JUMP: {
             url: 'sounds/jump.aac',
             volume: 0.08,
+            preloadCount: 5,
         },
         PLAYER_SHOOT: {
             url: 'sounds/shoot.aac',
             volume: 0.16,
+            preloadCount: 10,
         },
         LASER_COLLECTED: {
             url: 'sounds/laser-collected.aac',
@@ -51,6 +59,7 @@ export class AudioManager {
         BOMB: {
             url: 'sounds/bomb.aac',
             volume: 0.04,
+            preloadCount: 20,
         },
         PLAYER_HIT: {
             url: 'sounds/player-hit.aac',
@@ -59,6 +68,7 @@ export class AudioManager {
         ENEMY_HIT: {
             url: 'sounds/enemy-hit.aac',
             volume: 0.3,
+            preloadCount: 20,
         },
         START_BOSS_LEVEL: {
             url: 'sounds/start-boss-level.aac',
@@ -97,93 +107,46 @@ export class AudioManager {
 
     constructor() {
         this.isMuted = false;
-        this.loadedAudioFiles = new Map();
+        this.soundHandlers = new Map();
         this.oneShotOnEnded = null;
-        Object.keys(AudioManager.AUDIO_FILES).forEach((audioFile) => {
-            this.load(AudioManager.AUDIO_FILES[audioFile]);
+        Object.keys(AudioManager.SOUNDS).forEach((sound) => {
+            this.preloadHandlers(AudioManager.SOUNDS[sound]);
         });
     }
 
-    load(audioFile) {
-        const audioElement = new Audio();
-        audioElement.volume = audioFile.volume;
-        const sound = {
-            audioElement: audioElement,
-            isLoaded: false,
-            savedVolume: audioElement.volume,
-        };
-        this.loadedAudioFiles.set(audioFile.url, sound);
-        audioElement.addEventListener('loadeddata', () => {
-            if (audioElement.readyState >= 2) {
-                console.log(`AudioManager :: Loaded ${audioFile.url}`);
-                sound.isLoaded = true;
-                if (sound.playOnLoaded) {
-                    audioElement.play();
-                }
-                sound.playOnLoaded = false;
-            }
-        });
-        const sourceElement = document.createElement('source');
-        sourceElement.type = 'audio/mpeg';
-        sourceElement.src = audioFile.url;
-        audioElement.appendChild(sourceElement);
+    preloadHandlers(sound) {
+        const handlerCount = sound.preloadCount ?? 1;
+        const handlers = [];
+        for (let i = 0; i < handlerCount; i++) {
+            handlers.push(new SoundHandler(sound));
+        }
+        this.soundHandlers.set(sound.url, handlers);
     }
 
-    play(audioFile, loop = false) {
-        const sound = this.loadedAudioFiles.get(audioFile.url);
-        if (!sound) {
-            console.error(`AudioManager :: Not found ${audioFile.url}`);
-            return;
+    play(sound, onEnded = null) {
+        const handlers = this.soundHandlers.get(sound.url);
+        const availableHandler = handlers && handlers.length ? handlers.find((x) => x.isLoaded && !x.isPlaying) : null;
+        if (!availableHandler) {
+            const newHandler = new SoundHandler(sound, this.isMuted, true, onEnded);
+            this.soundHandlers.set(sound.url, [newHandler]);
+            return newHandler;
         }
 
-        if (sound.isLoaded) {
-            if (this.oneShotOnEnded) {
-                const onEnded = this.oneShotOnEnded;
-                this.oneShotOnEnded = null;
-                sound.audioElement.addEventListener('ended', onEnded, {
-                    once: true,
-                });
-            }
-            sound.audioElement.pause();
-            sound.audioElement.currentTime = 0;
-            sound.audioElement.loop = loop;
-            sound.audioElement.play();
-        } else {
-            sound.playOnLoaded = true;
-        }
-    }
-
-    stop(audioFile) {
-        const sound = this.loadedAudioFiles.get(audioFile.url);
-        if (!sound) {
-            console.error(`AudioManager :: Not found ${audioFile.url}`);
-            return;
-        }
-
-        if (sound.isLoaded) {
-            sound.audioElement.pause();
-            sound.audioElement.currentTime = 0;
-        } else {
-            sound.playOnLoaded = false;
-        }
+        availableHandler.play(onEnded);
+        return availableHandler;
     }
 
     mute() {
-        Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
-            sound.savedVolume = sound.audioElement.volume;
-            sound.audioElement.volume = 0;
+        this.soundHandlers.forEach((handlers) => {
+            handlers.forEach((x) => x.mute());
         });
         this.isMuted = true;
     }
 
     unmute() {
-        Array.from(this.loadedAudioFiles.values()).forEach((sound) => {
-            sound.audioElement.volume = sound.savedVolume;
+        this.soundHandlers.forEach((handlers) => {
+            handlers.forEach((x) => x.unmute());
         });
         this.isMuted = false;
-    }
-
-    setOneShotOnEnded(onEnded) {
-        this.oneShotOnEnded = onEnded;
     }
 }

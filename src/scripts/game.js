@@ -30,7 +30,8 @@ export class Game {
     static ON_SCREEN_CONTROLS_HEIGHT = 100;
 
     constructor() {
-        this.gameTime = performance.now();
+        this.isPaused = false;
+        this.gameTime = 0; //performance.now();
         this.state = GameState.INITIALIZING;
 
         // Prioritize loading assets
@@ -45,6 +46,14 @@ export class Game {
         this.handleWindowResize();
         window.addEventListener('resize', () => {
             this.handleWindowResize();
+        });
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden){
+                this.pause();
+            } else {
+                this.resume();
+            }
         });
 
         this.canvas = document.createElement('canvas');
@@ -67,7 +76,7 @@ export class Game {
 
         this.setGemCount(0);
         this.totalGemCount = 0;
-        this.modal.show('Pixel Jump', 'Start', () => {
+        this.modal.showManual('Pixel Jump', 'Start', () => {
             this.startNewGame();
         });
         this.gameLoop();
@@ -75,8 +84,15 @@ export class Game {
 
     startNewGame() {
         // Update state before UI
+        this.gameTime = 0;
+        this.lastUpdateTime = null;
         this.levelManager.reset();
         this.level = this.levelManager.getNextLevel();
+        // TODO: this is a hack to handle restarting from beating the game
+        if (this.soundHandler) {
+            this.soundHandler.stop();
+            this.soundHandler = null;
+        }
         this.level.world.playSong();
         this.hud.displayLevel(this.level);
         this.player.reset();
@@ -107,16 +123,19 @@ export class Game {
     }
 
     gameLoop() {
-        if (this.gameTime === null) {
-            this.gameTime = performance.now();
-        }
-        const currentTime = performance.now();
-        let elapsedTime = currentTime - this.gameTime;
+        if (!this.isPaused) {
+            if (this.lastUpdateTime === null) {
+                this.lastUpdateTime = performance.now();
+            }
+            const currentTime = performance.now();
+            let elapsedTime = currentTime - this.lastUpdateTime;
 
-        while (elapsedTime > Game.TIME_STEP) {
-            this.update();
-            elapsedTime -= Game.TIME_STEP;
-            this.gameTime += Game.TIME_STEP;
+            while (elapsedTime > Game.TIME_STEP) {
+                this.update();
+                elapsedTime -= Game.TIME_STEP;
+                this.gameTime += Game.TIME_STEP;
+                this.lastUpdateTime += Game.TIME_STEP;
+            }
         }
 
         this.render();
@@ -222,10 +241,12 @@ export class Game {
     handlePlayerDead() {
         // Stop audio
         this.level.world.stopSong();
-        this.level.world.stopBossSong();
         if (this.player.laserGun) {
             this.player.laserGun.off();
         }
+
+        // TODO: play game over song
+        // this.soundHandler = this.audioManager.play(AudioManager.SOUNDS.GAME_OVER);
         
         this.filterManager.animate(
             (fm, amountDone) => {
@@ -236,7 +257,7 @@ export class Game {
             2000
         );
         
-        this.modal.show('Game Over', 'Restart', () => {
+        this.modal.showEndGame('Game Over', () => {
             this.startNewGame();
         });
         
@@ -267,10 +288,8 @@ export class Game {
 
         const justBeatBoss = this.isBossLevel();
         if (justBeatBoss) {
-            this.level.world.stopBossSong();
-            this.audioManager.play(AudioManager.AUDIO_FILES.BOSS_DEAD);
+            this.audioManager.play(AudioManager.SOUNDS.BOSS_DEAD);
             this.level.world.playBossCelebrationSongThen(() => {
-                // TODO: consider this.player.prepareForWorldOutro() or something similar
                 this.player.mover.setCollideWith({
                     ceiling: false, // allow the player to jump to the top
                     walls: true,
@@ -292,8 +311,8 @@ export class Game {
 
         // Beat the game??
         if (!this.level) {
-            this.audioManager.play(AudioManager.AUDIO_FILES.FINALE_SONG, true);
-            this.modal.show('You Beat the Game', 'Restart', () => {
+            this.songHandler = this.audioManager.play(AudioManager.SOUNDS.FINALE_SONG);
+            this.modal.showEndGame('You Beat the Game', () => {
                 this.startNewGame();
             });
             this.filterManager.animate(
@@ -312,7 +331,7 @@ export class Game {
         if (this.level.boss) {
             this.level.world.stopSong();
             this.level.world.playBossSong();
-            this.audioManager.play(AudioManager.AUDIO_FILES.START_BOSS_LEVEL);
+            this.audioManager.play(AudioManager.SOUNDS.START_BOSS_LEVEL);
         } else if (justBeatBoss) {
             this.level.world.playSong();
         }
@@ -378,6 +397,36 @@ export class Game {
         this.onScreenControls.style.width = `${newWidth}px`;
         this.onScreenControls.style.display = isMobile ? 'flex' : 'none';
     }
+
+    pause() {
+        // TODO: pause audio?
+        this.wasMuted = this.audioManager.isMuted;
+        this.audioManager.mute();
+        this.isPaused = true;
+    }
+
+    resume() {
+        // TODO: resume audio?
+        if (!this.wasMuted) {
+            this.audioManager.unmute();
+        }
+        this.lastUpdateTime = null;
+        this.isPaused = false;
+    }
+
+/*
+
+TODO: Consider indexed tagging system for "renderables" or perhaps "entities"
+
+export class MyGameObject extends GameObject {
+    constructor() {
+        super(['enemy-type:tower', 'render-layer:1']);
+    }
+}
+
+game.addGameObject(myGameObject)
+
+*/
 
     render() {
         const ctx = this.renderContext.getCanvasContext();

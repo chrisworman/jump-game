@@ -17,6 +17,7 @@ export class LaserGun extends Entity {
         );
         this.sprite = SpriteLibrary.laserBeam();
         this.isOn = false;
+        this.soundHandler = null;
     }
 
     update() {
@@ -38,7 +39,7 @@ export class LaserGun extends Entity {
 
             // Start the audio if necessary
             if (!this.isOn) {
-                this.game.audioManager.play(AudioManager.AUDIO_FILES.LASER_GUN);
+                this.soundHandler = this.game.audioManager.play(AudioManager.SOUNDS.LASER_GUN);
             }
 
             this.sprite.filterManager.hueDegrees = (Math.sin(0.006 * this.game.gameTime) + 1.0) / 2.0 * 180;
@@ -52,7 +53,9 @@ export class LaserGun extends Entity {
     }
 
     off() {
-        this.game.audioManager.stop(AudioManager.AUDIO_FILES.LASER_GUN);
+        if (this.soundHandler) {
+            this.soundHandler.stop();
+        }
         this.isOn = false;
     }
 

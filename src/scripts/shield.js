@@ -124,7 +124,7 @@ export class Shield extends Collectable {
         this.game.hud.displayShield(this.lastTimeRemainingSecs);
         this.game.collectables = this.game.collectables.filter((x) => x !== this);
         this.game.level.world.stopSong();
-        this.game.audioManager.play(AudioManager.AUDIO_FILES.SHIELD_SONG);
+        this.game.audioManager.play(AudioManager.SOUNDS.SHIELD_SONG);
     }
 
     onHitEnemy(enemy) {

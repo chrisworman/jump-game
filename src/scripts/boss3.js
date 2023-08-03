@@ -97,7 +97,7 @@ export class Boss3 extends Enemy {
     handleShot() {
         const wasShot = super.handleShot();
         if (wasShot && !this.isDead) {
-            this.game.audioManager.play(AudioManager.AUDIO_FILES[`BOSS_3_SHOT_${this.health}`]);
+            this.game.audioManager.play(AudioManager.SOUNDS[`BOSS_3_SHOT_${this.health}`]);
         }
     }
 

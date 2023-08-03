@@ -15,9 +15,9 @@ export class LevelManager {
         this.world = new World(
             game,
             this.worldNumber,
-            AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-            AudioManager.AUDIO_FILES.BOSS_SONG,
-            AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
+            AudioManager.SOUNDS.BACKGROUND_SONG,
+            AudioManager.SOUNDS.BOSS_SONG,
+            AudioManager.SOUNDS.BOSS_CELEBRATION_SONG
         );
     }
 
@@ -37,9 +37,9 @@ export class LevelManager {
             this.world = new World(
                 this.game,
                 this.worldNumber,
-                AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-                AudioManager.AUDIO_FILES.BOSS_SONG,
-                AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
+                AudioManager.SOUNDS.BACKGROUND_SONG,
+                AudioManager.SOUNDS.BOSS_SONG,
+                AudioManager.SOUNDS.BOSS_CELEBRATION_SONG
             );
         }
 
@@ -70,9 +70,9 @@ export class LevelManager {
         this.world = new World(
             this.game,
             this.worldNumber,
-            AudioManager.AUDIO_FILES.BACKGROUND_SONG,
-            AudioManager.AUDIO_FILES.BOSS_SONG,
-            AudioManager.AUDIO_FILES.BOSS_CELEBRATION_SONG
+            AudioManager.SOUNDS.BACKGROUND_SONG,
+            AudioManager.SOUNDS.BOSS_SONG,
+            AudioManager.SOUNDS.BOSS_CELEBRATION_SONG
         );
     }
 }

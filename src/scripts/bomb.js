@@ -71,7 +71,7 @@ export class Bomb extends Enemy {
             spawned = new Bomb(game, x, y, velocity);
             game.enemies.push(spawned);
         }
-        game.audioManager.play(AudioManager.AUDIO_FILES.BOMB);
+        game.audioManager.play(AudioManager.SOUNDS.BOMB);
         return spawned;
     }
 }
