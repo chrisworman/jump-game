@@ -13,4 +13,6 @@ export class EnemyTypes {
     static SENTRY = 'SENTRY';
     static DUMPER = 'DUMPER';
     static POPPER = 'POPPER';
+    static BOMBER = 'BOMBER';
+    static ZAMBONEY = 'ZAMBONEY';
 }

@@ -14,6 +14,8 @@ import { Chaser } from './chaser.js';
 import { Sentry } from './sentry.js';
 import { Dumper } from './dumper.js';
 import { Popper } from './popper.js';
+import { Bomber } from './bomber.js';
+import { Zamboney } from './zamboney.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -61,6 +63,12 @@ export class Level {
         });
         this.popperSpawner = new Spawner(() => {
             return Popper.spawn(game);
+        });
+        this.bomberSpawner = new Spawner(() => {
+            return Bomber.spawn(game);
+        });
+        this.zamboneySpawner = new Spawner(() => {
+            return Zamboney.spawn(game);
         });
     }
 
@@ -141,7 +149,7 @@ export class Level {
         }
 
         // Dumper: ??
-        if (true) {
+        if (false) {
             const dumperCount = 1;
             for (let i = 0; i < dumperCount; i++) {
                 initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
@@ -182,10 +190,25 @@ export class Level {
         }
 
         // Popper
-        if (true) {
+        if (false) {
             const popperCount = 1;
             for (let i = 0; i < popperCount; i++) {
                 initialEnemies.push(this.popperSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        if (true) {
+            const zamboneyCount = 1;
+            for (let i = 0; i < zamboneyCount; i++) {
+                initialEnemies.push(this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        // Bomber
+        if (true) {
+            const bomberCount = 1;
+            for (let i = 0; i < bomberCount; i++) {
+                initialEnemies.push(this.bomberSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 

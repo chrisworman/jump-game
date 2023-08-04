@@ -13,7 +13,7 @@ export class Heavy extends Enemy {
     static SPEED = 0.8;
     static RECOVERY_TIME_MS = 3000;
 
-    constructor(game, x, y, currentSprite) {
+    constructor(game, x, y, spriteIdle) {
         super(
             game,
             x,
@@ -21,7 +21,7 @@ export class Heavy extends Enemy {
             SpriteLibrary.SIZES.HEAVY.width,
             SpriteLibrary.SIZES.HEAVY.height,
             EnemyTypes.HEAVY,
-            currentSprite,
+            spriteIdle,
             true,
             Heavy.HEALTH
         );
@@ -50,18 +50,9 @@ export class Heavy extends Enemy {
             return;
         }
 
-        if (this.game.state === GameState.PLAYING) {
-            // Done recovering?
-            if (
-                this.recovering &&
-                this.game.gameTime - this.recoveringStartTime > Heavy.RECOVERY_TIME_MS
-            ) {
-                this.recovering = false;
-                this.recoveringStartTime = null;
-                this.sprites.forEach((x) => x.filterManager.reset());
-            }
+        this.mover.update();
 
-            this.mover.update();
+        if (this.game.state === GameState.PLAYING) {
             this.emitter.update();
         }
     }

@@ -83,6 +83,10 @@ export class SpriteLibrary {
             width: 76,
             height: 48,
         },
+        BOMBER: {
+            width: 76,
+            height: 36,
+        },
         CHASER: {
             width: 32,
             height: 32,
@@ -97,6 +101,10 @@ export class SpriteLibrary {
         },
         POPPER: {
             width: 48,
+            height: 64,
+        },
+        ZAMBONEY: {
+            width: 64,
             height: 64,
         },
     };
@@ -238,6 +246,31 @@ export class SpriteLibrary {
         );
     }
 
+    static zamboneyRight() {
+        return new AnimatedSprite(
+            'images/zamboney.png',
+            SpriteLibrary.SIZES.ZAMBONEY.width,
+            SpriteLibrary.SIZES.ZAMBONEY.height,
+            0,
+            3,
+            6,
+            true
+        );
+    }
+
+    static zamboneyLeft() {
+        return new AnimatedSprite(
+            'images/zamboney.png',
+            SpriteLibrary.SIZES.ZAMBONEY.width,
+            SpriteLibrary.SIZES.ZAMBONEY.height,
+            0,
+            3,
+            6,
+            true,
+            SpriteLibrary.SIZES.ZAMBONEY.width * 3
+        );
+    }
+
     static turretIdle() {
         return new AnimatedSprite(
             'images/turret.png',
@@ -282,6 +315,30 @@ export class SpriteLibrary {
             0,
             5,
             12,
+            true
+        );
+    }
+
+    static bomberIdle() {
+        return new AnimatedSprite(
+            'images/bomber.png',
+            SpriteLibrary.SIZES.BOMBER.width,
+            SpriteLibrary.SIZES.BOMBER.height,
+            0,
+            1,
+            1,
+            false
+        );
+    }
+
+    static bomberShoot() {
+        return new AnimatedSprite(
+            'images/bomber.png',
+            SpriteLibrary.SIZES.BOMBER.width,
+            SpriteLibrary.SIZES.BOMBER.height,
+            0,
+            5,
+            8,
             true
         );
     }

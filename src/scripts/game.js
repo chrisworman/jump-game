@@ -315,9 +315,13 @@ export class Game {
     handleWorldOutroComplete() {
         this.background.fadeOut();
         this.platforms.fadeOut();
-        this.modal.showWorldComplete(`World ${this.level.world.number} Complete`, 'Continue', () => {
-            this.transitionToNextLevel();
-        });
+        this.modal.showWorldComplete(
+            `World ${this.level.world.number} Complete`,
+            'Continue',
+            () => {
+                this.transitionToNextLevel();
+            }
+        );
         this.state = GameState.WORLD_WRAP_UP;
     }
 
@@ -453,17 +457,9 @@ game.addGameObject(myGameObject)
             this.enemies
                 .filter(
                     (x) =>
-                        x.type === EnemyTypes.WALKER ||
-                        x.type === EnemyTypes.POUNDER ||
-                        x.type === EnemyTypes.TURRET ||
-                        x.type === EnemyTypes.TOWER ||
-                        x.type === EnemyTypes.SENTRY ||
-                        x.type === EnemyTypes.TANK ||
-                        x.type === EnemyTypes.HEAVY ||
-                        x.type === EnemyTypes.CHASER ||
-                        x.type === EnemyTypes.BOSS ||
-                        x.type === EnemyTypes.DUMPER ||
-                        x.type === EnemyTypes.POPPER
+                        x.type !== EnemyTypes.BOMB &&
+                        x.type !== EnemyTypes.ROCKET &&
+                        x.type !== EnemyTypes.BIG_BOMB
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);

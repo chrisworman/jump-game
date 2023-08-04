@@ -11,7 +11,7 @@ import { GameState } from './gameState.js';
 export class Tank extends Enemy {
     static SPEED = 2.5;
 
-    constructor(game, x, y) {
+    constructor(game, x, y, spriteIdle) {
         super(
             game,
             x,
@@ -19,11 +19,11 @@ export class Tank extends Enemy {
             SpriteLibrary.SIZES.TANK.width,
             SpriteLibrary.SIZES.TANK.height,
             EnemyTypes.TANK,
-            SpriteLibrary.tankIdle(),
+            spriteIdle,
             true
         );
 
-        this.spriteIdle = SpriteLibrary.tankIdle();
+        this.spriteIdle = spriteIdle;
         this.spriteLeft = SpriteLibrary.tankLeft();
         this.spriteRight = SpriteLibrary.tankRight();
         this.spriteBombing = SpriteLibrary.tankBombing();
@@ -54,16 +54,6 @@ export class Tank extends Enemy {
         });
     }
 
-    // render(renderContext) {
-    //     if (this.isDead) {
-    //         if (this.currentSprite.filterManager.animation == null) {
-    //             return;
-    //         }
-    //     }
-
-    //     this.currentSprite.render(renderContext, this.x, this.y);
-    // }
-
     update() {
         super.update();
         if (this.isDead) {
@@ -83,13 +73,6 @@ export class Tank extends Enemy {
         }
     }
 
-    // handleShot() {
-    //     super.handleShot();
-    //     if (this.isDead) {
-    //         this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
-    //     }
-    // }
-
     static spawn(game) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
         return new Tank(
@@ -98,7 +81,8 @@ export class Tank extends Enemy {
                 1,
                 game.canvas.width - SpriteLibrary.SIZES.TANK.width - 1
             ),
-            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.TANK.height
+            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.TANK.height,
+            SpriteLibrary.tankIdle()
         );
     }
 }
