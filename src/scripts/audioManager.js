@@ -63,11 +63,11 @@ export class AudioManager {
         },
         PLAYER_HIT: {
             url: 'sounds/player-hit.aac',
-            volume: 0.35,
+            volume: 0.25,
         },
         ENEMY_HIT: {
             url: 'sounds/enemy-hit.aac',
-            volume: 0.3,
+            volume: 0.2,
             preloadCount: 20,
         },
         START_BOSS_LEVEL: {

@@ -4,7 +4,7 @@ import { Sprite } from './sprite.js';
 export class SpriteLibrary {
     static SIZES = {
         PLAYER: {
-            width: 64,
+            width: 56,
             height: 48,
         },
         SHIELD: {

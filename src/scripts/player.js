@@ -15,6 +15,7 @@ export class Player extends Entity {
     static SHOOT_DELAY_MS = 250;
     static MAX_HEALTH = 3;
     static RECOVERY_TIME_MS = 4000;
+    static HIT_BOX_PADDING = 4;
 
     constructor(game) {
         super(
@@ -36,11 +37,27 @@ export class Player extends Entity {
             this.jumpingRightSprite,
         ];
 
+        this.boundingBox = new Box(this.x, this.y, this.width, this.height);
+
         this.reset();
     }
 
     getHitBox() {
-        return new Box(this.x, this.y + 15, this.width - 15, this.height);
+        // Return a box that attempts to be slightly forgiving (i.e. Player.HIT_BOX_PADDING) and
+        // also approximately clips the transparent pixels in the image as the jump is animated.
+        if (this.mover.jumping) {
+            this.boundingBox.x = this.x + Player.HIT_BOX_PADDING;
+            this.boundingBox.y = this.y + 6 + Player.HIT_BOX_PADDING; // When the player is jumping, there are between about 6 (varies) transparent pixels above the player
+            this.boundingBox.width = this.width - Player.HIT_BOX_PADDING;
+            this.boundingBox.height = this.height - 6 - 4 - Player.HIT_BOX_PADDING; // When the player is jumping, there are about 4 (varies) transparent pixels below the player
+        } else {
+            this.boundingBox.x = this.x + Player.HIT_BOX_PADDING;
+            this.boundingBox.y = this.y + 12 + Player.HIT_BOX_PADDING; // When the player is not jumping, there are 12 transparent pixels above the player
+            this.boundingBox.width = this.width - Player.HIT_BOX_PADDING;
+            this.boundingBox.height = this.height - 12 - Player.HIT_BOX_PADDING;
+        }
+
+        return this.boundingBox;
     }
 
     update() {
@@ -79,7 +96,10 @@ export class Player extends Entity {
         }
 
         // Done recovering?
-        if (this.recovering && this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
+        if (
+            this.recovering &&
+            this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS
+        ) {
             this.recovering = false;
             this.recoveringStartTime = null;
             this.sprites.forEach((x) => x.filterManager.reset());
@@ -145,7 +165,10 @@ export class Player extends Entity {
 
     updateBossCelebration() {
         // Done recovering?
-        if (this.recovering && this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS) {
+        if (
+            this.recovering &&
+            this.game.gameTime - this.recoveringStartTime > Player.RECOVERY_TIME_MS
+        ) {
             this.recovering = false;
             this.recoveringStartTime = null;
             this.sprites.forEach((x) => x.filterManager.reset());
@@ -226,7 +249,11 @@ export class Player extends Entity {
 
             const recoveringAnimation = FilterManager.recoveringAnimation();
             this.sprites.forEach((x) =>
-                x.filterManager.animate(recoveringAnimation, this.game.gameTime, Player.RECOVERY_TIME_MS)
+                x.filterManager.animate(
+                    recoveringAnimation,
+                    this.game.gameTime,
+                    Player.RECOVERY_TIME_MS
+                )
             );
         }
 

@@ -114,8 +114,44 @@ export class Level {
                 }
             }
 
+            // Sentries
+            const sentryLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            if (sentryLevels.indexOf(this.number) >= 0) {
+                const sentryCount = Math.max(1, Math.min(2, this.number - 7));
+                for (let i = 0; i < sentryCount; i++) {
+                    initialEnemies.push(
+                        this.sentrySpawner.spawnWithoutIntersecting(initialEnemies)
+                    );
+                }
+            }
+
+            // Dumper
+            const dumperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            if (dumperLevels.indexOf(this.number) >= 0) {
+                const dumperCount =  Math.max(1, Math.min(3, this.number - 6));
+                for (let i = 0; i < dumperCount; i++) {
+                    initialEnemies.push(
+                        this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
+                    );
+                }
+            }
+        }
+
+        if (this.world.number === 2) {
+
+            // Tanks
+            const tankLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            if (tankLevels.indexOf(this.number) >= 0) {
+                const tankCount = Math.max(1, Math.min(3, this.number - 5));
+                for (let i = 0; i < tankCount; i++) {
+                    initialEnemies.push(
+                        this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
+                    );
+                }
+            }
+
             // Towers
-            const towerLevels = [3, 5, 6, 7, 8, 9, 10];
+            const towerLevels = [2, 3, 5, 6, 7, 8, 9, 10];
             if (towerLevels.indexOf(this.number) >= 0) {
                 const towerCount = Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < towerCount; i++) {
@@ -132,42 +168,6 @@ export class Level {
                 for (let i = 0; i < pounderCount; i++) {
                     initialEnemies.push(
                         this.pounderSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
-                }
-            }
-        }
-
-        if (this.world.number === 2) {
-
-            // Tanks
-            const tankLevels = [1, 2, 5, 6, 7, 8, 9, 10];
-            if (tankLevels.indexOf(this.number) >= 0) {
-                const tankCount = Math.max(1, Math.min(3, this.number - 5));
-                for (let i = 0; i < tankCount; i++) {
-                    initialEnemies.push(
-                        this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
-                }
-            }
-
-            // Sentries
-            const sentryLevels = [3, 4, 5, 6, 7, 8, 9, 10];
-            if (sentryLevels.indexOf(this.number) >= 0) {
-                const sentryCount = Math.max(1, Math.min(2, this.number - 7));
-                for (let i = 0; i < sentryCount; i++) {
-                    initialEnemies.push(
-                        this.sentrySpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
-                }
-            }
-
-            // Dumper
-            const dumperLevels = [4, 6, 7, 8, 9, 10];
-            if (dumperLevels.indexOf(this.number) >= 0) {
-                const dumperCount =  Math.max(1, Math.min(3, this.number - 6));
-                for (let i = 0; i < dumperCount; i++) {
-                    initialEnemies.push(
-                        this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
             }
@@ -198,7 +198,7 @@ export class Level {
             }
 
             // Bomber
-            const bomberLevels = [4, 6, 7, 8, 9, 10];
+            const bomberLevels = [2, 4, 5, 6, 7, 8, 9, 10];
             if (bomberLevels.indexOf(this.number) >= 0) {
                 const bomberCount =  Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < bomberCount; i++) {
@@ -212,9 +212,9 @@ export class Level {
         if (this.world.number === 4) {
 
             // Chasers
-            const chaserLevels = [1, 2, 4, 5, 6, 7, 8, 9, 10];
+            const chaserLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (chaserLevels.indexOf(this.number) >= 0) {
-                const chaserCount = Math.max(1, Math.min(5, this.number - 2));
+                const chaserCount = Math.max(1, Math.min(5, this.number - 1));
                 for (let i = 0; i < chaserCount; i++) {
                     initialEnemies.push(
                         this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)

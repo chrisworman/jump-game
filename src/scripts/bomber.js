@@ -42,7 +42,7 @@ export class Bomber extends Enemy {
                     }
                     const bomb = Bomb.spawn(
                         this.game,
-                        this.x + this.width * (i === 0 ? 0.10 : 0.50),
+                        this.x + this.width * (i === 0 ? 0.1 : 0.5),
                         this.y + this.height,
                         0
                     );
@@ -52,7 +52,7 @@ export class Bomber extends Enemy {
                     this.currentSprite = this.spriteIdle;
                 }
             },
-            delays: [3000, 1000, 1000],
+            delays: [RandomGenerator.randomIntBetween(2000, 4000), 1000, 1000],
         });
     }
 
@@ -70,7 +70,7 @@ export class Bomber extends Enemy {
     }
 
     static spawn(game) {
-        const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 3);
+        const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 2);
         return new Bomber(
             game,
             RandomGenerator.randomIntBetween(

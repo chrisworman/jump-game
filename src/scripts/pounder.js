@@ -44,12 +44,12 @@ export class Pounder extends Enemy {
             },
             delays: [
                 RandomGenerator.randomIntBetween(1500, 3500),
-                900,
-                900,
-                900,
-                900,
-                900,
-                900,
+                RandomGenerator.randomIntBetween(800, 1000),
+                RandomGenerator.randomIntBetween(800, 1000),
+                RandomGenerator.randomIntBetween(800, 1000),
+                RandomGenerator.randomIntBetween(800, 1000),
+                RandomGenerator.randomIntBetween(800, 1000),
+                RandomGenerator.randomIntBetween(800, 1000),
                 RandomGenerator.randomIntBetween(500, 1500),
             ],
         });

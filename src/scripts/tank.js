@@ -9,7 +9,7 @@ import { Emitter } from './emitter.js';
 import { GameState } from './gameState.js';
 
 export class Tank extends Enemy {
-    static SPEED = 2.5;
+    static SPEED = 2.6;
 
     constructor(game, x, y, spriteIdle) {
         super(
@@ -50,7 +50,11 @@ export class Tank extends Enemy {
                     this.mover.pace(RandomGenerator.randomSign() * Tank.SPEED);
                 }
             },
-            delays: [RandomGenerator.randomIntBetween(3000, 6000), 1000, 2000],
+            delays: [
+                RandomGenerator.randomIntBetween(3000, 4000),
+                1000,
+                RandomGenerator.randomIntBetween(1500, 3000),
+            ],
         });
     }
 

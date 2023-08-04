@@ -180,7 +180,7 @@ export class Game {
         // Update remaining entities
         this.platforms.update();
         this.enemies.forEach((enemy) => enemy.update());
-        this.bullets.forEach((bullet) => bullet.update());
+        this.bullets.forEach((bullet) => bullet.update()); // Consider updating bullets first to kill enemies?
         this.collectables.forEach((x) => x.update());
         this.healthUpHearts.forEach((x) => x.update());
         this.level.spawnEnemies();
@@ -414,7 +414,9 @@ export class Game {
         this.responsiveCanvas.style.left = `${Math.ceil(windowW * 0.5 - newWidth * 0.5)}px`;
         this.responsiveCanvas.style.top = `${Game.HUD_HEIGHT}px`;
 
+        this.hudContainer.style.left = `${Math.ceil(windowW * 0.5 - newWidth * 0.5)}px`;
         this.hudContainer.style.width = `${newWidth}px`;
+
         this.onScreenControls.style.top = `${newHeight}px`;
         this.onScreenControls.style.width = `${newWidth}px`;
         this.onScreenControls.style.display = isMobile ? 'flex' : 'none';

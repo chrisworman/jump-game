@@ -89,14 +89,18 @@
             }
 
             .hud {
-                border: 4px solid #ddd;;
-                box-sizing: border-box;
+                border: 2px solid #ddd;;
+                border-bottom: none;
+                position: absolute;
+                /*
                 margin: 0 auto;
+                */
                 height: 50px;
                 overflow: hidden;
-                padding: 3px;
+                padding: 7px;
                 background-color: #333;
                 text-transform: uppercase;
+                box-sizing: border-box;
             }
 
             .hud-text {
@@ -206,6 +210,8 @@
 
             .responsive-canvas {
                 position: absolute;
+                border: solid 2px #ddd; 
+                box-sizing: border-box;
             }
 
             .on-screen-controls {
