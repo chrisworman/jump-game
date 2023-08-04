@@ -2,14 +2,13 @@ import { Enemy } from './enemy.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 import { EnemyTypes } from './enemyTypes.js';
 import { Mover } from './mover.js';
-import { Bomb } from './bomb.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { Platforms } from './platforms.js';
 import { GameState } from './gameState.js';
 import { Rocket } from './rocket.js';
 
 export class Zamboney extends Enemy {
-    static SPEED = 1;
+    static SPEED = 2;
 
     constructor(game, x, y, spriteLeft) {
         super(
@@ -23,10 +22,14 @@ export class Zamboney extends Enemy {
             true
         );
 
-        this.facingLeft = true;
+        
         this.spriteLeft = spriteLeft;
         this.spriteRight = SpriteLibrary.zamboneyRight();
         this.sprites = [this.spriteLeft, this.spriteRight];
+
+        this.facingLeft = RandomGenerator.randomBool() ? true : false;
+        this.currentSprite = this.facingLeft ? this.spriteLeft : this.spriteRight;
+
         this.mover = new Mover(game, this);
         this.mover.pace(Zamboney.SPEED);
         this.lastShootTime = 0;    

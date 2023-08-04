@@ -44,7 +44,7 @@ export class Popper extends Enemy {
                 }
             },
             delays: [
-                RandomGenerator.randomIntBetween(5000, 6000),
+                RandomGenerator.randomIntBetween(3000, 5000),
                 1000,
                 800
             ],

@@ -44,7 +44,7 @@ export class World {
         switch (this.number) {
             case 1: return Boss1.spawn(this.game);
             case 2: return Boss2.spawn(this.game);
-            case 3: return Boss3.spawn(this.game);
+            case 3: return Boss3.spawn(this.game); // TODO: BOSS 3 should be 4 (where chaser appears!!!)
             // TODO: design remaining bosses
             default: return Boss3.spawn(this.game);
         }

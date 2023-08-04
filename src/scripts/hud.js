@@ -6,8 +6,7 @@ export class Hud {
         this.hearts = document.getElementById('hearts');
         this.shield = document.getElementById('shield');
         this.collectable = document.getElementById('collectable');
-        this.world = document.getElementById('world');
-        this.level = document.getElementById('level');
+        this.hudText = document.getElementById('hudText');
         this.collectableCount = document.getElementById('collectableCount');
         this.audioButton = document.getElementById('audioButton');
         this.audioButton.addEventListener('click', () => {
@@ -52,7 +51,11 @@ export class Hud {
     }
 
     displayLevel(level) {
-        this.world.innerText = level.world.number;
-        this.level.innerText = level.number;
+        if (level.boss) {
+            this.hudText.innerText = `World ${level.world.number} Boss`;
+        } else {
+            const paddedLevel = level.number.toString().padStart(2, '0');
+            this.hudText.innerText = `Level ${paddedLevel}`;
+        }
     }
 }
