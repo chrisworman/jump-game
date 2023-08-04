@@ -1,4 +1,5 @@
 import { AudioManager } from './audioManager.js';
+import { LaserGun } from './laserGun.js';
 import { Level } from './level.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { SpriteLibrary } from './spriteLibrary.js';

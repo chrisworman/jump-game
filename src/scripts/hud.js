@@ -55,7 +55,7 @@ export class Hud {
             this.hudText.innerText = `World ${level.world.number} Boss`;
         } else {
             const paddedLevel = level.number.toString().padStart(2, '0');
-            this.hudText.innerText = `Level ${paddedLevel}`;
+            this.hudText.innerText = `World ${level.world.number} Level ${paddedLevel}`;
         }
     }
 }

@@ -60,7 +60,6 @@ export class Platforms {
     }
 
     fadeOut() {
-        console.log('platforms fade out');
         this.currentSprites.forEach((x) => {
             x.filterManager.animate(
                 FilterManager.fadeOutBrightnessAnimation(),

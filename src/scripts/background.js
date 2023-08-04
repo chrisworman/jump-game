@@ -10,7 +10,6 @@ export class Background {
         this.offset = 0;
 
         const worldNumber = game.level?.world?.number || 1;
-        console.log(worldNumber);
         this.layers = [
             {
                 sprite: SpriteLibrary[`world${worldNumber}BackgroundLayer0`](),
@@ -57,7 +56,6 @@ export class Background {
     }
 
     fadeOut() {
-        console.log('background fade out');
         this.layers.forEach((x) => {
             x.sprite.filterManager.animate(
                 FilterManager.fadeOutBrightnessAnimation(),

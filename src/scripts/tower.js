@@ -48,7 +48,17 @@ export class Tower extends Enemy {
                 }
                 this.currentSprite.reset();
             },
-            delays: [1000, 200, 200, 200, 2500, 200, 200, 200, 200],
+            delays: [
+                RandomGenerator.randomIntBetween(2000, 3000),
+                200,
+                200,
+                200,
+                RandomGenerator.randomIntBetween(2000, 3000),
+                200,
+                200,
+                200,
+                200,
+            ],
         });
     }
 

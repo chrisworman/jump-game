@@ -40,7 +40,7 @@ export class Heavy extends Enemy {
                 bomb.mover.setVelocityX(0);
                 bomb.mover.setVelocityY(0);
             },
-            delays: [2000, 400, 400, 400, 400, 400],
+            delays: [RandomGenerator.randomIntBetween(2000, 4000), 400, 400, 400, 400, 400],
         });
     }
 

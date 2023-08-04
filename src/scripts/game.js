@@ -315,26 +315,10 @@ export class Game {
     handleWorldOutroComplete() {
         this.background.fadeOut();
         this.platforms.fadeOut();
-        this.modal.showWorldComplete(
-            `World ${this.level.world.number} Complete`,
-            'Continue',
-            () => {
-                this.transitionToNextLevel();
-            }
-        );
-        this.state = GameState.WORLD_WRAP_UP;
-    }
 
-    transitionToNextLevel() {
-        const justBeatBoss = this.isBossLevel();
-        this.level = this.levelManager.getNextLevel();
-
-        // Beat the game??
-        if (!this.level) {
+        // Beat the game?
+        if (this.level.world.isLast()) {
             this.songHandler = this.audioManager.play(AudioManager.SOUNDS.FINALE_SONG);
-            this.modal.showEndGame('Game Complete!', 'Restart', () => {
-                this.startNewGame();
-            });
             this.filterManager.animate(
                 (fm, amountDone) => {
                     fm.blurPixels = amountDone * 8;
@@ -343,9 +327,26 @@ export class Game {
                 this.gameTime,
                 1000
             );
+            this.modal.showEndGame('Game Complete!', 'Restart', () => {
+                this.songHandler.stop(); // Finale song
+                this.startNewGame();
+            });
             this.state = GameState.GAME_BEAT;
-            return;
-        }
+        } else { // World complete, but not the game
+            this.modal.showWorldComplete(
+                `World ${this.level.world.number} Complete`,
+                'Continue',
+                () => {
+                    this.transitionToNextLevel();
+                }
+            );
+            this.state = GameState.WORLD_WRAP_UP;
+        }        
+    }
+
+    transitionToNextLevel() {
+        const justBeatBoss = this.isBossLevel();
+        this.level = this.levelManager.getNextLevel();
 
         // Start the right song
         if (this.level.boss) {

@@ -46,9 +46,9 @@ export class Dumper extends Enemy {
                 }
             },
             delays: [
-                1000,
+                RandomGenerator.randomIntBetween(900, 1500),
                 RandomGenerator.randomIntBetween(1500, 2500),
-                1000,
+                RandomGenerator.randomIntBetween(900, 1500),
                 RandomGenerator.randomIntBetween(1500, 2500),
             ],
         });

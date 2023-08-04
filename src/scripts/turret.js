@@ -37,7 +37,16 @@ export class Turret extends Enemy {
                     RandomGenerator.randomSign()
                 );
             },
-            delays: [300, 300, 300, 2000, 300, 300, 300, 2000],
+            delays: [
+                300,
+                300,
+                300,
+                RandomGenerator.randomIntBetween(2000, 3000),
+                300,
+                300,
+                300,
+                RandomGenerator.randomIntBetween(2000, 3000),
+            ],
         });
     }
 
@@ -63,8 +72,7 @@ export class Turret extends Enemy {
                 1,
                 game.canvas.width - SpriteLibrary.SIZES.TURRET.width - 1
             ),
-            RandomGenerator.randomFromArray(eligiblePlatformYs) -
-                SpriteLibrary.SIZES.TURRET.height
+            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.TURRET.height
         );
     }
 }

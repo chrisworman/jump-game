@@ -32,29 +32,42 @@ export class SoundHandler {
             throw new Error(`${this.sound.url} already playing`);
         }
 
-        this.isPlaying = true;
-        this.audio.addEventListener(
-            'ended',
-            () => {
-                this.isPlaying = false;
-                if (onEnded) {
-                    onEnded();
+        try {
+            this.isPlaying = true;
+            this.audio.addEventListener(
+                'ended',
+                () => {
+                    this.isPlaying = false;
+                    if (onEnded) {
+                        onEnded();
+                    }
+                },
+                {
+                    once: true,
                 }
-            },
-            {
-                once: true,
-            }
-        );
+            );
 
-        this.audio.currentTime = 0;
-        this.audio.loop = this.sound.loop;
-        this.audio.play();
+            this.audio.currentTime = 0;
+            this.audio.loop = this.sound.loop;
+            this.audio.play();
+        } catch (error) {
+            console.error(`Error playing ${sound.url}`);
+            console.error(error, this);
+            this.isPlaying = false;
+        }
     }
 
     stop() {
-        this.audio.pause();
-        this.audio.currentTime = 0;
-        this.isPlaying = false;
+        try {
+            if (this.isPlaying) {
+                this.audio.pause();
+                this.audio.currentTime = 0;
+                this.isPlaying = false;
+            }
+        } catch (error) {
+            console.error(`Error stopping ${sound.url}`);
+            console.error(error, this);
+        }
     }
 
     mute() {

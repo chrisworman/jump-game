@@ -96,10 +96,10 @@ export class Sentry extends Enemy {
     static spawn(game) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 6);
         const x = RandomGenerator.randomBool()
-            ? RandomGenerator.randomIntBetween(1, Math.ceil(game.canvas.width * 0.1))
+            ? RandomGenerator.randomIntBetween(10, Math.ceil(game.canvas.width * 0.1))
             : RandomGenerator.randomIntBetween(
                   Math.ceil(game.canvas.width * 0.9),
-                  game.canvas.width - SpriteLibrary.SIZES.SENTRY.width - 1
+                  game.canvas.width - SpriteLibrary.SIZES.SENTRY.width - 10
               );
         return new Sentry(
             game,

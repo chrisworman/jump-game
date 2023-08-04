@@ -1,6 +1,7 @@
 import { Boss1 } from "./boss1.js";
 import { Boss2 } from "./boss2.js";
 import { Boss3 } from "./boss3.js";
+import { LevelManager } from "./levelManager.js";
 
 export class World {
     constructor(game, number, song, bossSong, bossCelebrationSong) {
@@ -38,6 +39,10 @@ export class World {
         if (this.songHandler) {
             this.songHandler.stop();
         }
+    }
+
+    isLast() {
+        return this.number === LevelManager.WORLD_COUNT;
     }
 
     getBoss() {
