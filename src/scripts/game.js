@@ -461,7 +461,8 @@ game.addGameObject(myGameObject)
                         x.type === EnemyTypes.TANK ||
                         x.type === EnemyTypes.HEAVY ||
                         x.type === EnemyTypes.CHASER ||
-                        x.type === EnemyTypes.BOSS
+                        x.type === EnemyTypes.BOSS ||
+                        x.type === EnemyTypes.DUMPER
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);

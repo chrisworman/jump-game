@@ -12,6 +12,7 @@ import { Heavy } from './heavy.js';
 import { Pounder } from './pounder.js';
 import { Chaser } from './chaser.js';
 import { Sentry } from './sentry.js';
+import { Dumper } from './dumper.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -53,6 +54,9 @@ export class Level {
         });
         this.heavySpawner = new Spawner(() => {
             return Heavy.spawn(game);
+        });
+        this.dumperSpawner = new Spawner(() => {
+            return Dumper.spawn(game);
         });
     }
 
@@ -129,6 +133,14 @@ export class Level {
             const sentryCount = 1;
             for (let i = 0; i < sentryCount; i++) {
                 initialEnemies.push(this.sentrySpawner.spawnWithoutIntersecting(initialEnemies));
+            }
+        }
+
+        // Dumper: ??
+        if (true) {
+            const dumperCount = 1;
+            for (let i = 0; i < dumperCount; i++) {
+                initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
             }
         }
 

@@ -11,4 +11,5 @@ export class EnemyTypes {
     static HEAVY = 'HEAVY';
     static CHASER = 'CHASER';
     static SENTRY = 'SENTRY';
+    static DUMPER = 'DUMPER';
 }

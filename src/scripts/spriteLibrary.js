@@ -91,6 +91,10 @@ export class SpriteLibrary {
             width: 32,
             height: 64,
         },
+        DUMPER: {
+            width: 32,
+            height: 64,
+        },
     };
 
     static preloadImages() {
@@ -470,6 +474,31 @@ export class SpriteLibrary {
             4,
             12,
             false
+        );
+    }
+
+    static dumperIdle() {
+        return new AnimatedSprite(
+            'images/dumper.png',
+            SpriteLibrary.SIZES.DUMPER.width,
+            SpriteLibrary.SIZES.DUMPER.height,
+            0,
+            4,
+            8,
+            true
+        );
+    }
+
+    static dumperShoot() {
+        return new AnimatedSprite(
+            'images/dumper.png',
+            SpriteLibrary.SIZES.DUMPER.width,
+            SpriteLibrary.SIZES.DUMPER.height,
+            0,
+            2,
+            16,
+            false,
+            SpriteLibrary.SIZES.DUMPER.width * 4
         );
     }
 
