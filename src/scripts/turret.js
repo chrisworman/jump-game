@@ -67,11 +67,4 @@ export class Turret extends Enemy {
                 SpriteLibrary.SIZES.TURRET.height
         );
     }
-
-    // handleShot() {
-    //     super.handleShot();
-    //     if (this.isDead) {
-    //         this.currentSprite.filterManager.animate(FilterManager.blurFadeOutAnimation(), this.game.gameTime, 250);
-    //     }
-    // }
 }

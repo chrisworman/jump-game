@@ -95,6 +95,10 @@ export class SpriteLibrary {
             width: 32,
             height: 64,
         },
+        POPPER: {
+            width: 48,
+            height: 64,
+        },
     };
 
     static preloadImages() {
@@ -206,6 +210,31 @@ export class SpriteLibrary {
             0,
             22,
             12
+        );
+    }
+
+    static popperIdle() {
+        return new AnimatedSprite(
+            'images/popper.png',
+            SpriteLibrary.SIZES.POPPER.width,
+            SpriteLibrary.SIZES.POPPER.height,
+            0,
+            8,
+            6,
+            true
+        );
+    }
+
+    static popperShoot() {
+        return new AnimatedSprite(
+            'images/popper.png',
+            SpriteLibrary.SIZES.POPPER.width,
+            SpriteLibrary.SIZES.POPPER.height,
+            0,
+            2,
+            14,
+            false,
+            SpriteLibrary.SIZES.POPPER.width * 8
         );
     }
 

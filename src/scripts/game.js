@@ -462,7 +462,8 @@ game.addGameObject(myGameObject)
                         x.type === EnemyTypes.HEAVY ||
                         x.type === EnemyTypes.CHASER ||
                         x.type === EnemyTypes.BOSS ||
-                        x.type === EnemyTypes.DUMPER
+                        x.type === EnemyTypes.DUMPER ||
+                        x.type === EnemyTypes.POPPER
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);

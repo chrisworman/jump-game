@@ -13,6 +13,7 @@ import { Pounder } from './pounder.js';
 import { Chaser } from './chaser.js';
 import { Sentry } from './sentry.js';
 import { Dumper } from './dumper.js';
+import { Popper } from './popper.js';
 
 export class Level {
     static MAX_GEMS = 20;
@@ -57,6 +58,9 @@ export class Level {
         });
         this.dumperSpawner = new Spawner(() => {
             return Dumper.spawn(game);
+        });
+        this.popperSpawner = new Spawner(() => {
+            return Popper.spawn(game);
         });
     }
 
@@ -175,6 +179,14 @@ export class Level {
             (this.world.number === 5 && [5, 7, 9, 11, 12, 13, 14, 16, 18].indexOf(this.number) >= 0)
         ) {
             initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
+        }
+
+        // Popper
+        if (true) {
+            const popperCount = 1;
+            for (let i = 0; i < popperCount; i++) {
+                initialEnemies.push(this.popperSpawner.spawnWithoutIntersecting(initialEnemies));
+            }
         }
 
         // Turrets: very hard
