@@ -65,8 +65,8 @@ export class LevelManager {
     }
 
     reset() {
-        this.levelNumber = 10;
-        this.worldNumber = 5;
+        this.levelNumber = 0;
+        this.worldNumber = 1;
         this.world = new World(
             this.game,
             this.worldNumber,
