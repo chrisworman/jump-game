@@ -67,6 +67,14 @@ export class SpriteLibrary {
             width: 76,
             height: 64,
         },
+        BOSS_5: {
+            width: 300,
+            height: 300,
+        },
+        BOSS_5_JETS: {
+            width: 300,
+            height: 16,
+        },
         HEALTH_UP_HEART: {
             width: 32,
             height: 32,
@@ -704,6 +712,42 @@ export class SpriteLibrary {
             5,
             30,
             false
+        );
+    }
+
+    static boss5Idle() {
+        return new AnimatedSprite(
+            'images/boss-5.png',
+            SpriteLibrary.SIZES.BOSS_5.width,
+            SpriteLibrary.SIZES.BOSS_5.height,
+            0,
+            4,
+            5,
+            true
+        );
+    }
+
+    static boss5Shoot() {
+        return new AnimatedSprite(
+            'images/boss-5.png',
+            SpriteLibrary.SIZES.BOSS_5.width,
+            SpriteLibrary.SIZES.BOSS_5.height,
+            0,
+            4,
+            10,
+            false
+        );
+    }
+
+    static boss5Jets() {
+        return new AnimatedSprite(
+            'images/boss-5-jets.png',
+            SpriteLibrary.SIZES.BOSS_5_JETS.width,
+            SpriteLibrary.SIZES.BOSS_5_JETS.height,
+            0,
+            3,
+            6,
+            true,
         );
     }
 

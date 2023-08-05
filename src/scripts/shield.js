@@ -110,7 +110,7 @@ export class Shield extends Collectable {
     render(renderContext) {
         if (this.attached) {
             const yOffset = this.game.player.mover.jumping ? 10 : 5;
-            this.sprite.render(renderContext, this.game.player.x - 5, this.game.player.y - yOffset);
+            this.sprite.render(renderContext, this.game.player.x - 10, this.game.player.y - yOffset);
         } else {
             this.sprite.render(renderContext, this.x, this.y);
         }

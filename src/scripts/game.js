@@ -332,7 +332,8 @@ export class Game {
                 this.startNewGame();
             });
             this.state = GameState.GAME_BEAT;
-        } else { // World complete, but not the game
+        } else {
+            // World complete, but not the game
             this.modal.showWorldComplete(
                 `World ${this.level.world.number} Complete`,
                 'Continue',
@@ -341,7 +342,7 @@ export class Game {
                 }
             );
             this.state = GameState.WORLD_WRAP_UP;
-        }        
+        }
     }
 
     transitionToNextLevel() {
@@ -462,7 +463,8 @@ game.addGameObject(myGameObject)
                     (x) =>
                         x.type !== EnemyTypes.BOMB &&
                         x.type !== EnemyTypes.ROCKET &&
-                        x.type !== EnemyTypes.BIG_BOMB
+                        x.type !== EnemyTypes.BIG_BOMB &&
+                        x.type !== EnemyTypes.FINAL_BOSS
                 )
                 .forEach((x) => x.render(this.renderContext));
             this.player.render(this.renderContext);
@@ -471,7 +473,7 @@ game.addGameObject(myGameObject)
                 .filter((x) => x.type === EnemyTypes.BOMB || x.type === EnemyTypes.ROCKET)
                 .forEach((x) => x.render(this.renderContext));
             this.enemies
-                .filter((x) => x.type === EnemyTypes.BIG_BOMB)
+                .filter((x) => x.type === EnemyTypes.BIG_BOMB || x.type === EnemyTypes.FINAL_BOSS)
                 .forEach((x) => x.render(this.renderContext));
             this.bullets.forEach((x) => x.render(this.renderContext));
             this.healthUpHearts.forEach((x) => x.render(this.renderContext));

@@ -65,15 +65,15 @@ export class Pounder extends Enemy {
         }
     }
 
-    static spawn(game) {
+    static spawn(game, x = null, y = null) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 3);
         return new Pounder(
             game,
-            RandomGenerator.randomIntBetween(
+            x || RandomGenerator.randomIntBetween(
                 100,
                 game.canvas.width - SpriteLibrary.SIZES.POUNDER.width - 100
             ),
-            RandomGenerator.randomFromArray(eligiblePlatformYs) -
+            y || RandomGenerator.randomFromArray(eligiblePlatformYs) -
                 SpriteLibrary.SIZES.POUNDER.height,
             SpriteLibrary.SIZES.POUNDER.width,
             SpriteLibrary.SIZES.POUNDER.height,

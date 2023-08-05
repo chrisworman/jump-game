@@ -1,5 +1,4 @@
 import { AudioManager } from './audioManager.js';
-import { LaserGun } from './laserGun.js';
 import { Level } from './level.js';
 import { RandomGenerator } from './randomGenerator.js';
 import { SpriteLibrary } from './spriteLibrary.js';
@@ -66,8 +65,8 @@ export class LevelManager {
     }
 
     reset() {
-        this.levelNumber = 0;
-        this.worldNumber = 1;
+        this.levelNumber = 10;
+        this.worldNumber = 5;
         this.world = new World(
             this.game,
             this.worldNumber,

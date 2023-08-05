@@ -15,4 +15,5 @@ export class EnemyTypes {
     static POPPER = 'POPPER';
     static BOMBER = 'BOMBER';
     static ZAMBONEY = 'ZAMBONEY';
+    static FINAL_BOSS = 'FINAL_BOSS';
 }

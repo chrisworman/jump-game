@@ -248,7 +248,7 @@ export class Level {
         if (this.world.number === 5) {
 
             if (this.number === 1) {
-                const chaserCount = 4;
+                const chaserCount = 6;
                 for (let i = 0; i < chaserCount; i++) {
                     initialEnemies.push(
                         this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -338,16 +338,16 @@ export class Level {
                 initialEnemies.push(
                     this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
                 );
+                initialEnemies.push(
+                    this.turrentSpawner.spawnWithoutIntersecting(initialEnemies)
+                );
+                initialEnemies.push(
+                    this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
+                );
                 const tankCount = 2;
                 for (let i = 0; i < tankCount; i++) {
                     initialEnemies.push(
                         this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
-                }
-                const zamboneyCount = 3;
-                for (let i = 0; i < zamboneyCount; i++) {
-                    initialEnemies.push(
-                        this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
             }
@@ -422,10 +422,16 @@ export class Level {
                         this.pounderSpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
-                const zamboneyCount = 3;
+                const zamboneyCount = 2;
                 for (let i = 0; i < zamboneyCount; i++) {
                     initialEnemies.push(
                         this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
+                    );
+                }
+                const chaserCount = 3;
+                for (let i = 0; i < chaserCount; i++) {
+                    initialEnemies.push(
+                        this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
             }

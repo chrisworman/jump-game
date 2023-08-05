@@ -290,6 +290,6 @@ export class Player extends Entity {
         this.laserGun = null;
         this.sprites.forEach((x) => x.reset());
         this.sprites.forEach((x) => x.filterManager.reset());
-        // this.laserGun = new LaserGun(this.game); // TODO: debug world 5 levels
+        this.laserGun = new LaserGun(this.game); // TODO: debug world 5 levels
     }
 }

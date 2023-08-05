@@ -1,6 +1,7 @@
 import { Boss1 } from "./boss1.js";
 import { Boss2 } from "./boss2.js";
 import { Boss3 } from "./boss3.js";
+import { Boss5 } from "./boss5.js";
 import { LevelManager } from "./levelManager.js";
 
 export class World {
@@ -51,6 +52,7 @@ export class World {
             case 2: return Boss2.spawn(this.game);
             case 3: return Boss3.spawn(this.game); // TODO: BOSS 3 should be 4 (where chaser appears!!!)
             // TODO: design remaining bosses
+            case 5: return Boss5.spawn(this.game);
             default: return Boss3.spawn(this.game);
         }
     }

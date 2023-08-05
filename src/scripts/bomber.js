@@ -69,15 +69,18 @@ export class Bomber extends Enemy {
         }
     }
 
-    static spawn(game) {
+    static spawn(game, x = null, y = null) {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 2);
         return new Bomber(
             game,
-            RandomGenerator.randomIntBetween(
-                1,
-                game.canvas.width - SpriteLibrary.SIZES.BOMBER.width - 1
-            ),
-            RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.BOMBER.height,
+            x ||
+                RandomGenerator.randomIntBetween(
+                    1,
+                    game.canvas.width - SpriteLibrary.SIZES.BOMBER.width - 1
+                ),
+            y ||
+                RandomGenerator.randomFromArray(eligiblePlatformYs) -
+                    SpriteLibrary.SIZES.BOMBER.height,
             SpriteLibrary.bomberIdle()
         );
     }

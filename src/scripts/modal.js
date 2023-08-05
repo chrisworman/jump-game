@@ -8,7 +8,7 @@ export class Modal {
             this.handleAction();
         });
         document.addEventListener('keyup', (event) => {
-            if (event.code === 'Enter') {
+            if (event.code === 'Enter' || event.code === 'Space') {
                 this.handleAction();
             }
         });

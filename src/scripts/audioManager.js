@@ -77,7 +77,7 @@ export class AudioManager {
         ROBOTIC_DEATH: {
             // Unused, but neat, use for final boss!!
             url: 'sounds/robotic-death.aac',
-            volume: 0.05,
+            volume: 0.2,
         },
         BOSS_SHOT_1: {
             url: 'sounds/boss-hit.aac',
