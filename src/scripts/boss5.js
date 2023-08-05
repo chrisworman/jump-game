@@ -17,15 +17,10 @@ export class Boss5 extends Enemy {
     static SHOOT_DELAY_MS = 1000;
     static FLOAT_DISTANCE_X = 10;
     static FLOAT_DISTANCE_Y = 15;
-    static FLOAT_VELOCITY_X = 0.12;
-    static FLOAT_VELOCITY_Y = 0.1;
-
-    // static STATES = {
-    //     FLOATING: 0,
-    //     PREPARING_TO_SHOOT: 1,
-    //     SHOOTING: 2,
-    //     PREPARING_TO_FLOAT: 3,
-    // };
+    static FLOAT_VELOCITY_X = 0.14;
+    static FLOAT_VELOCITY_Y = 0.12;
+    static SHOOT_SETUP_VELOCITY = 2.3;
+    static SHOOT_VELOCITY = 1.6;
 
     constructor(game, x, y, spriteIdle) {
         super(
@@ -58,14 +53,12 @@ export class Boss5 extends Enemy {
         this.emitter = new Emitter(game, {
             emit: (i) => {
                 if (i === 0 || i === 1) {
-                    this.floating = false;
-                    this.mover.stop();
                     this.currentSprite = this.spriteShoot;
 
                     if (
                         i === 0 &&
-                        this.health === 1 &&
-                        this.game.enemies.filter((x) => x.type === EnemyTypes.BOMBER).length <= 1
+                        this.health <= 3 &&
+                        this.game.enemies.filter((x) => x.type === EnemyTypes.BOMBER).length <= 2
                     ) {
                         const bomber = Bomber.spawn(
                             game,
@@ -97,15 +90,23 @@ export class Boss5 extends Enemy {
                     );
                 } else if (i === 3) {
                     this.floating = false;
-                    this.mover.setVelocityX(this.shootingLeft ? -1.5 : 1.5);
+                    this.currentSprite = this.spriteIdle;
+                    this.mover.setVelocityX(
+                        this.shootingLeft ? -Boss5.SHOOT_SETUP_VELOCITY : Boss5.SHOOT_SETUP_VELOCITY
+                    );
                     this.mover.setVelocityY(0.3);
                 } else if (i === 4) {
                     this.shooting = true;
-                    this.mover.setVelocityX(this.shootingLeft ? 1.6 : -1.5);
+                    this.mover.setVelocityX(
+                        this.shootingLeft ? Boss5.SHOOT_VELOCITY : -Boss5.SHOOT_VELOCITY
+                    );
                     this.mover.setVelocityY(0);
                 } else if (i === 5) {
                     this.shooting = false;
-                    this.mover.setVelocityX(this.shootingLeft ? -1.5 : 1.5);
+                    this.currentSprite = this.spriteIdle;
+                    this.mover.setVelocityX(
+                        this.shootingLeft ? -Boss5.SHOOT_SETUP_VELOCITY : Boss5.SHOOT_SETUP_VELOCITY
+                    );
                     this.mover.setVelocityY(-0.3);
                 } else if (i === 6) {
                     this.floating = true;
@@ -117,13 +118,13 @@ export class Boss5 extends Enemy {
                 }
             },
             delays: [
-                RandomGenerator.randomIntBetween(500, 800), // Wait before spawning
-                1000, // Wait to spawn another
-                1000, // Start floating after waiting a bit
-                1000, // After floating, start moving to shoot position
-                1500, // Finish moving to shoot position
+                RandomGenerator.randomIntBetween(400, 600), // Wait before spawning
+                500, // Wait to spawn another
+                500, // Start idle after waiting a bit
+                800, // After idle, start moving to shoot position
+                900, // Finish moving to shoot position
                 2800, // Shoot ... finish shooting
-                1500, // Move back to floating position
+                900, // Move back to idle position
             ],
         });
     }
@@ -153,7 +154,7 @@ export class Boss5 extends Enemy {
                 this.currentSprite.reset();
                 Bomb.spawn(
                     this.game,
-                    this.x + this.width * 0.1,
+                    this.x + this.width * 0.05,
                     this.y + this.height,
                     0
                 ).mover.stop();
@@ -165,7 +166,7 @@ export class Boss5 extends Enemy {
                 ).mover.stop();
                 Bomb.spawn(
                     this.game,
-                    this.x + this.width * 0.9,
+                    this.x + this.width * 0.95,
                     this.y + this.height,
                     0
                 ).mover.stop();
@@ -178,6 +179,8 @@ export class Boss5 extends Enemy {
             ((Math.sin(0.001 * this.game.gameTime) + 1.0) / 2.0) * 50 + 120;
         this.spriteJets.filterManager.blurPixels =
             ((Math.sin(0.002 * this.game.gameTime) + 1.0) / 2.0) * 2 + 1.5;
+        this.spriteJets.filterManager.brightnessPercent =
+            ((Math.sin(0.01 * this.game.gameTime) + 1.0) / 2.0) * 50 + 100;
     }
 
     // TODO: introduce Boss and inherit

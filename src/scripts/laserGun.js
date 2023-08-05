@@ -4,7 +4,7 @@ import { GameState } from './gameState.js';
 import { SpriteLibrary } from './spriteLibrary.js';
 
 export class LaserGun extends Entity {
-    static XOFFSET = 8;
+    static XOFFSET = 4;
     static YOFFSET = 0;
 
     constructor(game) {

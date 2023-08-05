@@ -11,6 +11,7 @@ export class FilterManager {
         this.blurPixels = 0; // 0-?
         this.saturatePercent = 100; // 0-100
         this.animation = null;
+        this.dropShadow = null;
     }
 
     animate(onUpdate, now, lengthMs = 1000) {
@@ -37,7 +38,8 @@ export class FilterManager {
             this.opacityPercent < 100 ||
             this.blurPixels > 0 ||
             this.brightnessPercent !== 100 ||
-            this.saturatePercent !== 100;
+            this.saturatePercent !== 100 ||
+            this.dropShadow !== null;
         if (hasFilters) {
             ctx.save();
             // https://developer.mozilla.org/en-US/docs/Web/CSS/filter
@@ -49,6 +51,7 @@ export class FilterManager {
                 this.brightnessPercent !== 100 ? `brightness(${this.brightnessPercent}%) ` : '';
             const saturation =
                 this.saturatePercent !== 100 ? `saturate(${this.saturatePercent}%) ` : '';
+            const shadow = this.dropShadow ? `drop-shadow(${this.dropShadow}) ` : ''
             ctx.filter = `${hueRotate}${invert}${opacity}${blur}${brightness}${saturation}`;
         }
 
