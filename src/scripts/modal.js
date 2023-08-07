@@ -1,7 +1,9 @@
 export class Modal {
-    constructor() {
+    constructor(game) {
+        this.game = game;
         this.element = document.getElementById('modal');
         this.manual = document.getElementById('modalManual');
+        this.stats = document.getElementById('modalStats');
         this.text = document.getElementById('modalText');
         this.button = document.getElementById('modalButton');
         this.button.addEventListener('click', () => {
@@ -28,7 +30,10 @@ export class Modal {
         this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
         this.hideAllContent();
-        // TODO: show end game stats
+        this.stats.innerHTML = this.game.stats.getWorldHtml();
+        // TODO: refactor / cleanup this mess
+        this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
+        $(this.stats).show();
         $(this.element).fadeIn('slow');
     }
 
@@ -37,12 +42,14 @@ export class Modal {
         this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
         this.hideAllContent();
-        // TODO: show end world stats
+        this.stats.innerHTML = this.game.stats.getWorldHtml();
+        this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
         $(this.element).fadeIn('slow');
     }
 
     hideAllContent() {
         $(this.manual).hide();
+        $(this.stats).hide();
     }
 
     handleAction() {

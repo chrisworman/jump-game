@@ -63,7 +63,7 @@ export class SpriteLibrary {
             width: 64,
             height: 76,
         },
-        BOSS_3: {
+        BOSS_4: {
             width: 76,
             height: 64,
         },
@@ -679,11 +679,11 @@ export class SpriteLibrary {
         );
     }
 
-    static boss3Idle() {
+    static boss4Idle() {
         return new AnimatedSprite(
-            'images/boss_3.png',
-            SpriteLibrary.SIZES.BOSS_3.width,
-            SpriteLibrary.SIZES.BOSS_3.height,
+            'images/boss-4.png',
+            SpriteLibrary.SIZES.BOSS_4.width,
+            SpriteLibrary.SIZES.BOSS_4.height,
             0,
             2,
             2,
@@ -691,11 +691,11 @@ export class SpriteLibrary {
         );
     }
 
-    static boss3Shoot() {
+    static boss4Shoot() {
         return new AnimatedSprite(
-            'images/boss_3.png',
-            SpriteLibrary.SIZES.BOSS_3.width,
-            SpriteLibrary.SIZES.BOSS_3.height,
+            'images/boss-4.png',
+            SpriteLibrary.SIZES.BOSS_4.width,
+            SpriteLibrary.SIZES.BOSS_4.height,
             0,
             4,
             8,

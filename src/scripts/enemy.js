@@ -64,7 +64,7 @@ export class Enemy extends Entity {
             this.health = Math.max(0, this.health - 1);
             this.isDead = this.health === 0;
             if (this.isDead) {
-                this.game.recordEnemyDeath(this);
+                this.game.stats.enemyKilled(this.type);
                 const deathAnimation = FilterManager.blurFadeOutAnimation();
                 this.sprites.forEach((x) =>
                     x.filterManager.animate(

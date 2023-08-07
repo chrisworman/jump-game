@@ -3,6 +3,7 @@ import { FilterManager } from './filterManager.js';
 export class AnimatedSprite {
     constructor(imagePath, width, height, yOffset, frameCount, fps = 12, loop = true, xoffset = 0) {
         // By convention, sprite sheets for animations are always left to right horizontal
+        this.imagePath = imagePath;
         this.xOffsets = Array(frameCount);
         this.yOffset = yOffset;
         for (let i = 0; i < frameCount; i++) {
@@ -79,5 +80,28 @@ export class AnimatedSprite {
                     );
             });
         }
+    }
+
+    pushHtml(html) {
+        const id = Array.from(this.imagePath.matchAll(/^.*\/(.+)\..+$/g))[0][1];
+        const animation = `enemy-animation-${id}`;
+        const cssClass = `enemy-${id}`;
+        html.push(`
+            <style>
+                @keyframes ${animation} {
+                    to { background-position: -${this.width * this.frameCount}px; }
+                }
+          
+                .${cssClass} {
+                    width: ${this.width}px;
+                    height: ${this.height}px;
+                    background: url("${this.imagePath}");
+                    animation: ${animation} ${this.frameCount / this.fps}s steps(${this.frameCount}) infinite;
+                    overflow: hidden;
+                    margin: 10px auto;
+                }
+            </style>
+            <div class="${cssClass}"></div>
+        `);
     }
 }

@@ -87,16 +87,16 @@ export class AudioManager {
             url: 'sounds/boss-hit-2.aac',
             volume: 0.3,
         },
-        BOSS_SHOT_3: {
+        BOSS_SHOT_4: {
             url: 'sounds/boss-hit-3.aac',
             volume: 0.3,
         },
-        BOSS_3_SHOT_1: {
-            url: 'sounds/boss-3-vox-1.aac',
+        BOSS_4_SHOT_1: {
+            url: 'sounds/boss-4-vox-1.aac',
             volume: 0.2,
         },
-        BOSS_3_SHOT_2: {
-            url: 'sounds/boss-3-vox-2.aac',
+        BOSS_4_SHOT_2: {
+            url: 'sounds/boss-4-vox-2.aac',
             volume: 0.2,
         },
         BOSS_DEAD: {

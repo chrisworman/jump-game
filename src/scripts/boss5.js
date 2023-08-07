@@ -70,6 +70,7 @@ export class Boss5 extends Enemy {
                         );
                         bomber.mover.dropping = true;
                         game.enemies.push(bomber);
+                        this.game.stats.shootableEnemyAvailable(bomber.type);
                         this.currentSprite.reset();
                     } else {
                         const chaser = Chaser.spawn(
@@ -79,6 +80,7 @@ export class Boss5 extends Enemy {
                         );
                         chaser.mover.dropping = true;
                         game.enemies.push(chaser);
+                        this.game.stats.shootableEnemyAvailable(chaser.type);
                         this.currentSprite.reset();
                     }
                 } else if (i === 2) {

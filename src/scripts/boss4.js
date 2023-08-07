@@ -9,7 +9,7 @@ import { Chaser } from './chaser.js';
 import { GameState } from './gameState.js';
 import { AudioManager } from './audioManager.js';
 
-export class Boss3 extends Enemy {
+export class Boss4 extends Enemy {
     static SPEED = 3.25;
     static STATES = {
         PACING: 0,
@@ -24,22 +24,22 @@ export class Boss3 extends Enemy {
             game,
             x,
             y,
-            SpriteLibrary.SIZES.BOSS_3.width,
-            SpriteLibrary.SIZES.BOSS_3.height,
+            SpriteLibrary.SIZES.BOSS_4.width,
+            SpriteLibrary.SIZES.BOSS_4.height,
             EnemyTypes.BOSS,
             spriteIdle,
             true,
             3
         );
 
-        this.state = Boss3.STATES.PACING;
+        this.state = Boss4.STATES.PACING;
 
         this.spriteIdle = spriteIdle;
-        this.spriteShoot = SpriteLibrary.boss3Shoot();
+        this.spriteShoot = SpriteLibrary.boss4Shoot();
         this.sprites = [this.spriteIdle, this.spriteShoot];
 
         this.mover = new Mover(game, this);
-        this.mover.pace(Boss3.SPEED);
+        this.mover.pace(Boss4.SPEED);
         this.mover.setCollideWith({
             platforms: true,
             walls: true,
@@ -50,7 +50,7 @@ export class Boss3 extends Enemy {
             emit: () => {
                 this.toggleState();
 
-                if (this.state === Boss3.STATES.PACING) {
+                if (this.state === Boss4.STATES.PACING) {
                     this.currentSprite = this.spriteIdle;
                     if (this.y + this.height > game.player.y + game.player.height) {
                         this.mover.jump();
@@ -58,12 +58,12 @@ export class Boss3 extends Enemy {
                         this.mover.drop();
                     }
                 } else if (
-                    this.state === Boss3.STATES.SPAWN_MINION_1 ||
-                    this.state === Boss3.STATES.SPAWN_MINION_2 ||
-                    this.state === Boss3.STATES.SPAWN_MINION_3 ||
-                    this.state === Boss3.STATES.SPAWN_MINION_4
+                    this.state === Boss4.STATES.SPAWN_MINION_1 ||
+                    this.state === Boss4.STATES.SPAWN_MINION_2 ||
+                    this.state === Boss4.STATES.SPAWN_MINION_3 ||
+                    this.state === Boss4.STATES.SPAWN_MINION_4
                 ) {
-                    if (this.state === Boss3.STATES.SPAWN_MINION_1) {
+                    if (this.state === Boss4.STATES.SPAWN_MINION_1) {
                         this.currentSprite = this.spriteShoot;
                     }
                     this.currentSprite.reset();
@@ -75,6 +75,7 @@ export class Boss3 extends Enemy {
                                 this.y + this.height - SpriteLibrary.SIZES.CHASER.height
                             );
                             game.enemies.push(minion);
+                            this.game.stats.shootableEnemyAvailable(minion.type);
                             this.spriteShoot.setOnReachedEnd(null);
                         }
                     });
@@ -97,20 +98,20 @@ export class Boss3 extends Enemy {
     handleShot() {
         const wasShot = super.handleShot();
         if (wasShot && !this.isDead) {
-            this.game.audioManager.play(AudioManager.SOUNDS[`BOSS_3_SHOT_${this.health}`]);
+            this.game.audioManager.play(AudioManager.SOUNDS[`BOSS_4_SHOT_${this.health}`]);
         }
     }
 
     toggleState() {
-        this.state = (this.state + 1) % Object.keys(Boss3.STATES).length;
+        this.state = (this.state + 1) % Object.keys(Boss4.STATES).length;
     }
 
     static spawn(game) {
         const x = RandomGenerator.randomIntBetween(
             1,
-            game.canvas.width - SpriteLibrary.SIZES.BOSS_3.width - 1
+            game.canvas.width - SpriteLibrary.SIZES.BOSS_4.width - 1
         );
-        const y = Platforms.getPlatformYs()[0] - SpriteLibrary.SIZES.BOSS_3.height;
-        return new Boss3(game, x, y, SpriteLibrary.boss3Idle());
+        const y = Platforms.getPlatformYs()[0] - SpriteLibrary.SIZES.BOSS_4.height;
+        return new Boss4(game, x, y, SpriteLibrary.boss4Idle());
     }
 }

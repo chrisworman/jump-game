@@ -102,11 +102,10 @@ export class Level {
         const initialEnemies = [];
 
         if (this.world.number === 1) {
-
             // Walkers
             const walkerLevels = [2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (walkerLevels.indexOf(this.number) >= 0) {
-                const walkerCount = Math.max(1, Math.min(6, this.number - 4));
+                const walkerCount = Math.max(1, Math.min(5, this.number - 4));
                 for (let i = 0; i < walkerCount; i++) {
                     initialEnemies.push(
                         this.walkerSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -114,21 +113,19 @@ export class Level {
                 }
             }
 
-            // Sentries
-            const sentryLevels = [3, 4, 5, 6, 7, 8, 9, 10];
-            if (sentryLevels.indexOf(this.number) >= 0) {
-                const sentryCount = Math.max(1, Math.min(2, this.number - 7));
-                for (let i = 0; i < sentryCount; i++) {
-                    initialEnemies.push(
-                        this.sentrySpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
+            // Towers
+            const towerLevels = [3, 5, 6, 7, 8, 9, 10];
+            if (towerLevels.indexOf(this.number) >= 0) {
+                const towerCount = Math.max(1, Math.min(3, this.number - 6));
+                for (let i = 0; i < towerCount; i++) {
+                    initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 }
             }
 
             // Dumper
             const dumperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
             if (dumperLevels.indexOf(this.number) >= 0) {
-                const dumperCount =  Math.max(1, Math.min(3, this.number - 6));
+                const dumperCount = Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < dumperCount; i++) {
                     initialEnemies.push(
                         this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -138,25 +135,22 @@ export class Level {
         }
 
         if (this.world.number === 2) {
-
             // Tanks
             const tankLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (tankLevels.indexOf(this.number) >= 0) {
                 const tankCount = Math.max(1, Math.min(3, this.number - 5));
                 for (let i = 0; i < tankCount; i++) {
-                    initialEnemies.push(
-                        this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
+                    initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
                 }
             }
 
-            // Towers
-            const towerLevels = [2, 3, 5, 6, 7, 8, 9, 10];
-            if (towerLevels.indexOf(this.number) >= 0) {
-                const towerCount = Math.max(1, Math.min(3, this.number - 6));
-                for (let i = 0; i < towerCount; i++) {
+            // Sentries
+            const sentryLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            if (sentryLevels.indexOf(this.number) >= 0) {
+                const sentryCount = Math.max(1, Math.min(2, this.number - 5));
+                for (let i = 0; i < sentryCount; i++) {
                     initialEnemies.push(
-                        this.towerSpawner.spawnWithoutIntersecting(initialEnemies)
+                        this.sentrySpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
             }
@@ -164,7 +158,7 @@ export class Level {
             // Pounder
             const pounderLevels = [4, 5, 6, 7, 8, 9, 10];
             if (pounderLevels.indexOf(this.number) >= 0) {
-                const pounderCount =  Math.max(1, Math.min(3, this.number - 5));
+                const pounderCount = Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < pounderCount; i++) {
                     initialEnemies.push(
                         this.pounderSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -174,11 +168,10 @@ export class Level {
         }
 
         if (this.world.number === 3) {
-
             // Zamboney
             const zamboneyLevels = [1, 2, 4, 5, 6, 7, 8, 9, 10];
             if (zamboneyLevels.indexOf(this.number) >= 0) {
-                const zamboneyCount = Math.max(1, Math.min(4, this.number - 5));
+                const zamboneyCount = Math.max(1, Math.min(4, this.number - 6));
                 for (let i = 0; i < zamboneyCount; i++) {
                     initialEnemies.push(
                         this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
@@ -187,9 +180,9 @@ export class Level {
             }
 
             // Poppers
-            const popperLevels = [3, 5, 6, 7, 8, 9, 10];
+            const popperLevels = [3, 4, 5, 6, 7, 8, 10];
             if (popperLevels.indexOf(this.number) >= 0) {
-                const popperCount = Math.max(1, Math.min(3, this.number - 6));
+                const popperCount = Math.max(1, Math.min(2, this.number - 6));
                 for (let i = 0; i < popperCount; i++) {
                     initialEnemies.push(
                         this.popperSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -200,7 +193,7 @@ export class Level {
             // Bomber
             const bomberLevels = [2, 4, 5, 6, 7, 8, 9, 10];
             if (bomberLevels.indexOf(this.number) >= 0) {
-                const bomberCount =  Math.max(1, Math.min(3, this.number - 6));
+                const bomberCount = Math.max(1, Math.min(2, this.number - 7));
                 for (let i = 0; i < bomberCount; i++) {
                     initialEnemies.push(
                         this.bomberSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -210,7 +203,6 @@ export class Level {
         }
 
         if (this.world.number === 4) {
-
             // Chasers
             const chaserLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (chaserLevels.indexOf(this.number) >= 0) {
@@ -236,17 +228,14 @@ export class Level {
             // Heavy
             const heavyLevels = [4, 5, 6, 7, 8, 9, 10];
             if (heavyLevels.indexOf(this.number) >= 0) {
-                const heavyCount =  Math.max(1, Math.min(2, this.number - 8));
+                const heavyCount = Math.max(1, Math.min(2, this.number - 8));
                 for (let i = 0; i < heavyCount; i++) {
-                    initialEnemies.push(
-                        this.heavySpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
+                    initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
                 }
             }
         }
 
         if (this.world.number === 5) {
-
             if (this.number === 1) {
                 const chaserCount = 6;
                 for (let i = 0; i < chaserCount; i++) {
@@ -254,7 +243,7 @@ export class Level {
                         this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)
                     );
                 }
-                const pounderCount =  2;
+                const pounderCount = 2;
                 for (let i = 0; i < pounderCount; i++) {
                     initialEnemies.push(
                         this.pounderSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -263,12 +252,8 @@ export class Level {
             }
 
             if (this.number === 2) {
-                initialEnemies.push(
-                    this.bomberSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.towerSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.bomberSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 const walkerCount = 2;
                 for (let i = 0; i < walkerCount; i++) {
                     initialEnemies.push(
@@ -278,15 +263,9 @@ export class Level {
             }
 
             if (this.number === 3) {
-                initialEnemies.push(
-                    this.heavySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
                 const popperCount = 2;
                 for (let i = 0; i < popperCount; i++) {
                     initialEnemies.push(
@@ -296,12 +275,8 @@ export class Level {
             }
 
             if (this.number === 4) {
-                initialEnemies.push(
-                    this.turrentSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies));
                 const pounderCount = 2;
                 for (let i = 0; i < pounderCount; i++) {
                     initialEnemies.push(
@@ -311,12 +286,8 @@ export class Level {
             }
 
             if (this.number === 5) {
-                initialEnemies.push(
-                    this.sentrySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.sentrySpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
                 const walkerCount = 4;
                 for (let i = 0; i < walkerCount; i++) {
                     initialEnemies.push(
@@ -332,36 +303,20 @@ export class Level {
             }
 
             if (this.number === 6) {
-                initialEnemies.push(
-                    this.towerSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.turrentSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies));
                 const tankCount = 2;
                 for (let i = 0; i < tankCount; i++) {
-                    initialEnemies.push(
-                        this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
+                    initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
                 }
             }
 
             if (this.number === 7) {
-                initialEnemies.push(
-                    this.heavySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.pounderSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.tankSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.pounderSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
                 const popperCount = 2;
                 for (let i = 0; i < popperCount; i++) {
                     initialEnemies.push(
@@ -371,12 +326,8 @@ export class Level {
             }
 
             if (this.number === 8) {
-                initialEnemies.push(
-                    this.turrentSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.towerSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 const chaserCount = 8;
                 for (let i = 0; i < chaserCount; i++) {
                     initialEnemies.push(
@@ -386,12 +337,8 @@ export class Level {
             }
 
             if (this.number === 9) {
-                initialEnemies.push(
-                    this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.dumperSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
                 const walkerCount = 4;
                 for (let i = 0; i < walkerCount; i++) {
                     initialEnemies.push(
@@ -407,15 +354,9 @@ export class Level {
             }
 
             if (this.number === 10) {
-                initialEnemies.push(
-                    this.heavySpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.towerSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
-                initialEnemies.push(
-                    this.popperSpawner.spawnWithoutIntersecting(initialEnemies)
-                );
+                initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.popperSpawner.spawnWithoutIntersecting(initialEnemies));
                 const pounderCount = 2;
                 for (let i = 0; i < pounderCount; i++) {
                     initialEnemies.push(
@@ -435,9 +376,13 @@ export class Level {
                     );
                 }
             }
-
-
         }
+
+        initialEnemies.forEach((x) => {
+            if (x.isShootable) {
+                this.game.stats.shootableEnemyAvailable(x.type);
+            }
+        });
 
         return initialEnemies;
     }
@@ -457,6 +402,8 @@ export class Level {
             entitiesToAvoid.push(gem);
             collectables.push(gem);
         }
+
+        this.game.stats.gemsAvailable(gemCount);
 
         // Shield
         if (this.number === 8) {

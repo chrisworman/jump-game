@@ -16,6 +16,7 @@ import { Rocket } from './rocket.js';
 import { HealthUpHeart } from './healthUpHeart.js';
 import { Enemy } from './enemy.js';
 import { Modal } from './modal.js';
+import { Stats } from './stats.js';
 
 export class Game {
     static LEVEL_SCROLL_SPEED = 6.5;
@@ -41,7 +42,7 @@ export class Game {
         this.hudContainer = document.getElementById('hud');
         this.responsiveCanvas = document.getElementById('responsiveCanvas');
         this.onScreenControls = document.getElementById('onScreenControls');
-        this.modal = new Modal();
+        this.modal = new Modal(this);
 
         this.handleWindowResize();
         window.addEventListener('resize', () => {
@@ -75,7 +76,6 @@ export class Game {
         this.enemyDeathsByType = {};
 
         this.setGemCount(0);
-        this.totalGemCount = 0;
         this.modal.showManual('Pixel Jump', 'Start', () => {
             this.startNewGame();
         });
@@ -84,6 +84,7 @@ export class Game {
 
     startNewGame() {
         // Update state before UI
+        this.stats = new Stats(this);
         this.gameTime = 0;
         this.lastUpdateTime = null;
         this.levelManager.reset();
@@ -98,8 +99,6 @@ export class Game {
         this.hud.displayLevel(this.level);
         this.player.reset();
         this.setGemCount(0);
-        this.totalGemCount = 0;
-        this.enemyDeathsByType = {};
         this.bullets = [];
         Bullet.SpawnReusePool = [];
         this.collectables = [];
@@ -222,7 +221,7 @@ export class Game {
     }
 
     incrementGemCount() {
-        this.totalGemCount++;
+        this.stats.gemCollected();
         this.setGemCount(this.gemCount + 1);
     }
 
@@ -387,11 +386,6 @@ export class Game {
 
     isBossLevel() {
         return this.level && !!this.level.boss;
-    }
-
-    recordEnemyDeath(enemy) {
-        const currentCount = this.enemyDeathsByType[enemy.type] ?? 0;
-        this.enemyDeathsByType[enemy.type] = currentCount + 1;
     }
 
     handleWindowResize() {
