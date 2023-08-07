@@ -84,8 +84,8 @@ export class AnimatedSprite {
 
     pushHtml(html) {
         const id = Array.from(this.imagePath.matchAll(/^.*\/(.+)\..+$/g))[0][1];
-        const animation = `enemy-animation-${id}`;
-        const cssClass = `enemy-${id}`;
+        const animation = `sprite-animation-${id}`;
+        const cssClass = `sprite-${id}`;
         html.push(`
             <style>
                 @keyframes ${animation} {

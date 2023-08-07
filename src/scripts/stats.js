@@ -46,9 +46,18 @@ export class Stats {
         const html = [];
         const worldNumber = this.game.level.world.number;
         const w = this.world[worldNumber];
+        
+
+        const collected = w.gems.collected;
+        const available = w.gems.available;
+        const percent = `${Math.ceil((collected / available) * 100)}%`;
+        html.push('<div class="modal-stat-row">');
+        SpriteLibrary.gem().pushHtml(html);
+        html.push(`<div class="modal-stat-text">${collected} / ${available} ≈ ${percent}</div>`);
+        html.push('</div>');
+
         const enemiesKilled = w.enemies.killedByType;
         const enemiesAvailable = w.enemies.availableByType;
-
         let totalAvailable = 0;
         let totalKilled = 0;
         for (const type in enemiesAvailable) {
@@ -70,9 +79,9 @@ export class Stats {
 
     pushEnemyKilledHtml(html, type, killed, available) {
         const percent = `${Math.ceil((killed / available) * 100)}%`;
-        html.push('<div class="enemy-stat">');
+        html.push('<div class="modal-stat-row">');
         this.pushEnemySpriteHtml(html, type);
-        html.push(`<div class="enemy-killed">${killed} / ${available} ≈ ${percent}</div>`);
+        html.push(`<div class="modal-stat-text">${killed} / ${available} ≈ ${percent}</div>`);
         html.push('</div>');
     }
 
