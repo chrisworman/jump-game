@@ -15,6 +15,7 @@ export class BigBomb extends Enemy {
             y,
             SpriteLibrary.SIZES.BIG_BOMB.width,
             SpriteLibrary.SIZES.BIG_BOMB.height,
+            0,
             EnemyTypes.BIG_BOMB,
             sprite,
             false

@@ -26,10 +26,11 @@ export class HealthUpHeart extends Entity {
     }
 
     update() {
+        super.update();
         this.mover.update();
         if (this.sprite.filterManager.animation == null) {
             // Done fading out
-            this.game.healthUpHearts = this.game.healthUpHearts.filter((x) => x !== this);
+            this.game.overlayEntities = this.game.overlayEntities.filter((x) => x !== this);
             return;
         }
     }
@@ -40,7 +41,7 @@ export class HealthUpHeart extends Entity {
 
     static spawn(game) {
         game.audioManager.play(AudioManager.SOUNDS.HEALTH_UP);
-        game.healthUpHearts.push(
+        game.overlayEntities.push(
             new HealthUpHeart(
                 game,
                 game.player.x + game.player.mover.velocity.x + game.player.width * 0.5,

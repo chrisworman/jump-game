@@ -5,6 +5,7 @@ import { SpriteLibrary } from './spriteLibrary.js';
 export class Stats {
     constructor(game) {
         this.game = game;
+        this.points = 0;
         this.world = {};
         for (let i = 1; i <= LevelManager.WORLD_COUNT; i++) {
             this.world[i] = {
@@ -15,6 +16,7 @@ export class Stats {
                 enemies: {
                     killedByType: {},
                     availableByType: {},
+                    points: 0,
                 },
             };
         }
@@ -36,10 +38,12 @@ export class Stats {
         this.world[worldNumber].enemies.availableByType[enemyType] = prev + 1;
     }
 
-    enemyKilled(enemyType) {
-        const worldNumber = this.game.level.world.number;
-        const prev = this.world[worldNumber].enemies.killedByType[enemyType] || 0;
-        this.world[worldNumber].enemies.killedByType[enemyType] = prev + 1;
+    enemyKilled(enemy) {
+        const enemyStats = this.world[this.game.level.world.number].enemies;
+        const prev = enemyStats.killedByType[enemy.type] || 0;
+        enemyStats.killedByType[enemy.type] = prev + 1;
+        enemyStats.points += enemy.points; // inc the points for the world sum
+        this.points += enemy.points; // inc the points for the global sum
     }
 
     getWorldHtml() {
@@ -47,7 +51,10 @@ export class Stats {
         const worldNumber = this.game.level.world.number;
         const w = this.world[worldNumber];
         
+        // Points
+        html.push(`<div class="modal-points">${this.getFormattedPoints()}</div>`);
 
+        // Gems
         const collected = w.gems.collected;
         const available = w.gems.available;
         const percent = `${Math.ceil((collected / available) * 100)}%`;
@@ -56,6 +63,7 @@ export class Stats {
         html.push(`<div class="modal-stat-text">${collected} / ${available} ≈ ${percent}</div>`);
         html.push('</div>');
 
+        // Enemy kills
         const enemiesKilled = w.enemies.killedByType;
         const enemiesAvailable = w.enemies.availableByType;
         let totalAvailable = 0;
@@ -71,10 +79,14 @@ export class Stats {
         return html.join('');
     }
 
-    getGameHtml() {
-        const html = [];
-        // TODO: aggregate stats over all worlds
-        return html.join('');
+    // getGameHtml() {
+    //     const html = [];
+    //     // TODO: aggregate stats over all worlds???
+    //     return html.join('');
+    // }
+
+    getFormattedPoints() {
+        return `${this.points.toLocaleString()} POINTS`;
     }
 
     pushEnemyKilledHtml(html, type, killed, available) {

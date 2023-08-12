@@ -114,7 +114,7 @@ export class Level {
             }
 
             // Towers
-            const towerLevels = [3, 5, 6, 7, 8, 9, 10];
+            const towerLevels = [3, 4, 5, 6, 7, 8, 9, 10];
             if (towerLevels.indexOf(this.number) >= 0) {
                 const towerCount = Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < towerCount; i++) {
@@ -123,7 +123,7 @@ export class Level {
             }
 
             // Dumper
-            const dumperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            const dumperLevels = [4, 5, 6, 7, 8, 9, 10];
             if (dumperLevels.indexOf(this.number) >= 0) {
                 const dumperCount = Math.max(1, Math.min(3, this.number - 6));
                 for (let i = 0; i < dumperCount; i++) {

@@ -20,6 +20,7 @@ export class Heavy extends Enemy {
             y,
             SpriteLibrary.SIZES.HEAVY.width,
             SpriteLibrary.SIZES.HEAVY.height,
+            100,
             EnemyTypes.HEAVY,
             spriteIdle,
             true,

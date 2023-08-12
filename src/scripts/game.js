@@ -71,7 +71,7 @@ export class Game {
         this.platforms = new Platforms(this);
         this.bullets = [];
         this.collectables = [];
-        this.healthUpHearts = [];
+        this.overlayEntities = [];
         this.enemies = [];
         this.enemyDeathsByType = {};
 
@@ -97,6 +97,7 @@ export class Game {
         }
         this.level.world.playSong();
         this.hud.displayLevel(this.level);
+        this.hud.displayPoints(0);
         this.player.reset();
         this.setGemCount(0);
         this.bullets = [];
@@ -181,7 +182,7 @@ export class Game {
         this.enemies.forEach((enemy) => enemy.update());
         this.bullets.forEach((bullet) => bullet.update()); // Consider updating bullets first to kill enemies?
         this.collectables.forEach((x) => x.update());
-        this.healthUpHearts.forEach((x) => x.update());
+        this.overlayEntities.forEach((x) => x.update());
         this.level.spawnEnemies();
     }
 
@@ -192,7 +193,7 @@ export class Game {
         this.enemies.forEach((enemy) => enemy.update());
         this.bullets.forEach((bullet) => bullet.update());
         this.collectables.forEach((x) => x.update());
-        this.healthUpHearts.forEach((x) => x.update());
+        this.overlayEntities.forEach((x) => x.update());
 
         // Has the player reached the bottom of the screen?
         if (this.player.y + this.player.height >= this.canvas.height) {
@@ -213,7 +214,7 @@ export class Game {
 
     updateBossCelebration() {
         this.player.update();
-        this.healthUpHearts.forEach((x) => x.update());
+        this.overlayEntities.forEach((x) => x.update());
     }
 
     updateWorldOutro() {
@@ -470,7 +471,7 @@ game.addGameObject(myGameObject)
                 .filter((x) => x.type === EnemyTypes.BIG_BOMB || x.type === EnemyTypes.FINAL_BOSS)
                 .forEach((x) => x.render(this.renderContext));
             this.bullets.forEach((x) => x.render(this.renderContext));
-            this.healthUpHearts.forEach((x) => x.render(this.renderContext));
+            this.overlayEntities.forEach((x) => x.render(this.renderContext));
         });
 
         const ctxResponsive = this.responsiveCanvas.getContext('2d');

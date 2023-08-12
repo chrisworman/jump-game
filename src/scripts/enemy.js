@@ -1,6 +1,7 @@
 import { AudioManager } from './audioManager.js';
 import { Entity } from './entity.js';
 import { FilterManager } from './filterManager.js';
+import { PointBonus } from './pointBonus.js';
 
 export class Enemy extends Entity {
     static DEFAULT_HEALTH = 1;
@@ -13,12 +14,14 @@ export class Enemy extends Entity {
         y,
         width,
         height,
+        points,
         type,
         currentSprite,
         isShootable,
         health = Enemy.DEFAULT_HEALTH
     ) {
         super(game, x, y, width, height);
+        this.points = points;
         this.type = type;
         this.currentSprite = currentSprite;
         this.isDead = false;
@@ -64,7 +67,9 @@ export class Enemy extends Entity {
             this.health = Math.max(0, this.health - 1);
             this.isDead = this.health === 0;
             if (this.isDead) {
-                this.game.stats.enemyKilled(this.type);
+                this.game.stats.enemyKilled(this);
+                this.game.overlayEntities.push(new PointBonus(this.game, this.x, this.y, this.points));
+                this.game.hud.displayPoints(this.game.stats.points);
                 const deathAnimation = FilterManager.blurFadeOutAnimation();
                 this.sprites.forEach((x) =>
                     x.filterManager.animate(

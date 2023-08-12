@@ -6,7 +6,8 @@ export class Hud {
         this.hearts = document.getElementById('hearts');
         this.shield = document.getElementById('shield');
         this.collectable = document.getElementById('collectable');
-        this.hudText = document.getElementById('hudText');
+        this.points = document.getElementById('points');
+        this.level = document.getElementById('level');
         this.collectableCount = document.getElementById('collectableCount');
         this.audioButton = document.getElementById('audioButton');
         this.audioButton.addEventListener('click', () => {
@@ -38,7 +39,7 @@ export class Hud {
             this.collectable.offsetHeight; // Force DOM reflow
             this.collectable.classList.add('pulse-bg');
         }
-        this.collectableCount.innerText = String(count).padStart(2, '0');
+        this.collectableCount.innerText = count;
     }
 
     displayAudioMuted(isMuted) {
@@ -52,10 +53,13 @@ export class Hud {
 
     displayLevel(level) {
         if (level.boss) {
-            this.hudText.innerText = `World ${level.world.number} Boss`;
+            this.level.innerText = `World ${level.world.number} Boss`;
         } else {
-            const paddedLevel = level.number.toString().padStart(2, '0');
-            this.hudText.innerText = `World ${level.world.number} Level ${paddedLevel}`;
+            this.level.innerText = `World ${level.world.number}-${level.number}`;
         }
+    }
+
+    displayPoints(points) {
+        this.points.innerText = points.toString().padStart(6, '0');
     }
 }

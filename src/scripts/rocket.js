@@ -16,6 +16,7 @@ export class Rocket extends Enemy {
             y,
             SpriteLibrary.SIZES.ROCKET.width,
             SpriteLibrary.SIZES.ROCKET.height,
+            0,
             EnemyTypes.ROCKET,
             SpriteLibrary.rocket(),
             false

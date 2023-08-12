@@ -20,6 +20,7 @@ export class Bomber extends Enemy {
             y,
             SpriteLibrary.SIZES.BOMBER.width,
             SpriteLibrary.SIZES.BOMBER.height,
+            75,
             EnemyTypes.BOMBER,
             spriteIdle,
             true,

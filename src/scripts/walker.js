@@ -15,6 +15,7 @@ export class Walker extends Enemy {
             y,
             SpriteLibrary.SIZES.WALKER.width,
             SpriteLibrary.SIZES.WALKER.height,
+            5,
             EnemyTypes.WALKER,
             walkingSprite,
             true

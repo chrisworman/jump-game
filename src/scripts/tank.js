@@ -18,6 +18,7 @@ export class Tank extends Enemy {
             y,
             SpriteLibrary.SIZES.TANK.width,
             SpriteLibrary.SIZES.TANK.height,
+            35,
             EnemyTypes.TANK,
             spriteIdle,
             true

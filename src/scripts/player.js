@@ -52,9 +52,9 @@ export class Player extends Entity {
             this.boundingBox.height = this.height - 8 - 4 - Player.HIT_BOX_PADDING; // When the player is jumping, there are about 4 (varies) transparent pixels below the player
         } else {
             this.boundingBox.x = this.x + Player.HIT_BOX_PADDING;
-            this.boundingBox.y = this.y + 16 + Player.HIT_BOX_PADDING; // When the player is not jumping, there some transparent pixels above the player
+            this.boundingBox.y = this.y + 12 + Player.HIT_BOX_PADDING; // When the player is not jumping, there some transparent pixels above the player
             this.boundingBox.width = this.width - Player.HIT_BOX_PADDING;
-            this.boundingBox.height = this.height - 16 - Player.HIT_BOX_PADDING;
+            this.boundingBox.height = this.height - 12 - Player.HIT_BOX_PADDING;
         }
 
         return this.boundingBox;

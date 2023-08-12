@@ -15,6 +15,7 @@ export class Turret extends Enemy {
             y,
             SpriteLibrary.SIZES.TURRET.width,
             SpriteLibrary.SIZES.TURRET.height,
+            75,
             EnemyTypes.TURRET,
             SpriteLibrary.turretIdle(),
             true

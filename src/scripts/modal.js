@@ -31,7 +31,6 @@ export class Modal {
         this.onAction = onAction;
         this.hideAllContent();
         this.stats.innerHTML = this.game.stats.getWorldHtml();
-        // TODO: refactor / cleanup this mess
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
         $(this.stats).show();
         $(this.element).fadeIn('slow');
@@ -44,6 +43,7 @@ export class Modal {
         this.hideAllContent();
         this.stats.innerHTML = this.game.stats.getWorldHtml();
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
+        $(this.stats).show();
         $(this.element).fadeIn('slow');
     }
 

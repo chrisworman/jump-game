@@ -10,7 +10,7 @@ import { GameState } from './gameState.js';
 
 export class Pounder extends Enemy {
     constructor(game, x, y, width, height, currentSprite) {
-        super(game, x, y, width, height, EnemyTypes.POUNDER, currentSprite, true);
+        super(game, x, y, width, height, 25, EnemyTypes.POUNDER, currentSprite, true);
 
         this.spriteIdle = currentSprite;
         this.spritePound = SpriteLibrary.pounderPound();
@@ -22,7 +22,10 @@ export class Pounder extends Enemy {
             emit: (i) => {
                 if (i === 0 || i === 7) {
                     this.currentSprite = this.spriteIdle;
-                    if (this.y + this.height > Platforms.HEIGHT && RandomGenerator.randomBool(0.70)) {
+                    if (
+                        this.y + this.height > Platforms.HEIGHT &&
+                        RandomGenerator.randomBool(0.7)
+                    ) {
                         this.mover.jump();
                     } else {
                         this.mover.drop();
@@ -69,12 +72,14 @@ export class Pounder extends Enemy {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 3);
         return new Pounder(
             game,
-            x || RandomGenerator.randomIntBetween(
-                100,
-                game.canvas.width - SpriteLibrary.SIZES.POUNDER.width - 100
-            ),
-            y || RandomGenerator.randomFromArray(eligiblePlatformYs) -
-                SpriteLibrary.SIZES.POUNDER.height,
+            x ||
+                RandomGenerator.randomIntBetween(
+                    100,
+                    game.canvas.width - SpriteLibrary.SIZES.POUNDER.width - 100
+                ),
+            y ||
+                RandomGenerator.randomFromArray(eligiblePlatformYs) -
+                    SpriteLibrary.SIZES.POUNDER.height,
             SpriteLibrary.SIZES.POUNDER.width,
             SpriteLibrary.SIZES.POUNDER.height,
             SpriteLibrary.pounderIdle()

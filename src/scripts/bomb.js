@@ -10,15 +10,16 @@ export class Bomb extends Enemy {
     static SPAWN_SPEED_Y = 8;
     static SpawnReusePool = [];
 
-    constructor(game, x, y, velocity) {
+    constructor(game, x, y, sprite, velocity) {
         super(
             game,
             x,
             y,
             SpriteLibrary.SIZES.BOMB.width,
             SpriteLibrary.SIZES.BOMB.height,
+            0,
             EnemyTypes.BOMB,
-            SpriteLibrary.bomb(),
+            sprite,
             false
         );
         this.mover = new Mover(game, this);
@@ -68,7 +69,7 @@ export class Bomb extends Enemy {
             spawned = Bomb.SpawnReusePool.pop();
             spawned.reuse(x, y, velocity);
         } else {
-            spawned = new Bomb(game, x, y, velocity);
+            spawned = new Bomb(game, x, y, SpriteLibrary.bomb(), velocity);
             game.enemies.push(spawned);
         }
         game.audioManager.play(AudioManager.SOUNDS.BOMB);

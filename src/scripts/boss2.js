@@ -21,6 +21,7 @@ export class Boss2 extends Enemy {
             y,
             SpriteLibrary.SIZES.BOSS_2.width,
             SpriteLibrary.SIZES.BOSS_2.height,
+            750,
             EnemyTypes.BOSS,
             SpriteLibrary.bossIdle(),
             true,

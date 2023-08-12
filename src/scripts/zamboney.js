@@ -17,6 +17,7 @@ export class Zamboney extends Enemy {
             y,
             SpriteLibrary.SIZES.ZAMBONEY.width,
             SpriteLibrary.SIZES.ZAMBONEY.height,
+            25,
             EnemyTypes.ZAMBONEY,
             spriteLeft,
             true
