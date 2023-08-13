@@ -82,12 +82,12 @@ export class Modal {
         this.onAction = onAction;
 
         const bgStyle = `url("images/level-${this.game.level?.world?.number || 1}-bg-layer-0-fuzzy.png")`;
+        document.querySelectorAll('.tab-content').forEach((tabContent) => {
+            tabContent.style.backgroundImage = bgStyle;
+        });
         
         this.stats.innerHTML = this.game.stats.getWorldHtml();
-        this.stats.style.backgroundImage = bgStyle;
-
         this.leaderBoard.innerHTML = LeaderBoard.getHtml();
-        this.leaderBoard.style.backgroundImage = bgStyle;
 
         $(this.tabs).show();
         $(this.element).fadeIn('slow');
