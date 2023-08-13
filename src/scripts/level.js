@@ -180,9 +180,9 @@ export class Level {
             }
 
             // Poppers
-            const popperLevels = [3, 4, 5, 6, 7, 8, 10];
+            const popperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
             if (popperLevels.indexOf(this.number) >= 0) {
-                const popperCount = Math.max(1, Math.min(2, this.number - 6));
+                const popperCount = Math.max(1, Math.min(2, this.number - 5));
                 for (let i = 0; i < popperCount; i++) {
                     initialEnemies.push(
                         this.popperSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -191,9 +191,9 @@ export class Level {
             }
 
             // Bomber
-            const bomberLevels = [2, 4, 5, 6, 7, 8, 9, 10];
+            const bomberLevels = [2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (bomberLevels.indexOf(this.number) >= 0) {
-                const bomberCount = Math.max(1, Math.min(2, this.number - 7));
+                const bomberCount = Math.max(1, Math.min(2, this.number - 6));
                 for (let i = 0; i < bomberCount; i++) {
                     initialEnemies.push(
                         this.bomberSpawner.spawnWithoutIntersecting(initialEnemies)
