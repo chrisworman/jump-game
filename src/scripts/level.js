@@ -226,7 +226,7 @@ export class Level {
             }
 
             // Heavy
-            const heavyLevels = [4, 5, 6, 7, 8, 9, 10];
+            const heavyLevels = [2, 4, 5, 6, 7, 8, 9, 10];
             if (heavyLevels.indexOf(this.number) >= 0) {
                 const heavyCount = Math.max(1, Math.min(2, this.number - 8));
                 for (let i = 0; i < heavyCount; i++) {
