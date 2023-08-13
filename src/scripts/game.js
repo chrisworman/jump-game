@@ -17,6 +17,7 @@ import { HealthUpHeart } from './healthUpHeart.js';
 import { Enemy } from './enemy.js';
 import { Modal } from './modal.js';
 import { Stats } from './stats.js';
+import { LeaderBoard } from './leaderBoard.js';
 
 export class Game {
     static LEVEL_SCROLL_SPEED = 6.5;
@@ -258,9 +259,17 @@ export class Game {
             2000
         );
 
-        this.modal.showEndGame('Game Over', 'Play Again', () => {
-            this.startNewGame();
-        });
+        const finalPoints = this.stats.points;
+        if (LeaderBoard.isNewRecord(finalPoints)) {
+            console.log('leader board record');
+            LeaderBoard.add(finalPoints, 'CW');
+            this.modal.showNewLeaderBoardRecord(finalPoints);
+            console.log(LeaderBoard.getAll());
+        } else {
+            this.modal.showEndGame('Game Over', 'Play Again', () => {
+                this.startNewGame();
+            });
+        }
 
         this.state = GameState.GAME_OVER;
     }

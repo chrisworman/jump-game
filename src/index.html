@@ -97,7 +97,7 @@
                 margin: 50px auto 0 auto;
                 padding: 10px;
                 width: 100%;
-                max-height: 450px;
+                max-height: 475px;
                 border: solid 2px #fff;
                 overflow-x: hidden;
                 overflow-y: auto;
@@ -123,6 +123,19 @@
                 padding: 10px;
                 font-size: 30px;
                 text-align: center;
+            }
+
+            .modal input[type='text'] {
+                border: solid 2px #fff;
+                display: none;
+                margin: 30px auto 0 auto;
+                caret-color: white;
+                font-size: 35px;
+                text-align: center;
+                width: 90%;
+                background-color: black;
+                color: white;
+                font-family: 'VT323', monospace;
             }
 
             .hud {
@@ -422,6 +435,7 @@
     <body>
         <div id="modal" class="modal">
             <div id="modalText" class="modal-text"></div>
+            <input type="text" id="modalInput" maxlength="20" autofocus autocomplete="nickname"/>
             <div id="modalManual" class="modal-manual">
                 <img src="images/manual.png" />
             </div>
