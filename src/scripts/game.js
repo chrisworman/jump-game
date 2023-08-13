@@ -334,10 +334,15 @@ export class Game {
                 this.gameTime,
                 1000
             );
-            this.modal.showTabs('Game Complete!', 'Play Again', () => {
-                this.songHandler.stop(); // Finale song
-                this.startNewGame();
-            });
+            const finalPoints = this.stats.points;
+            if (LeaderBoard.isNewRecord(finalPoints)) {
+                this.modal.showNewLeaderBoardRecord(finalPoints, true);
+            } else {
+                this.modal.showTabs('Game Complete', 'Play Again', () => {
+                    this.songHandler.stop(); // Finale song
+                    this.startNewGame();
+                });
+            }
             this.state = GameState.GAME_BEAT;
         } else {
             this.modal.showTabs(

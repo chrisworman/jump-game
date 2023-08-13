@@ -51,7 +51,7 @@ export class Modal {
         $(this.element).fadeIn('slow');
     }
 
-    showNewLeaderBoardRecord(points) {
+    showNewLeaderBoardRecord(points, didBeatGame = false) {
         this.hideAllContent();
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
         this.title.innerText = 'You made the TOP TEN!';
@@ -63,7 +63,10 @@ export class Modal {
             const name = this.input.value;
             if (name) {
                 LeaderBoard.add(points, name);
-                this.showTabs('Pixel Jump', 'Play Again', () => {
+                this.showTabs(didBeatGame ? 'Game Complete' :'Pixel Jump', 'Play Again', () => {
+                    if (didBeatGame) {
+                        this.game.songHandler.stop(); // Finale song
+                    }
                     this.game.startNewGame();
                 });
             }
