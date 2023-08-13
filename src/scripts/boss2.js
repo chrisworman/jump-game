@@ -14,7 +14,7 @@ export class Boss2 extends Enemy {
     static SPEED = 3;
     // static RECOVERY_TIME_MS = 4000;
 
-    constructor(game, x, y) {
+    constructor(game, x, y, spriteIdle) {
         super(
             game,
             x,
@@ -23,7 +23,7 @@ export class Boss2 extends Enemy {
             SpriteLibrary.SIZES.BOSS_2.height,
             750,
             EnemyTypes.BOSS,
-            SpriteLibrary.boss2Idle(),
+            spriteIdle,
             true,
             Boss2.HEALTH
         );
@@ -31,9 +31,9 @@ export class Boss2 extends Enemy {
         this.recovering = false;
         this.recoveringStartTime = null;
 
-        this.spriteIdle = SpriteLibrary.boss2Idle();
+        this.spriteIdle = spriteIdle;
         this.spriteJump = SpriteLibrary.boss2Jump();
-        this.spriteBomb = SpriteLibrary.bossBomb();
+        this.spriteBomb = SpriteLibrary.boss2Bomb();
         this.sprites = [this.spriteIdle, this.spriteJump, this.spriteBomb];
 
         this.bombSpawner = new Emitter(game, {
@@ -98,6 +98,6 @@ export class Boss2 extends Enemy {
         const eligiblePlatformYs = Platforms.getPlatformYs().filter((y, i) => i < 5);
         const y =
             RandomGenerator.randomFromArray(eligiblePlatformYs) - SpriteLibrary.SIZES.BOSS_2.height;
-        return new Boss2(game, x, y);
+        return new Boss2(game, x, y, SpriteLibrary.boss2Idle());
     }
 }

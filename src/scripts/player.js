@@ -292,4 +292,24 @@ export class Player extends Entity {
         this.sprites.forEach((x) => x.filterManager.reset());
         // this.laserGun = new LaserGun(this.game); // TODO: debug world 5 levels
     }
+
+    fadeOut() {
+        this.sprites.forEach((x) => {
+            x.filterManager.animate(
+                FilterManager.fadeOutBrightnessAnimation(),
+                this.game.gameTime,
+                1500
+            );
+        });
+    }
+
+    fadeIn() {
+        this.sprites.forEach((x) => {
+            x.filterManager.animate(
+                FilterManager.fadeInBrightnessAnimation(),
+                this.game.gameTime,
+                1500
+            );
+        });
+    }
 }

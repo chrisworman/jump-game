@@ -60,9 +60,19 @@ export class Platforms {
     }
 
     fadeOut() {
-        this.currentSprites.forEach((x) => {
+        [...this.currentSprites, ...this.nextSprites].forEach((x) => {
             x.filterManager.animate(
                 FilterManager.fadeOutBrightnessAnimation(),
+                this.game.gameTime,
+                1200
+            );
+        });
+    }
+
+    fadeIn() {
+        [...this.currentSprites, ...this.nextSprites].forEach((x) => {
+            x.filterManager.animate(
+                FilterManager.fadeInBrightnessAnimation(),
                 this.game.gameTime,
                 1200
             );

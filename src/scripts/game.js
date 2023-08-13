@@ -263,9 +263,6 @@ export class Game {
         if (LeaderBoard.isNewRecord(finalPoints)) {
             this.modal.showNewLeaderBoardRecord(finalPoints);
         } else {
-            // this.modal.showEndGame('Game Over', 'Play Again', () => {
-            //     this.startNewGame();
-            // });
             this.modal.showTabs('Game Over', 'Play Again', () => {
                 this.startNewGame();
             });
@@ -324,6 +321,7 @@ export class Game {
     handleWorldOutroComplete() {
         this.background.fadeOut();
         this.platforms.fadeOut();
+        this.player.fadeOut();
 
         // Beat the game?
         if (this.level.world.isLast()) {
@@ -336,24 +334,12 @@ export class Game {
                 this.gameTime,
                 1000
             );
-            // this.modal.showEndGame('Game Complete!', 'Restart', () => {
-            //     this.songHandler.stop(); // Finale song
-            //     this.startNewGame();
-            // });
             this.modal.showTabs('Game Complete!', 'Play Again', () => {
                 this.songHandler.stop(); // Finale song
                 this.startNewGame();
             });
             this.state = GameState.GAME_BEAT;
         } else {
-            // World complete, but not the game
-            // this.modal.showWorldComplete(
-            //     `World ${this.level.world.number} Complete`,
-            //     'Continue',
-            //     () => {
-            //         this.transitionToNextLevel();
-            //     }
-            // );
             this.modal.showTabs(
                 `World ${this.level.world.number} Complete`,
                 'Continue',
@@ -381,6 +367,7 @@ export class Game {
 
         this.hud.displayLevel(this.level);
         this.platforms.handleLevelComplete(this.level.platformSprites);
+        this.player.fadeIn();
         this.player.handelLevelComplete();
 
         this.state = GameState.LEVEL_TRANSITION;

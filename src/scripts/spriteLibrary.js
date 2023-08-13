@@ -636,7 +636,7 @@ export class SpriteLibrary {
 
     static boss1Pace() {
         return new AnimatedSprite(
-            'images/boss-2.png',
+            'images/boss-1.png',
             SpriteLibrary.SIZES.BOSS_1.width,
             SpriteLibrary.SIZES.BOSS_1.height,
             0,
@@ -648,7 +648,7 @@ export class SpriteLibrary {
 
     static boss1Shoot() {
         return new AnimatedSprite(
-            'images/boss-2.png',
+            'images/boss-1.png',
             SpriteLibrary.SIZES.BOSS_1.width,
             SpriteLibrary.SIZES.BOSS_1.height,
             0,
@@ -755,9 +755,9 @@ export class SpriteLibrary {
         );
     }
 
-    static bossBomb() {
+    static boss2Bomb() {
         return new AnimatedSprite(
-            'images/boss-1.png',
+            'images/boss-2.png',
             SpriteLibrary.SIZES.BOSS_2.width,
             SpriteLibrary.SIZES.BOSS_2.height,
             0,

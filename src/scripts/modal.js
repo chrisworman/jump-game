@@ -66,38 +66,9 @@ export class Modal {
                 this.showTabs('Pixel Jump', 'Play Again', () => {
                     this.game.startNewGame();
                 });
-                // $(this.input).hide();
-                // this.stats.innerHTML = LeaderBoard.getHtml();
-                // $(this.tabs).show();
-                // this.onAction = () => {
-                //     this.game.startNewGame();
-                // };
-                // this.button.innerText = `PLAY AGAIN ⏎`;
             }
             return true; // cancel fadeout
         };
-        $(this.element).fadeIn('slow');
-    }
-
-    // showEndGame(text, buttonText, onAction) {
-    //     this.hideAllContent();
-    //     this.title.innerText = text;
-    //     this.button.innerText = `${buttonText} ⏎`;
-    //     this.onAction = onAction;
-    //     this.stats.innerHTML = this.game.stats.getWorldHtml();
-    //     this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-    //     $(this.tabs).show();
-    //     $(this.element).fadeIn('slow');
-    // }
-
-    showWorldComplete(text, buttonText, onAction) {
-        this.title.innerText = text;
-        this.button.innerText = `${buttonText} ⏎`;
-        this.onAction = onAction;
-        this.hideAllContent();
-        this.stats.innerHTML = this.game.stats.getWorldHtml();
-        this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-        $(this.tabs).show();
         $(this.element).fadeIn('slow');
     }
 
