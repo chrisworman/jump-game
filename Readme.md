@@ -14,9 +14,10 @@ Audio is broken on iOS Safari (probably other browsers), including audio events,
 
 * https://stackoverflow.com/questions/31776548/why-cant-javascript-play-audio-files-on-iphone-safari
 
-More critically, canvas filters, which the game relies upon, are not supported for Webkit browsers:
+More critically, canvas filters, which the game relies upon, are not  supported for Webkit browsers:
 
 * https://github.com/WebKit/WebKit/pull/3793
+* https://caniuse.com/mdn-api_canvasrenderingcontext2d_filter
 
 That being said, I have implemented on-screen controls when a mobile browser is detected in case these issues are ever resolved.
 
