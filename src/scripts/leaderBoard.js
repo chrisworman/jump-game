@@ -29,9 +29,9 @@ export class LeaderBoard {
     static getHtml() {
         const html = [];
         LeaderBoard.getAll().forEach((x, i) => {
-            html.push('<div class="modal-stat-row">');
-            html.push(`<div class="modal-stat-text">#${i+1} ${x.name}</div>`);
-            html.push(`<div class="modal-stat-text">${x.points.toLocaleString()}</div>`);
+            html.push('<div class="modal-leader-board-row">');
+            html.push(`<div>#${i+1} ${x.name}</div>`);
+            html.push(`<div>${x.points.toLocaleString()}</div>`);
             html.push('</div>');
         });
         return html.join('');

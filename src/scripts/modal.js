@@ -1,14 +1,18 @@
-import { LeaderBoard } from "./leaderBoard.js";
+import { LeaderBoard } from './leaderBoard.js';
 
 export class Modal {
     constructor(game) {
         this.game = game;
         this.element = document.getElementById('modal');
-        this.input = document.getElementById('modalInput');
+        this.title = document.getElementById('modalTitle');
         this.manual = document.getElementById('modalManual');
+        this.input = document.getElementById('modalInput');
+        this.tabs = document.getElementById('modalTabs');
         this.stats = document.getElementById('modalStats');
-        this.text = document.getElementById('modalText');
+        this.leaderBoard = document.getElementById('modalLeaderBoard');
         this.button = document.getElementById('modalButton');
+        
+        // Button events
         this.button.addEventListener('click', () => {
             this.handleAction();
         });
@@ -17,10 +21,29 @@ export class Modal {
                 this.handleAction();
             }
         });
+
+        // Tab events
+        document.querySelectorAll('.tab, .tab-selected').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                // Selected tab
+                document.querySelectorAll('.tab-selected').forEach((selectedTab) => {
+                    selectedTab.className = 'tab';
+                });
+                tab.className = 'tab-selected';
+                // Content
+                document.querySelectorAll('.tab-content').forEach((tabContent) => {
+                    if (tabContent.dataset.tabId === tab.dataset.tabId) {
+                        tabContent.style.display = 'block';
+                    } else {
+                        tabContent.style.display = 'none';
+                    }
+                });
+            });
+        });
     }
 
     showManual(text, buttonText, onAction) {
-        this.text.innerText = text;
+        this.title.innerText = text;
         this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
         this.hideAllContent();
@@ -31,54 +54,75 @@ export class Modal {
     showNewLeaderBoardRecord(points) {
         this.hideAllContent();
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-        this.text.innerText = 'You made the TOP TEN!';
+        this.title.innerText = 'You made the TOP TEN!';
         this.input.placeholder = 'Enter your name';
-        this.input.focus();
         $(this.input).show();
+        this.input.focus();
         this.button.innerText = `CONTINUE ⏎`;
         this.onAction = () => {
             const name = this.input.value;
             if (name) {
                 LeaderBoard.add(points, name);
-                $(this.input).hide();
-                this.stats.innerHTML = LeaderBoard.getHtml();
-                $(this.stats).show();
-                this.onAction = () => {
+                this.showTabs('Pixel Jump', 'Play Again', () => {
                     this.game.startNewGame();
-                };
-                this.button.innerText = `PLAY AGAIN ⏎`;
+                });
+                // $(this.input).hide();
+                // this.stats.innerHTML = LeaderBoard.getHtml();
+                // $(this.tabs).show();
+                // this.onAction = () => {
+                //     this.game.startNewGame();
+                // };
+                // this.button.innerText = `PLAY AGAIN ⏎`;
             }
             return true; // cancel fadeout
         };
         $(this.element).fadeIn('slow');
     }
 
-    showEndGame(text, buttonText, onAction) {
-        this.hideAllContent();
-        this.text.innerText = text;
+    // showEndGame(text, buttonText, onAction) {
+    //     this.hideAllContent();
+    //     this.title.innerText = text;
+    //     this.button.innerText = `${buttonText} ⏎`;
+    //     this.onAction = onAction;
+    //     this.stats.innerHTML = this.game.stats.getWorldHtml();
+    //     this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
+    //     $(this.tabs).show();
+    //     $(this.element).fadeIn('slow');
+    // }
+
+    showWorldComplete(text, buttonText, onAction) {
+        this.title.innerText = text;
         this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
+        this.hideAllContent();
         this.stats.innerHTML = this.game.stats.getWorldHtml();
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-        $(this.stats).show();
+        $(this.tabs).show();
         $(this.element).fadeIn('slow');
     }
 
-    showWorldComplete(text, buttonText, onAction) {
-        this.text.innerText = text;
+    showTabs(title, buttonText, onAction) {
+        this.hideAllContent();
+        this.title.innerText = title;
         this.button.innerText = `${buttonText} ⏎`;
         this.onAction = onAction;
-        this.hideAllContent();
+
+        const bgStyle = `url("images/level-${this.game.level?.world?.number || 1}-bg-layer-0-fuzzy.png")`;
+        
         this.stats.innerHTML = this.game.stats.getWorldHtml();
-        this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-        $(this.stats).show();
+        this.stats.style.backgroundImage = bgStyle;
+
+        this.leaderBoard.innerHTML = LeaderBoard.getHtml();
+        this.leaderBoard.style.backgroundImage = bgStyle;
+
+        $(this.tabs).show();
         $(this.element).fadeIn('slow');
     }
 
     hideAllContent() {
         $(this.input).hide();
         $(this.manual).hide();
-        $(this.stats).hide();
+        $(this.tabs).hide();
     }
 
     handleAction() {

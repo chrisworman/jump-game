@@ -261,12 +261,12 @@ export class Game {
 
         const finalPoints = this.stats.points;
         if (LeaderBoard.isNewRecord(finalPoints)) {
-            console.log('leader board record');
-            LeaderBoard.add(finalPoints, 'CW');
             this.modal.showNewLeaderBoardRecord(finalPoints);
-            console.log(LeaderBoard.getAll());
         } else {
-            this.modal.showEndGame('Game Over', 'Play Again', () => {
+            // this.modal.showEndGame('Game Over', 'Play Again', () => {
+            //     this.startNewGame();
+            // });
+            this.modal.showTabs('Game Over', 'Play Again', () => {
                 this.startNewGame();
             });
         }
@@ -336,14 +336,25 @@ export class Game {
                 this.gameTime,
                 1000
             );
-            this.modal.showEndGame('Game Complete!', 'Restart', () => {
+            // this.modal.showEndGame('Game Complete!', 'Restart', () => {
+            //     this.songHandler.stop(); // Finale song
+            //     this.startNewGame();
+            // });
+            this.modal.showTabs('Game Complete!', 'Play Again', () => {
                 this.songHandler.stop(); // Finale song
                 this.startNewGame();
             });
             this.state = GameState.GAME_BEAT;
         } else {
             // World complete, but not the game
-            this.modal.showWorldComplete(
+            // this.modal.showWorldComplete(
+            //     `World ${this.level.world.number} Complete`,
+            //     'Continue',
+            //     () => {
+            //         this.transitionToNextLevel();
+            //     }
+            // );
+            this.modal.showTabs(
                 `World ${this.level.world.number} Complete`,
                 'Continue',
                 () => {
