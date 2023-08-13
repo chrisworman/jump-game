@@ -1,5 +1,6 @@
 import { Boss1 } from "./boss1.js";
 import { Boss2 } from "./boss2.js";
+import { Boss3 } from "./boss3.js";
 import { Boss4 } from "./boss4.js";
 import { Boss5 } from "./boss5.js";
 import { LevelManager } from "./levelManager.js";
@@ -50,7 +51,7 @@ export class World {
         switch (this.number) {
             case 1: return Boss1.spawn(this.game);
             case 2: return Boss2.spawn(this.game);
-            case 3: return Boss1.spawn(this.game); // TODO: Implement boss 3
+            case 3: return Boss3.spawn(this.game);
             case 4: return Boss4.spawn(this.game);
             case 5: return Boss5.spawn(this.game);
         }

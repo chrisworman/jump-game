@@ -23,7 +23,7 @@ export class Boss2 extends Enemy {
             SpriteLibrary.SIZES.BOSS_2.height,
             750,
             EnemyTypes.BOSS,
-            SpriteLibrary.bossIdle(),
+            SpriteLibrary.boss2Idle(),
             true,
             Boss2.HEALTH
         );
@@ -31,8 +31,8 @@ export class Boss2 extends Enemy {
         this.recovering = false;
         this.recoveringStartTime = null;
 
-        this.spriteIdle = SpriteLibrary.bossIdle();
-        this.spriteJump = SpriteLibrary.bossJump();
+        this.spriteIdle = SpriteLibrary.boss2Idle();
+        this.spriteJump = SpriteLibrary.boss2Jump();
         this.spriteBomb = SpriteLibrary.bossBomb();
         this.sprites = [this.spriteIdle, this.spriteJump, this.spriteBomb];
 

@@ -24,7 +24,7 @@ export class Boss1 extends Enemy {
             SpriteLibrary.SIZES.BOSS_1.height,
             500,
             EnemyTypes.BOSS,
-            SpriteLibrary.boss2Pace(),
+            SpriteLibrary.boss1Pace(),
             true,
             Boss1.HEALTH
         );
@@ -32,8 +32,8 @@ export class Boss1 extends Enemy {
         this.recovering = false;
         this.recoveringStartTime = null;
 
-        this.spritePace = SpriteLibrary.boss2Pace();
-        this.spriteShoot = SpriteLibrary.boss2Shoot();
+        this.spritePace = SpriteLibrary.boss1Pace();
+        this.spriteShoot = SpriteLibrary.boss1Shoot();
         this.sprites = [this.spritePace, this.spriteShoot];
         this.mover = new Mover(game, this);
         this.mover.pace(Boss1.SPEED);

@@ -63,6 +63,10 @@ export class SpriteLibrary {
             width: 64,
             height: 76,
         },
+        BOSS_3: {
+            width: 56,
+            height: 56,
+        },
         BOSS_4: {
             width: 76,
             height: 64,
@@ -630,31 +634,7 @@ export class SpriteLibrary {
         );
     }
 
-    static bossIdle() {
-        return new AnimatedSprite(
-            'images/boss-1.png',
-            SpriteLibrary.SIZES.BOSS_2.width,
-            SpriteLibrary.SIZES.BOSS_2.height,
-            0,
-            5,
-            10,
-            false
-        );
-    }
-
-    static bossJump() {
-        return new AnimatedSprite(
-            'images/boss-1.png',
-            SpriteLibrary.SIZES.BOSS_2.width,
-            SpriteLibrary.SIZES.BOSS_2.height,
-            0,
-            5,
-            10,
-            false
-        );
-    }
-
-    static boss2Pace() {
+    static boss1Pace() {
         return new AnimatedSprite(
             'images/boss-2.png',
             SpriteLibrary.SIZES.BOSS_1.width,
@@ -666,7 +646,7 @@ export class SpriteLibrary {
         );
     }
 
-    static boss2Shoot() {
+    static boss1Shoot() {
         return new AnimatedSprite(
             'images/boss-2.png',
             SpriteLibrary.SIZES.BOSS_1.width,
@@ -679,6 +659,78 @@ export class SpriteLibrary {
         );
     }
 
+    static boss2Idle() {
+        return new AnimatedSprite(
+            'images/boss-2.png',
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
+            0,
+            5,
+            10,
+            false
+        );
+    }
+
+    static boss2Jump() {
+        return new AnimatedSprite(
+            'images/boss-2.png',
+            SpriteLibrary.SIZES.BOSS_2.width,
+            SpriteLibrary.SIZES.BOSS_2.height,
+            0,
+            5,
+            10,
+            false
+        );
+    }
+
+    static boss3LeftIdle() {
+        return new AnimatedSprite(
+            'images/boss-3-left.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            3,
+            10,
+            true
+        );
+    }
+
+    static boss3LeftJump() {
+        return new AnimatedSprite(
+            'images/boss-3-left.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            6,
+            10,
+            false
+        );
+    }
+
+    static boss3RightIdle() {
+        return new AnimatedSprite(
+            'images/boss-3-right.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            3,
+            10,
+            true
+        );
+    }
+
+    static boss3RightJump() {
+        return new AnimatedSprite(
+            'images/boss-3-right.png',
+            SpriteLibrary.SIZES.BOSS_3.width,
+            SpriteLibrary.SIZES.BOSS_3.height,
+            0,
+            6,
+            10,
+            false
+        );
+    }
+
     static boss4Idle() {
         return new AnimatedSprite(
             'images/boss-4.png',
@@ -687,7 +739,7 @@ export class SpriteLibrary {
             0,
             2,
             2,
-            true,
+            true
         );
     }
 
@@ -699,7 +751,7 @@ export class SpriteLibrary {
             0,
             4,
             8,
-            false,
+            false
         );
     }
 
@@ -747,7 +799,7 @@ export class SpriteLibrary {
             0,
             3,
             6,
-            true,
+            true
         );
     }
 

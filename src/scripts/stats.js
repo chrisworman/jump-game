@@ -57,7 +57,7 @@ export class Stats {
         // Gems
         const collected = w.gems.collected;
         const available = w.gems.available;
-        const percent = `${Math.ceil((collected / available) * 100)}%`;
+        const percent = `${Math.ceil((collected / (available || 1)) * 100)}%`;
         html.push('<div class="modal-stat-row">');
         SpriteLibrary.gem().pushHtml(html);
         html.push(`<div class="modal-stat-text">${collected} / ${available} ≈ ${percent}</div>`);
@@ -90,7 +90,7 @@ export class Stats {
     }
 
     pushEnemyKilledHtml(html, type, killed, available) {
-        const percent = `${Math.ceil((killed / available) * 100)}%`;
+        const percent = `${Math.ceil((killed / (available || 1)) * 100)}%`;
         html.push('<div class="modal-stat-row">');
         this.pushEnemySpriteHtml(html, type);
         html.push(`<div class="modal-stat-text">${killed} / ${available} ≈ ${percent}</div>`);

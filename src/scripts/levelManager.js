@@ -65,8 +65,9 @@ export class LevelManager {
     }
 
     reset() {
-        this.levelNumber = 0;
-        this.worldNumber = 1;
+        const query = new URLSearchParams(window.location.search);
+        this.levelNumber = query.get('level') ? parseInt(query.get('level')) - 1 : 0;
+        this.worldNumber =  query.get('world') ? parseInt(query.get('world')) : 1;
         this.world = new World(
             this.game,
             this.worldNumber,
