@@ -1,4 +1,7 @@
+
 # Pixel Jump
+
+![favicon-32x32](https://github.com/chrisworman/jump-game/assets/5204921/71a7b732-b325-4e26-acbb-8d43e3cd11c5)
 
 HTML 2D vertical scroller game:
 
