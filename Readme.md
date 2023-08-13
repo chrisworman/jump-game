@@ -29,4 +29,6 @@ https://chrisworman.github.io/jump-game/
 
 ## Screenshot
 
-![Screenshot 2023-08-03 at 2 52 46 PM](https://github.com/chrisworman/jump-game/assets/5204921/d20d2824-3ccb-4fa8-bca9-91c6baf05212)
+| World 1 | Final Boss |
+|---|---|
+| ![Screenshot 2023-08-13 at 3 53 41 PM](https://github.com/chrisworman/jump-game/assets/5204921/aa9d9547-9221-4ada-ab2f-ffa3ff59566f) | ![Screenshot 2023-08-13 at 3 54 11 PM](https://github.com/chrisworman/jump-game/assets/5204921/3c8b4f97-0872-4d6b-a9e0-c2e0e06b89cc) |
