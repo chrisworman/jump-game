@@ -1,10 +1,26 @@
 # Pixel Jump
 
-HTML 2D vertical scroller game. Meant for desktop; audio and canvas filters are not working on iOS Safari (probably other mobile browsers), so the game doesn't really work on mobile. For the canvas filter issues, see this PR:
+HTML 2D vertical scroller game:
 
-https://github.com/WebKit/WebKit/pull/3793
+* Beat each level by making it to the top
+* Collect gems to earn health
+* Kill enemies to earn points
 
-That being said, I have implemented on-screen controls for mobile browsers if these issues are ever resolved.
+## Browser Support
+
+Only tested and working on Mac Chrome (probably works on Windows Chrome).
+
+Audio is broken on iOS Safari (probably other browsers), including audio events, which the game relies upon. This can probably be fixed:
+
+* https://stackoverflow.com/questions/31776548/why-cant-javascript-play-audio-files-on-iphone-safari
+
+More critically, canvas filters, which the game relies upon, are not supported for Webkit browsers:
+
+* https://github.com/WebKit/WebKit/pull/3793
+
+That being said, I have implemented on-screen controls when a mobile browser is detected in case these issues are ever resolved.
+
+## Play Now
 
 The latest version can be played here:
 
