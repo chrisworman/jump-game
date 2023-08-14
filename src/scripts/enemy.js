@@ -68,7 +68,7 @@ export class Enemy extends Entity {
             this.isDead = this.health === 0;
             if (this.isDead) {
                 this.game.stats.enemyKilled(this);
-                this.game.overlayEntities.push(new PointBonus(this.game, this.x, this.y, this.points));
+                this.game.overlayEntities.push(new PointBonus(this.game, this.x, this.y + this.height * 0.5, this.points));
                 this.game.hud.displayPoints(this.game.stats.points);
                 const deathAnimation = FilterManager.blurFadeOutAnimation();
                 this.sprites.forEach((x) =>

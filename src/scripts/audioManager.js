@@ -27,7 +27,7 @@ export class AudioManager {
         },
         GEM_COLLECTED: {
             url: 'sounds/collectable.aac',
-            volume: 0.6,
+            volume: 0.45,
             preloadCount: 10,
         },
         BIG_BOMB: {
