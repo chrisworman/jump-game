@@ -34,6 +34,8 @@ export class SoundHandler {
 
         try {
             this.isPlaying = true;
+
+            // TODO: this seems bad
             this.audio.addEventListener(
                 'ended',
                 () => {
