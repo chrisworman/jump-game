@@ -58,6 +58,16 @@ export class Game {
             }
         });
 
+        document.addEventListener('keypress', (event) => {
+            if (event.key === 'p') {
+                if (this.isPaused) {
+                    this.resume();
+                } else {
+                    this.pause();
+                }
+            }
+        });
+
         this.canvas = document.createElement('canvas');
         this.canvas.width = Game.WORLD_WIDTH;
         this.canvas.height = Game.WORLD_HEIGHT;
