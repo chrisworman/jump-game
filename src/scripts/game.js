@@ -87,6 +87,7 @@ export class Game {
         this.enemyDeathsByType = {};
 
         this.setGemCount(0);
+        document.body.style.display = '';
         this.modal.showManual('Pixel Jump', 'Start', () => {
             this.startNewGame();
         });
