@@ -102,6 +102,7 @@ export class Level {
         const initialEnemies = [];
 
         if (this.world.number === 1) {
+
             // Walkers
             const walkerLevels = [2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (walkerLevels.indexOf(this.number) >= 0) {
@@ -113,12 +114,14 @@ export class Level {
                 }
             }
 
-            // Towers
-            const towerLevels = [3, 4, 5, 6, 7, 8, 9, 10];
-            if (towerLevels.indexOf(this.number) >= 0) {
-                const towerCount = Math.max(1, Math.min(3, this.number - 6));
-                for (let i = 0; i < towerCount; i++) {
-                    initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+            // Poppers
+            const popperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            if (popperLevels.indexOf(this.number) >= 0) {
+                const popperCount = Math.max(1, Math.min(2, this.number - 5));
+                for (let i = 0; i < popperCount; i++) {
+                    initialEnemies.push(
+                        this.popperSpawner.spawnWithoutIntersecting(initialEnemies)
+                    );
                 }
             }
 
@@ -179,14 +182,12 @@ export class Level {
                 }
             }
 
-            // Poppers
-            const popperLevels = [3, 4, 5, 6, 7, 8, 9, 10];
-            if (popperLevels.indexOf(this.number) >= 0) {
-                const popperCount = Math.max(1, Math.min(2, this.number - 5));
-                for (let i = 0; i < popperCount; i++) {
-                    initialEnemies.push(
-                        this.popperSpawner.spawnWithoutIntersecting(initialEnemies)
-                    );
+            // Towers
+            const towerLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+            if (towerLevels.indexOf(this.number) >= 0) {
+                const towerCount = Math.max(1, Math.min(3, this.number - 6));
+                for (let i = 0; i < towerCount; i++) {
+                    initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 }
             }
 
