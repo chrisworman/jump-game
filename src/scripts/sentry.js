@@ -23,7 +23,7 @@ export class Sentry extends Enemy {
             y,
             SpriteLibrary.SIZES.SENTRY.width,
             SpriteLibrary.SIZES.SENTRY.height,
-            35,
+            25,
             EnemyTypes.SENTRY,
             spriteIdle,
             true

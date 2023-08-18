@@ -17,7 +17,7 @@ export class Chaser extends Enemy {
             y,
             SpriteLibrary.SIZES.CHASER.width,
             SpriteLibrary.SIZES.CHASER.height,
-            10,
+            20,
             EnemyTypes.CHASER,
             currentSprite,
             true
