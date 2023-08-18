@@ -16,7 +16,7 @@ export class Dumper extends Enemy {
             y,
             SpriteLibrary.SIZES.DUMPER.width,
             SpriteLibrary.SIZES.DUMPER.height,
-            10,
+            15,
             EnemyTypes.DUMPER,
             spriteIdle,
             true

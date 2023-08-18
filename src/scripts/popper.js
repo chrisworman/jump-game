@@ -15,7 +15,7 @@ export class Popper extends Enemy {
             y,
             SpriteLibrary.SIZES.POPPER.width,
             SpriteLibrary.SIZES.POPPER.height,
-            25,
+            20,
             EnemyTypes.POPPER,
             spriteIdle,
             true
