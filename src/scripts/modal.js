@@ -54,7 +54,7 @@ export class Modal {
     showNewLeaderBoardRecord(points, didBeatGame = false) {
         this.hideAllContent();
         this.stats.style.backgroundImage = `url("images/level-${this.game.level.world.number}-bg-layer-0-fuzzy.png")`;
-        this.title.innerText = 'You made the TOP TEN!';
+        this.title.innerText = didBeatGame ? 'Game Complete' : 'New High Score';
         this.input.placeholder = 'Enter your name';
         $(this.input).show();
         this.input.focus();

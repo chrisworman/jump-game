@@ -60,6 +60,6 @@ export class Hud {
     }
 
     displayPoints(points) {
-        this.points.innerText = points.toString().padStart(6, '0');
+        this.points.innerText = points.toLocaleString();
     }
 }
