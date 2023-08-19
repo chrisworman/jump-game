@@ -242,7 +242,7 @@ export class Level {
 
         if (this.world.number === 5) {
             if (this.number === 1) {
-                const chaserCount = 7;
+                const chaserCount = 8;
                 for (let i = 0; i < chaserCount; i++) {
                     initialEnemies.push(
                         this.chaserSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -258,8 +258,11 @@ export class Level {
 
             if (this.number === 2) {
                 initialEnemies.push(this.bomberSpawner.spawnWithoutIntersecting(initialEnemies));
-                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
-                const walkerCount = 2;
+                const towerCount = 2;
+                for (let i=0; i < towerCount; i++) {
+                    initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
+                }
+                const walkerCount = 3;
                 for (let i = 0; i < walkerCount; i++) {
                     initialEnemies.push(
                         this.walkerSpawner.spawnWithoutIntersecting(initialEnemies)
@@ -271,6 +274,7 @@ export class Level {
                 initialEnemies.push(this.heavySpawner.spawnWithoutIntersecting(initialEnemies));
                 initialEnemies.push(this.tankSpawner.spawnWithoutIntersecting(initialEnemies));
                 initialEnemies.push(this.dumperSpawner.spawnWithoutIntersecting(initialEnemies));
+                initialEnemies.push(this.chaserSpawner.spawnWithoutIntersecting(initialEnemies));
                 const popperCount = 2;
                 for (let i = 0; i < popperCount; i++) {
                     initialEnemies.push(
@@ -280,6 +284,7 @@ export class Level {
             }
 
             if (this.number === 4) {
+                initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 initialEnemies.push(this.turrentSpawner.spawnWithoutIntersecting(initialEnemies));
                 initialEnemies.push(this.zamboneySpawner.spawnWithoutIntersecting(initialEnemies));
                 const pounderCount = 3;
