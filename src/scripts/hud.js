@@ -16,6 +16,7 @@ export class Hud {
 
         this.displayGemCount(0);
         this.displayHealth(Game.MAX_PLAYER_HEALTH);
+        this.displayPointsTimer = null;
     }
 
     displayHealth(health) {
@@ -60,6 +61,17 @@ export class Hud {
     }
 
     displayPoints(points) {
-        this.points.innerText = points.toLocaleString();
+        const currentPoints = parseInt(this.points.innerText.replace(/,/g, '')) || 0;
+        if (currentPoints !== points) {
+            const oneCloser = Math.sign(points - currentPoints) * 1 + currentPoints;
+            this.points.innerText = oneCloser.toLocaleString();
+            if (this.displayPointsTimer) {
+                clearTimeout(this.displayPointsTimer);
+            }
+            const delayMs = Math.max(8, Math.abs(points - currentPoints) / 500);
+            this.displayPointsTimer = setTimeout(() => {
+                this.displayPoints(points);
+            }, delayMs);
+        }
     }
 }
