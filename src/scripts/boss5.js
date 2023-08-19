@@ -29,7 +29,7 @@ export class Boss5 extends Enemy {
             y,
             SpriteLibrary.SIZES.BOSS_5.width,
             SpriteLibrary.SIZES.BOSS_5.height,
-            10000,
+            5000,
             EnemyTypes.FINAL_BOSS,
             spriteIdle,
             true,
