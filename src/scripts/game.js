@@ -25,7 +25,6 @@ export class Game {
     static FPS = 60;
     static TIME_STEP = 1000 / Game.FPS;
     static GEM_HEALTH_UP_THRESHOLD = 50;
-
     static WORLD_WIDTH = 550;
     static WORLD_HEIGHT = 800;
     static HUD_HEIGHT = 50;
@@ -33,7 +32,7 @@ export class Game {
 
     constructor() {
         this.isPaused = false;
-        this.gameTime = 0; //performance.now();
+        this.gameTime = 0;
         this.state = GameState.INITIALIZING;
 
         // Prioritize loading assets
@@ -312,6 +311,7 @@ export class Game {
 
         const justBeatBoss = this.isBossLevel();
         if (justBeatBoss) {
+            this.shake();
             this.audioManager.play(AudioManager.SOUNDS.BOSS_DEAD);
             this.level.world.playBossCelebrationSongThen(() => {
                 this.player.mover.setCollideWith({
