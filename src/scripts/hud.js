@@ -63,12 +63,15 @@ export class Hud {
     displayPoints(points) {
         const currentPoints = parseInt(this.points.innerText.replace(/,/g, '')) || 0;
         if (currentPoints !== points) {
-            const oneCloser = Math.sign(points - currentPoints) * 1 + currentPoints;
-            this.points.innerText = oneCloser.toLocaleString();
+            const absDiff = Math.abs(points - currentPoints);
+            const nextPoints = absDiff >= 200 
+                ? Math.sign(points - currentPoints) * absDiff * 0.5 + currentPoints
+                : Math.sign(points - currentPoints) * 1 + currentPoints;
+            this.points.innerText = nextPoints.toLocaleString();
             if (this.displayPointsTimer) {
                 clearTimeout(this.displayPointsTimer);
             }
-            const delayMs = Math.max(8, Math.abs(points - currentPoints) / 500);
+            const delayMs = 2 / Math.abs(points - currentPoints);
             this.displayPointsTimer = setTimeout(() => {
                 this.displayPoints(points);
             }, delayMs);
