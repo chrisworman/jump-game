@@ -10,7 +10,7 @@ import { GameState } from './gameState.js';
 
 export class Pounder extends Enemy {
     constructor(game, x, y, width, height, currentSprite) {
-        super(game, x, y, width, height, 25, EnemyTypes.POUNDER, currentSprite, true);
+        super(game, x, y, width, height, 20, EnemyTypes.POUNDER, currentSprite, true);
 
         this.spriteIdle = currentSprite;
         this.spritePound = SpriteLibrary.pounderPound();

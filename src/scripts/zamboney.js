@@ -8,7 +8,7 @@ import { GameState } from './gameState.js';
 import { Rocket } from './rocket.js';
 
 export class Zamboney extends Enemy {
-    static SPEED = 2;
+    static SPEED = 2.5;
 
     constructor(game, x, y, spriteLeft) {
         super(
@@ -23,7 +23,6 @@ export class Zamboney extends Enemy {
             true
         );
 
-        
         this.spriteLeft = spriteLeft;
         this.spriteRight = SpriteLibrary.zamboneyRight();
         this.sprites = [this.spriteLeft, this.spriteRight];
@@ -33,7 +32,7 @@ export class Zamboney extends Enemy {
 
         this.mover = new Mover(game, this);
         this.mover.pace(Zamboney.SPEED);
-        this.lastShootTime = 0;    
+        this.lastShootTime = 0;
     }
 
     update() {
@@ -53,16 +52,28 @@ export class Zamboney extends Enemy {
         }
 
         if (this.game.state === GameState.PLAYING) {
-            // Fire at player
             const player = this.game.player;
             const yDistanceFromPlayer = Math.abs(player.y + player.height - (this.y + this.height));
             const shouldBeShooting = !player.recovering && yDistanceFromPlayer <= 15;
+            // Face the player when shooting
+            if (shouldBeShooting) {
+                if (player.x >= this.x && this.facingLeft) {
+                    this.facingLeft = false;
+                    this.currentSprite = this.spriteRight;
+                    this.mover.pace(Zamboney.SPEED);
+                } else if (player.x < this.x && !this.facingLeft) {
+                    this.facingLeft = true;
+                    this.currentSprite = this.spriteLeft;
+                    this.mover.pace(-Zamboney.SPEED);
+                }
+            }
+            // Fire at player
             if (shouldBeShooting && this.game.gameTime - this.lastShootTime >= 2000) {
                 Rocket.spawn(
                     this.game,
                     this.facingLeft ? this.x : this.x + this.width,
                     this.y + this.height * 0.5 - SpriteLibrary.SIZES.BOMB.height * 0.5,
-                    this.facingLeft ? -1 : 1,
+                    this.facingLeft ? -1 : 1
                 );
                 this.lastShootTime = this.game.gameTime;
             }

@@ -15,7 +15,7 @@ export class Tower extends Enemy {
             y,
             SpriteLibrary.SIZES.TOWER.width,
             SpriteLibrary.SIZES.TOWER.height,
-            35,
+            25,
             EnemyTypes.TOWER,
             x < game.canvas.width * 0.5
                 ? SpriteLibrary.towerRightIdle()

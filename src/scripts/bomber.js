@@ -10,7 +10,7 @@ import { GameState } from './gameState.js';
 
 export class Bomber extends Enemy {
     static HEALTH = 2;
-    static SPEED = 0.7;
+    static SPEED = 0.8;
     static RECOVERY_TIME_MS = 2000;
 
     constructor(game, x, y, spriteIdle) {

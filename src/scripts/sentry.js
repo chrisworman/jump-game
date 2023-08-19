@@ -13,8 +13,8 @@ export class Sentry extends Enemy {
         SHOOTING_LEFT: 1,
         SHOOTING_RIGHT: 2,
     };
-    static SHOOT_INTERVAL_MS = 800;
-    static SHOOT_DISTANCE = 290;
+    static SHOOT_INTERVAL_MS = 1000;
+    static SHOOT_DISTANCE = 280;
 
     constructor(game, x, y, spriteIdle) {
         super(
