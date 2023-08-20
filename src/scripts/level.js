@@ -102,7 +102,6 @@ export class Level {
         const initialEnemies = [];
 
         if (this.world.number === 1) {
-
             // Walkers
             const walkerLevels = [2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (walkerLevels.indexOf(this.number) >= 0) {
@@ -133,11 +132,9 @@ export class Level {
                     );
                 }
             }
-            
         }
 
         if (this.world.number === 2) {
-            
             // Tanks
             const tankLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (tankLevels.indexOf(this.number) >= 0) {
@@ -171,7 +168,6 @@ export class Level {
         }
 
         if (this.world.number === 3) {
-
             // Zamboney
             const zamboneyLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (zamboneyLevels.indexOf(this.number) >= 0) {
@@ -207,7 +203,6 @@ export class Level {
         }
 
         if (this.world.number === 4) {
-
             // Chasers
             const chaserLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             if (chaserLevels.indexOf(this.number) >= 0) {
@@ -259,7 +254,7 @@ export class Level {
             if (this.number === 2) {
                 initialEnemies.push(this.bomberSpawner.spawnWithoutIntersecting(initialEnemies));
                 const towerCount = 2;
-                for (let i=0; i < towerCount; i++) {
+                for (let i = 0; i < towerCount; i++) {
                     initialEnemies.push(this.towerSpawner.spawnWithoutIntersecting(initialEnemies));
                 }
                 const walkerCount = 3;
@@ -398,11 +393,18 @@ export class Level {
     }
 
     spawnCollectables() {
-        if (this.boss) {
-            return [];
+        const collectables = [];
+
+        // Laser: always ensure the laser is available on world 5 levels,
+        // which is mostly for testing, esp. the final boss
+        if (this.world.number === 5 && !this.game.player.laserGun) {
+            collectables.push(LaserCollectable.spawn(this.game));
         }
 
-        const collectables = [];
+        // No other collectables when there is a boss
+        if (this.boss) {
+            return collectables;
+        }
 
         // Gems
         const gemCount = Math.min(Level.MAX_GEMS, Math.ceil(this.world.number + this.number * 0.7));
@@ -418,11 +420,6 @@ export class Level {
         // Shield
         if (this.number === 8) {
             collectables.push(Shield.spawn(this.game));
-        }
-
-        // Laser
-        if (this.world.number === 5 && this.number === 1) {
-            collectables.push(LaserCollectable.spawn(this.game));
         }
 
         return collectables;

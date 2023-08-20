@@ -7,7 +7,6 @@ import { Mover } from './mover.js';
 import { Entity } from './entity.js';
 import { Box } from './box.js';
 import { FilterManager } from './filterManager.js';
-import { LaserGun } from './laserGun.js';
 
 export class Player extends Entity {
     static VERTICAL_SPEED = -8;
