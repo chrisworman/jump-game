@@ -101,7 +101,7 @@ export class AudioManager {
         },
         BOSS_5_SHOT: {
             url: 'sounds/boss-5-shot.aac',
-            volume: 0.5,
+            volume: 0.6,
         },
         BOSS_DEAD: {
             url: 'sounds/boss-dead.aac',
