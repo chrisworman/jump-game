@@ -186,11 +186,10 @@ export class Boss5 extends Enemy {
             ((Math.sin(0.01 * this.game.gameTime) + 1.0) / 2.0) * 50 + 100;
     }
 
-    // TODO: introduce Boss and inherit
     handleShot() {
         const wasShot = super.handleShot();
         if (wasShot && !this.isDead) {
-            this.game.audioManager.play(AudioManager.SOUNDS.ROBOTIC_DEATH);
+            this.game.audioManager.play(AudioManager.SOUNDS.BOSS_5_SHOT);
         }
     }
 

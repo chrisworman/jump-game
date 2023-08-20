@@ -99,6 +99,10 @@ export class AudioManager {
             url: 'sounds/boss-4-vox-2.aac',
             volume: 0.2,
         },
+        BOSS_5_SHOT: {
+            url: 'sounds/boss-5-shot.aac',
+            volume: 0.5,
+        },
         BOSS_DEAD: {
             url: 'sounds/boss-dead.aac',
             volume: 0.25,
